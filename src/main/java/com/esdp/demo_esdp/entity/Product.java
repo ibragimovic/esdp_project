@@ -30,6 +30,12 @@ public class Product {
     private Category category;
 
 
+    @NotNull
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+
     @NotBlank
     private String description;
 
