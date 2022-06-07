@@ -38,7 +38,8 @@ public class User {
     private String login;
 
 
-    @Size(min = 10)
+    @Size(min = 14)
+    @NotBlank
     private String telNumber;
 
     @NotBlank
