@@ -38,8 +38,8 @@ public class User {
     private String login;
 
 
-    @Size(min = 10)
-    @Column(name = "tel_number")
+    @Size(min = 14)
+    @NotBlank
     private String telNumber;
 
     @NotBlank
