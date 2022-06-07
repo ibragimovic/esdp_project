@@ -39,6 +39,7 @@ public class User {
 
 
     @Size(min = 10)
+    @Column(name = "tel_number")
     private String telNumber;
 
     @NotBlank
