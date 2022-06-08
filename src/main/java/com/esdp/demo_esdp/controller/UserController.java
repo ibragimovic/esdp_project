@@ -1,6 +1,6 @@
 package com.esdp.demo_esdp.controller;
 
-import com.esdp.demo_esdp.exeption.UserRegisterForm;
+import com.esdp.demo_esdp.dto.UserRegisterForm;
 import com.esdp.demo_esdp.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -21,12 +21,6 @@ import java.security.Principal;
 public class UserController {
 
     private final UserService userService;
-
-    @GetMapping("/registration-page")
-    public String mainRegistrationPage()
-    {
-        return "registration-page";
-    }
 
     @GetMapping("/profile")
     public String pageCustomerProfile(Model model, Principal principal)

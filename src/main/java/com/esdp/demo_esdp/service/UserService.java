@@ -4,7 +4,7 @@ import com.esdp.demo_esdp.dto.UserResponseDTO;
 import com.esdp.demo_esdp.entity.User;
 import com.esdp.demo_esdp.exeption.UserAlreadyRegisteredException;
 import com.esdp.demo_esdp.exeption.UserNotFoundException;
-import com.esdp.demo_esdp.exeption.UserRegisterForm;
+import com.esdp.demo_esdp.dto.UserRegisterForm;
 import com.esdp.demo_esdp.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
