@@ -13,5 +13,7 @@ create table products
             references category,
     user_id     bigint    not null
         constraint fkdb050tk37qryv15hd932626th
-            references users
+            references users,
+    status      varchar(255),
+    data_add timestamp not null
 );

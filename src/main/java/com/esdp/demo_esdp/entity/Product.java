@@ -3,9 +3,8 @@ package com.esdp.demo_esdp.entity;
 import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "products")
@@ -22,6 +21,7 @@ public class Product {
     private Long id;
 
     @NotBlank
+    @Size(min = 10)
     private String name;
 
     @NotNull
@@ -42,4 +42,19 @@ public class Product {
     @NotNull
     @Min(1)
     private Integer price;
+
+
+    @Builder.Default
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private ProductStatus status = ProductStatus.MODERNIZATION;
+
+    @Past
+    @NotNull
+    @Column(name = "data_add")
+    private LocalDateTime dateAdd;
+}
+
+enum ProductStatus {
+    MODERNIZATION, DECLINED, ACCEPTED
 }
