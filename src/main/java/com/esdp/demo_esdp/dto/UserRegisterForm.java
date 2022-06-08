@@ -1,4 +1,4 @@
-package com.esdp.demo_esdp.exeption;
+package com.esdp.demo_esdp.dto;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -19,13 +19,18 @@ public class UserRegisterForm {
     @Pattern(regexp = "^[^\\d\\s]+$", message = "Should contain only letters")
     private String name = "";
 
+    @NotBlank
     private String lastName = "";
 
     @NotBlank
+    @Size(min = 8)
     private String password = "";
 
     @Size(min = 14)
     @NotBlank
     private String telNumber;
+
+    @NotBlank
+    private String login;
 
 }
