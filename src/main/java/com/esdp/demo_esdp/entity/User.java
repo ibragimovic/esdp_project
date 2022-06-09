@@ -46,6 +46,11 @@ public class User {
     @Size(min = 8)
     private String password;
 
+
+    @NotBlank
+    private String path;
+
+
     @Column
     @Builder.Default
     private boolean enabled = true;
