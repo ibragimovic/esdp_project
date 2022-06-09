@@ -3,19 +3,44 @@
 
 <#-- обрабатываем его, и передаём ему список скриптов, которые необходимо подключить-->
 <@main.renderWith>
-
-    <p>Главная страница, которую будем заполнять контентом</p>
-    <div class="flex flex-justify-content-center">
-        <a class="flex box-128" href="/register"> Регистрация </a>
-        <a class="flex box-128" href="/login"> Войти </a>
-        <a class="flex box-128" href="/profile"> Профиль </a>
-
-        <form class="flex box-128" action="/logout" method="post">
-            <#if _csrf??>
-                <input type="hidden" name="${(_csrf.parameterName)!'csrf'}" value="${(_csrf.token)!'--no-token--'}"/>
-            </#if>
-            <button class="flex box-128 logout-button">Выйти </button>
-        </form>
-
+    <div class="jumbotron jumbotron-fluid">
+      <div class="container">
+        <h1 class="display-4">Arenda.KG</h1>
+        <p class="lead">Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...</p>
+      </div>
+    </div>
+    <div class="d-flex justify-content-between flex-wrap">
+        <div class="card mb-2" style="width: 18rem;">
+          <img class="card-img-top" src="https://via.placeholder.com/120x80.png" alt="Card image cap">
+          <div class="card-body">
+            <h5 class="card-title">Card title</h5>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <a href="#" class="btn btn-primary">Go somewhere</a>
+          </div>
+        </div>
+        <div class="card mb-2" style="width: 18rem;">
+          <img class="card-img-top" src="https://via.placeholder.com/120x80.png" alt="Card image cap">
+          <div class="card-body">
+            <h5 class="card-title">Card title</h5>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <a href="#" class="btn btn-primary">Go somewhere</a>
+          </div>
+        </div>
+        <div class="card mb-2" style="width: 18rem;">
+          <img class="card-img-top" src="https://via.placeholder.com/120x80.png" alt="Card image cap">
+          <div class="card-body">
+            <h5 class="card-title">Card title</h5>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <a href="#" class="btn btn-primary">Go somewhere</a>
+          </div>
+        </div>
+        <div class="card mb-2" style="width: 18rem;">
+          <img class="card-img-top" src="https://via.placeholder.com/120x80.png" alt="Card image cap">
+          <div class="card-body">
+            <h5 class="card-title">Card title</h5>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <a href="#" class="btn btn-primary">Go somewhere</a>
+          </div>
+        </div>
     </div>
 </@main.renderWith>

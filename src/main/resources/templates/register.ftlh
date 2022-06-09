@@ -2,33 +2,28 @@
 
 <@main.renderWith>
     <h2>Please register</h2>
-    <div>
     <form action="/register" method="post">
 
         <#if _csrf??>
             <input type="hidden" name="${(_csrf.parameterName)!'csrf'}" value="${(_csrf.token)!'--no-token--'}"/>
         </#if>
 
-        <div>
-            <label class="flex flex-v-center">
-                <p class="label-input-text">Имя:</p>
-                <input type="text" name="name" placeholder="ваше имя"  value="${(dto.name)!''}">
-            </label>
+        <div class="form-group">
+            <label for="name">Имя</label>
+            <input type="text" name="name" class="form-control" id="name" placeholder="Ваше имя"
+                value="${(dto.name)!''}" autofocus>
+        </div>
+        <div class="form-group">
+            <label for="email">Адрес почты</label>
+            <input type="email" name="email" class="form-control" id="email" placeholder="Ваш адрес почты"
+                value="${(dto.email)!''}" autofocus>
+        </div>
+        <div class="form-group">
+            <label for="password">Пароль:</label>
+            <input type="password" class="form-control" id="password" placeholder="Пароль" value="">
         </div>
         <div>
-            <label class="flex flex-v-center">
-                <p class="label-input-text">Адрес почты:</p>
-                <input type="text" name="email" placeholder="ваш адрес почты"  value="${(dto.email)!''}" >
-            </label>
-        </div>
-        <div>
-            <label class="flex flex-v-center">
-                <p class="label-input-text">Пароль:</p>
-                <input type="text" name="password" placeholder="пароль"  value="">
-            </label>
-        </div>
-        <div>
-            <button type="submit">Регистрация</button>
+            <button type="submit" class="btn btn-primary">Регистрация</button>
         </div>
         <div>
             <#if errors?? >
@@ -39,8 +34,4 @@
             </#if>
         </div>
     </form>
-    </div>
-    <div class="bottom-box">
-        <a href="/">На главную страницу</a>
-    </div>
 </@main.renderWith>
