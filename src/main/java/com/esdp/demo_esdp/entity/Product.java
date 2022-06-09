@@ -55,6 +55,3 @@ public class Product {
     private LocalDateTime dateAdd;
 }
 
-enum ProductStatus {
-    MODERNIZATION, DECLINED, ACCEPTED
-}
