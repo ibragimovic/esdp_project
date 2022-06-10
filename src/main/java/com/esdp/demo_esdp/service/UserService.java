@@ -26,6 +26,7 @@ public class UserService {
                 .name(form.getName())
                 .lastname(form.getLastName())
                 .telNumber(form.getTelNumber())
+                .login(form.getLogin())
                 .password(encoder.encode(form.getPassword()))
                 .build();
 
