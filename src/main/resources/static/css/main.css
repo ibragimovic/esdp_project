@@ -5,3 +5,26 @@ html, body {
 * {
     font-weight: 300 !important;
 }
+.category_list{
+    display: inline-flex;
+    margin: 5px;
+    font-size: 12px;
+}
+a{
+    text-decoration: none;
+    color: dimgrey;
+}
+a:hover {
+    text-decoration: none;
+    color: dimgrey;
+}
+.child_category{
+    margin-left: 50px;
+    margin-top: 15px;
+    float: left;
+    width: 30%;
+}
+
+.child_category_list{
+    margin: 15px;
+}

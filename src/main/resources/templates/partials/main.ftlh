@@ -46,6 +46,13 @@
                 </form>
             </div>
         </nav>
+        <#if categories??>
+            <#list categories as category>
+        <p class="category_list"><a href="/category?id=${category.id}">${category.name}</a></p>
+            </#list>
+            <#else>
+        </#if>
+
         <div class="content">
             <#nested>
         </div>

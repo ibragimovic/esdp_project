@@ -27,7 +27,6 @@ public class CategoryController {
         var childCategory = categoryService.geSecondCategory(id, page);
         if (!childCategory.isEmpty()){
             model.addAttribute("child_categories", childCategory.getContent());}
-
         return "category";
     }
 }
