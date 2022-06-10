@@ -25,20 +25,18 @@ public class User {
     @NotBlank
     private String name;
 
-
     @NotBlank
     private String lastname;
-
 
     @NotBlank
     @Email
     private String email;
 
     @NotBlank
+    @Size(max = 25)
     private String login;
 
-
-    @Size(min = 14)
+    @Size(min = 13,max = 13)
     @NotBlank
     private String telNumber;
 
@@ -46,10 +44,7 @@ public class User {
     @Size(min = 8)
     private String password;
 
-
-    @NotBlank
     private String path;
-
 
     @Column
     @Builder.Default
