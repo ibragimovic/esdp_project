@@ -19,18 +19,20 @@ public class UserRegisterForm {
     @Pattern(regexp = "^[^\\d\\s]+$", message = "Should contain only letters")
     private String name = "";
 
-    @NotBlank
+    @Size(min=4, max=24, message = "Length must be >= 4 and <= 24")
+    @Pattern(regexp = "^[^\\d\\s]+$", message = "Should contain only letters")
     private String lastName = "";
 
     @NotBlank
-    @Size(min = 8)
+    @Size(min = 8, message = "Length must be >= 8")
     private String password = "";
 
-    @Size(min = 14)
+    @Size(min=13,max = 13,message = "Length must be = 13, format +996552902002")
     @NotBlank
-    private String telNumber;
+    @Pattern(regexp = "^(\\+)[0-9]+$", message = "Should contain only numbers")
+    private String telNumber = "";
 
     @NotBlank
-    private String login;
+    private String login = "";
 
 }
