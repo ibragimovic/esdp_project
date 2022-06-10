@@ -9,17 +9,21 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface ProductRepository extends JpaRepository<Product,Long> {
+public interface ProductRepository extends JpaRepository<Product, Long> {
 
-    @Query("select p from Product p where lower(p.name) like  %:name% ")
-    Page<Product> getProductName(@Param("name") String name, Pageable pageable);
+    @Query("select p from Product p where lower(p.name) like  %:name% and p.status = :status ")
+    Page<Product> getProductName(@Param("name") String name, @Param("status") String status, Pageable pageable);
 
-    @Query("select p from Product p where lower(p.category.name) like %:category%")
-    Page<Product> getProductCategory(@Param("category") String category, Pageable pageable);
+    @Query("select p from Product p where lower(p.category.name) like %:category% and p.status = :status")
+    Page<Product> getProductCategory(@Param("category") String category, @Param("status") String status, Pageable pageable);
 
-    @Query("select p from Product p where p.price >= :from and p.price <= :before")
-    Page<Product> getProductPrice(@Param("from") Integer from, @Param("before") Integer before, Pageable pageable);
+    @Query("select p from Product p where p.price >= :from and p.price <= :before and p.status = :status")
+    Page<Product> getProductPrice(@Param("from") Integer from, @Param("before") Integer before, @Param("status") String status, Pageable pageable);
 
-    @Query("select p from Product p where p.user.email = :email ")
-    List<Product> getProductUser(@Param("email") String email);
+    @Query("select p from Product p where p.user.email = :email and p.status = :status")
+    List<Product> getProductUser(@Param("email") String email, @Param("status") String status);
+
+
+    @Query("select p from Product p where p.status = :status order by p.dateAdd")
+    Page<Product> getProducts(@Param("status") String status, Pageable pageable);
 }
