@@ -26,4 +26,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query("select p from Product p where p.status = :status order by p.dateAdd")
     Page<Product> getProducts(@Param("status") String status, Pageable pageable);
+
+
+    @Query("select p.user.email from Product p where p.id = :id ")
+    String getPublicationUserEmail(@Param("id") Long id);
 }

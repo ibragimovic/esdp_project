@@ -3,6 +3,7 @@ package com.esdp.demo_esdp.controller;
 import com.esdp.demo_esdp.dto.ImageDTO;
 import com.esdp.demo_esdp.dto.ProductAddForm;
 import com.esdp.demo_esdp.entity.User;
+import com.esdp.demo_esdp.service.ProductService;
 import com.esdp.demo_esdp.service.PropertiesService;
 import com.esdp.demo_esdp.service.UserService;
 import lombok.NonNull;
@@ -39,14 +40,15 @@ public class ProductController {
     public String addNewProduct(@Valid ProductAddForm productAddForm,
                                 @Valid ImageDTO imageDTO,
                                 BindingResult validationResult,
-                                Principal principal,
+                                Authentication authentication,
                                 RedirectAttributes attributes) {
 
         if (validationResult.hasFieldErrors()) {
             attributes.addFlashAttribute("errors", validationResult.getFieldErrors());
             return "redirect:/product/add";
         }
-        propertiesService.addNewProduct(productAddForm, imageDTO, principal.getName());
+        User user = (User) authentication.getPrincipal();
+        productService.addNewProduct(productAddForm, imageDTO, user);
         return "redirect:/profile";
     }
 
@@ -54,7 +56,7 @@ public class ProductController {
     public String deleteProductById(@RequestParam("productId") Long productId,
                                     Authentication authentication) {
         User user = (User) authentication.getPrincipal();
-        propertiesService.deleteProductById(productId, user);
+        productService.deleteProductById(productId, user);
         return "redirect:/product";
     }
 
@@ -62,7 +64,7 @@ public class ProductController {
     public String getProductCategory(@RequestParam("category") @NotBlank String category,
                                      Model model,
                                      Pageable pageable, HttpServletRequest uriBuilder) {
-        var products = productService.getProductType(category, pageable);
+        var products = productService.getProductCategory(category, pageable);
         if (products.isEmpty()) {
             return "error404";
         } else {
