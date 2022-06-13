@@ -1,5 +1,6 @@
 package com.esdp.demo_esdp.entity;
 
+import com.esdp.demo_esdp.enums.ProductStatus;
 import lombok.*;
 
 import javax.persistence.*;
