@@ -1,4 +1,4 @@
-package com.esdp.demo_esdp.entity;
+package com.esdp.demo_esdp.enums;
 
 public enum ProductStatus {
     MODERNIZATION, DECLINED, ACCEPTED

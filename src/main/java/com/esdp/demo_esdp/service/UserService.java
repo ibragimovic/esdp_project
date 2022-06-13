@@ -2,8 +2,8 @@ package com.esdp.demo_esdp.service;
 
 import com.esdp.demo_esdp.dto.UserResponseDTO;
 import com.esdp.demo_esdp.entity.User;
-import com.esdp.demo_esdp.exeption.UserAlreadyRegisteredException;
-import com.esdp.demo_esdp.exeption.UserNotFoundException;
+import com.esdp.demo_esdp.exception.UserAlreadyRegisteredException;
+import com.esdp.demo_esdp.exception.UserNotFoundException;
 import com.esdp.demo_esdp.dto.UserRegisterForm;
 import com.esdp.demo_esdp.repositories.UserRepository;
 import lombok.AllArgsConstructor;

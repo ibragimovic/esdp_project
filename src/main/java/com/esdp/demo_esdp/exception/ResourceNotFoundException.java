@@ -1,4 +1,4 @@
-package com.esdp.demo_esdp.exeption;
+package com.esdp.demo_esdp.exception;
 
 public class ResourceNotFoundException extends RuntimeException {
 
