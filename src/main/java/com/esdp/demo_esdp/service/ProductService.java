@@ -3,20 +3,27 @@ package com.esdp.demo_esdp.service;
 import com.esdp.demo_esdp.dto.ImageDTO;
 import com.esdp.demo_esdp.dto.ProductAddForm;
 import com.esdp.demo_esdp.dto.ProductDTO;
+import com.esdp.demo_esdp.entity.Images;
+import com.esdp.demo_esdp.entity.Product;
 import com.esdp.demo_esdp.entity.ProductStatus;
 import com.esdp.demo_esdp.entity.User;
 import com.esdp.demo_esdp.exeption.ResourceNotFoundException;
+import com.esdp.demo_esdp.repositories.CategoryRepository;
 import com.esdp.demo_esdp.repositories.ImagesRepository;
 import com.esdp.demo_esdp.repositories.ProductRepository;
 import com.esdp.demo_esdp.repositories.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Service
 @AllArgsConstructor
@@ -24,8 +31,10 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
     private final ImagesRepository imagesRepository;
+    private final CategoryRepository categoryRepository;
 
-    private final String uploadPath = "C:\\Vova\\java\\gitHub\\java_group_11_homework_55_smagin_vladimir/uploads\\";
+    @Value("${upload.path}")
+    private final String uploadPath;
 
 
     public Page<ProductDTO> getProductName(String name, Pageable pageable) {
@@ -58,7 +67,36 @@ public class ProductService {
 
 
     public void addNewProduct(ProductAddForm productAddForm, ImageDTO imageDTO, User user) {
-
+        try {
+            var category = categoryRepository.getCategory(productAddForm.getCategoryId())
+                    .orElseThrow(ResourceNotFoundException::new);
+            if (imageDTO.getImages() != null) {
+                File upload = new File(uploadPath);
+                if (!upload.exists()) {
+                    upload.mkdir();
+                }
+                var product = Product.builder()
+                        .name(productAddForm.getName())
+                        .category(category)
+                        .user(user)
+                        .description(productAddForm.getDescription())
+                        .price(productAddForm.getPrice())
+                        .status(ProductStatus.MODERNIZATION)
+                        .dateAdd(LocalDateTime.now())
+                        .build();
+                for (int i = 0; i < imageDTO.getImages().size(); i++) {
+                    String uuid = UUID.randomUUID().toString();
+                    String resulFileName = uuid + "." + imageDTO.getImages().get(i).getOriginalFilename();
+                    imageDTO.getImages().get(i).transferTo(new File(uploadPath + resulFileName));
+                    Images image = Images.builder()
+                            .path(resulFileName)
+                            .product(product)
+                            .build();
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -79,6 +117,8 @@ public class ProductService {
                 }
             });
 
+        } else {
+            throw new ResourceNotFoundException();
         }
     }
 }
