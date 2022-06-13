@@ -10,15 +10,21 @@ import lombok.*;
 public class UserResponseDTO {
     private Long id;
     private String name;
-    private String lastName;
+    private String lastname;
+    private String login;
+    private String path;
     private String email;
+    private String telNumber;
 
     public static UserResponseDTO from(User user) {
         return builder()
                 .id(user.getId())
                 .name(user.getName())
-                .lastName(user.getLastname())
+                .lastname(user.getLastname())
+                .login(user.getLogin())
+                .path(user.getPath())
                 .email(user.getEmail())
+                .telNumber(user.getTelNumber())
                 .build();
     }
 }
