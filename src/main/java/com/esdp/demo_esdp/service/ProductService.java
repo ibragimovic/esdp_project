@@ -12,7 +12,7 @@ import com.esdp.demo_esdp.repositories.CategoryRepository;
 import com.esdp.demo_esdp.repositories.ImagesRepository;
 import com.esdp.demo_esdp.repositories.ProductRepository;
 import com.esdp.demo_esdp.repositories.UserRepository;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,7 +26,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ProductService {
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
@@ -34,7 +34,7 @@ public class ProductService {
     private final CategoryRepository categoryRepository;
 
     @Value("${upload.path}")
-    private final String uploadPath;
+    private String uploadPath;
 
 
     public Page<ProductDTO> getProductName(String name, Pageable pageable) {
