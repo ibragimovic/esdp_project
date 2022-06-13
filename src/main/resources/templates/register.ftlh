@@ -11,28 +11,28 @@
         <div class="form-group">
             <label for="name">Имя</label>
             <input type="text" name="name" class="form-control" id="name" placeholder="Ваше имя"
-                value="${(dto.name)!''}" autofocus>
+                value="${(dto.name)!''}" required autofocus>
         </div>
         <div class="form-group">
             <label for="lastName">Фамилия</label>
             <input type="text" name="lastName" class="form-control" id="lastName" placeholder="Ваша фамилия"
-                   value="${(dto.lastname)!''}" autofocus>
+                   value="${(dto.lastname)!''}" required autofocus>
         </div>
         <div class="form-group">
             <label for="login">Логин</label>
             <input type="text" name="login" class="form-control" id="login" placeholder="Ваш логин"
-                   value="${(dto.login)!''}" autofocus>
+                   value="${(dto.login)!''}" required autofocus>
         </div>
 
         <div class="form-group">
             <label for="email">Адрес почты</label>
             <input type="email" name="email" class="form-control" id="email" placeholder="Ваш адрес почты"
-                value="${(dto.email)!''}" autofocus>
+                value="${(dto.email)!''}" required autofocus>
         </div>
         <div class="form-group">
             <label for="tel">Телефон</label>
             <input type="tel" name="telNumber" class="form-control" id="telNumber" value="+996" placeholder="+996552902002"
-                   value="${(dto.telNumber)!''}" autofocus>
+                   value="${(dto.telNumber)!''}" required autofocus>
         </div>
         <div class="form-group">
             <label for="password">Пароль:</label>
