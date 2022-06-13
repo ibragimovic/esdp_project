@@ -1,6 +1,7 @@
 package com.esdp.demo_esdp.controller;
 
 import com.esdp.demo_esdp.dto.UserRegisterForm;
+import com.esdp.demo_esdp.dto.UserUpdateForm;
 import com.esdp.demo_esdp.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -28,6 +29,21 @@ public class UserController {
         var user = userService.getByEmail(principal.getName());
         model.addAttribute("dto", user);
         return "profile";
+    }
+
+    @PostMapping("/profile")
+    public String updateUserProfile(@Valid UserUpdateForm userRequestDto,
+                               BindingResult validationResult,
+                               RedirectAttributes attributes) {
+        attributes.addFlashAttribute("dto", userRequestDto);
+
+        if (validationResult.hasFieldErrors()) {
+            attributes.addFlashAttribute("errors", validationResult.getFieldErrors());
+            return "redirect:/profile";
+        }
+
+        userService.update(userRequestDto);
+        return "redirect:/profile";
     }
 
     @GetMapping("/register")

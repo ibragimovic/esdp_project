@@ -10,12 +10,15 @@
             <#if _csrf??>
                 <input type="hidden" name="${(_csrf.parameterName)!'csrf'}" value="${(_csrf.token)!'--no-token--'}"/>
             </#if>
+            <input type="text" name="id" class="form-control" id="id"
+                   value="${(dto.id)!''}" hidden>
 
             <div class="form-group col-md-6">
                 <label for="name">Имя</label>
                 <input type="text" name="name" class="form-control" id="name" placeholder="Ваше имя"
                        value="${(dto.name)!''}"  required autofocus>
             </div>
+
             <div class="form-group col-md-6">
                 <label for="lastName">Фамилия</label>
                 <input type="text" name="lastName" class="form-control" id="lastName" placeholder="Ваша фамилия"
@@ -34,7 +37,7 @@
             </div>
             <div class="form-group col-md-6">
                 <label for="tel">Телефон</label>
-                <input type="tel" name="telNumber" class="form-control" id="telNumber" value="+996" placeholder="+996 xxx xxxxxx"
+                <input type="tel" name="telNumber" class="form-control" id="telNumber" placeholder="+996 xxx xxxxxx"
                        value="${(dto.telNumber)!''}" required autofocus>
             </div>
 <#--            <div class="form-group">-->
