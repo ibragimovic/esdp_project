@@ -60,7 +60,7 @@ public class ProductController {
         return "redirect:/product";
     }
 
-    @GetMapping("/product/search")
+    @GetMapping("/product/search-category")
     public String getProductCategory(@RequestParam("category") @NotBlank String category,
                                      Model model,
                                      Pageable pageable, HttpServletRequest uriBuilder) {
@@ -74,7 +74,7 @@ public class ProductController {
         }
     }
 
-    @GetMapping("/product/search")
+    @GetMapping("/product/search-name")
     public String getProductName(@RequestParam("name") @NotBlank String name, Model model,
                                  Pageable pageable, HttpServletRequest uriBuilder) {
         var products = productService.getProductName(name, pageable);
@@ -87,7 +87,7 @@ public class ProductController {
         }
     }
 
-    @GetMapping("/product/search")
+    @GetMapping("/product/search-price")
     public String getProductPrice(@RequestParam("from") @NonNull @Min(1) Integer from,
                                   @RequestParam("before") @NonNull @Min(1) Integer before,
                                   Model model,
