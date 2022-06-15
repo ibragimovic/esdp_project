@@ -16,14 +16,14 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class FavoritesService {
-    private final ProductRepository productRepository;
     private final UserRepository userRepository;
     private final FavoritesRepository favoritesRepository;
+    private final ProductService productService;
 
 
     public void addToFavorites(Long userId, Long productId){
         User user=findUserById(userId);
-        Product product=findProductById(productId);
+        Product product= productService.findProductById(productId);
 
         Optional<Favorites> favoritesOpt=favoritesRepository.findByUserAndProduct(user,product);
         if(favoritesOpt.isEmpty()){
@@ -36,7 +36,7 @@ public class FavoritesService {
 
     public void removeFromFavorites(Long userId,Long productId){
         User user=findUserById(userId);
-        Product product=findProductById(productId);
+        Product product=productService.findProductById(productId);
 
         Optional<Favorites> favoritesOpt=favoritesRepository.findByUserAndProduct(user,product);
         if(favoritesOpt.isPresent()){
@@ -50,10 +50,7 @@ public class FavoritesService {
         return userRepository.findById(userId).orElseThrow(()-> new UserNotFoundException());
     }
 
-    //this method will be moved to ProductService later
-    protected Product findProductById(Long productId) throws ResourceNotFoundException{
-        return productRepository.findById(productId).orElseThrow( ()->new ResourceNotFoundException());
-    }
+
 
 }
 

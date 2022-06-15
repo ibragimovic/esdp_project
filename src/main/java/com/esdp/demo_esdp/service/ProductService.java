@@ -121,4 +121,10 @@ public class ProductService {
             throw new ResourceNotFoundException();
         }
     }
+
+    protected Product findProductById(Long productId) throws ResourceNotFoundException{
+        return productRepository.findById(productId).orElseThrow(
+                ()->new ResourceNotFoundException(String.format("product with id %s was not found",productId))
+        );
+    }
 }
