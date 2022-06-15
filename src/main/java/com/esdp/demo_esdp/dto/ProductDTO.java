@@ -19,6 +19,8 @@ public class ProductDTO {
     private Integer price;
     private String status;
     private LocalDateTime dateAdd;
+    private LocalDateTime endOfPayment;
+    private String localities;
 
     public static ProductDTO from(Product product) {
         return builder()
@@ -30,6 +32,8 @@ public class ProductDTO {
                 .price(product.getPrice())
                 .status(String.valueOf(product.getStatus()))
                 .dateAdd(product.getDateAdd())
+                .endOfPayment(product.getEndOfPayment())
+                .localities(product.getLocalities())
                 .build();
     }
 }
