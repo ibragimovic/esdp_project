@@ -54,5 +54,15 @@ public class Product {
     @NotNull
     @Column(name = "data_add")
     private LocalDateTime dateAdd;
+
+
+    @Past
+    @NotNull
+    @Column(name = " end_of_payment")
+    private LocalDateTime endOfPayment;
+
+
+    @NotBlank
+    private String localities;
 }
 
