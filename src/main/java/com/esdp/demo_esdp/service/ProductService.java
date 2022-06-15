@@ -88,10 +88,10 @@ public class ProductService {
                     String uuid = UUID.randomUUID().toString();
                     String resulFileName = uuid + "." + imageDTO.getImages().get(i).getOriginalFilename();
                     imageDTO.getImages().get(i).transferTo(new File(uploadPath + resulFileName));
-                    Images image = Images.builder()
+                    imagesRepository.save(Images.builder()
                             .path(resulFileName)
                             .product(product)
-                            .build();
+                            .build());
                 }
             }
         } catch (IOException e) {
@@ -122,9 +122,9 @@ public class ProductService {
         }
     }
 
-    protected Product findProductById(Long productId) throws ResourceNotFoundException{
+    protected Product findProductById(Long productId) throws ResourceNotFoundException {
         return productRepository.findById(productId).orElseThrow(
-                ()->new ResourceNotFoundException(String.format("product with id %s was not found",productId))
+                () -> new ResourceNotFoundException(String.format("product with id %s was not found", productId))
         );
     }
 }
