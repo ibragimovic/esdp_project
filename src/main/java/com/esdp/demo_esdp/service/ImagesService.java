@@ -26,7 +26,6 @@ import java.util.stream.Collectors;
 public class ImagesService {
     private final FileStorageImpl fileStorage;
     private final ImagesRepository imagesRepository;
-    private final ProductService productService;
 
     @Value("${upload.path}")
     private String uploadPath;

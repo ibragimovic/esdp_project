@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequiredArgsConstructor
 public class CategoryController {
     private final CategoryService categoryService;
-    private final ProductService productService;
 
     @GetMapping
     public String getMainCategory(Model model, @PageableDefault(sort = "name", direction = Sort.Direction.ASC) Pageable page) {

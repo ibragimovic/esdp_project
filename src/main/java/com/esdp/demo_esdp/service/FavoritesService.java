@@ -20,7 +20,6 @@ import java.util.stream.Collectors;
 public class FavoritesService {
     private final UserRepository userRepository;
     private final FavoritesRepository favoritesRepository;
-    private final ProductService productService;
 
 
     public List<FavoritesDTO> getFavoritesUser(String email) {
@@ -29,10 +28,8 @@ public class FavoritesService {
     }
 
 
-    public void addToFavorites(Long userId, Long productId) {
+    public void addToFavorites(Long userId, Product product) {
         User user = findUserById(userId);
-        Product product = productService.findProductById(productId);
-
         Optional<Favorites> favoritesOpt = favoritesRepository.findByUserAndProduct(user, product);
         if (favoritesOpt.isEmpty()) {
             favoritesRepository.save(Favorites.builder()
@@ -42,10 +39,8 @@ public class FavoritesService {
         }
     }
 
-    public void removeFromFavorites(Long userId, Long productId) {
+    public void removeFromFavorites(Long userId, Product product) {
         User user = findUserById(userId);
-        Product product = productService.findProductById(productId);
-
         Optional<Favorites> favoritesOpt = favoritesRepository.findByUserAndProduct(user, product);
         if (favoritesOpt.isPresent()) {
             favoritesRepository.delete(favoritesOpt.get());
