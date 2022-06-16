@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ImagesRepository extends JpaRepository<Images,Long> {
 
@@ -15,4 +16,7 @@ public interface ImagesRepository extends JpaRepository<Images,Long> {
 
     @Query("select i.path from Images i where i.product.id = :id ")
     List<String> getProductImagePath(@Param("id") Long id);
+
+    @Query("select i from Images i where i.id = :id ")
+    Optional<Images> getImageId(@Param("id") Long id);
 }
