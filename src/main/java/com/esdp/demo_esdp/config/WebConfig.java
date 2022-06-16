@@ -19,5 +19,6 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/fontawesome/**").addResourceLocations("classpath:/static/fontawesome/");
         registry.addResourceHandler("/webfonts/**").addResourceLocations("classpath:/static/webfonts/");
         registry.addResourceHandler("/uploads_/**").addResourceLocations("file:uploads_/");
+        registry.addResourceHandler("/webjars/**").addResourceLocations("/webjars/").resourceChain(false);
     }
 }
