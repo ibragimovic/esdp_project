@@ -5,10 +5,8 @@ import com.esdp.demo_esdp.entity.Favorites;
 import com.esdp.demo_esdp.entity.Product;
 import com.esdp.demo_esdp.entity.User;
 import com.esdp.demo_esdp.enums.ProductStatus;
-import com.esdp.demo_esdp.exception.ResourceNotFoundException;
 import com.esdp.demo_esdp.exception.UserNotFoundException;
 import com.esdp.demo_esdp.repositories.FavoritesRepository;
-import com.esdp.demo_esdp.repositories.ProductRepository;
 import com.esdp.demo_esdp.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -60,6 +58,9 @@ public class FavoritesService {
         return userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException());
     }
 
+    public void deleteFavoritesByProductId(Long productId) {
+        favoritesRepository.deleteAll(favoritesRepository.getFavoritesByProductId(productId));
+    }
 
 }
 

@@ -48,7 +48,7 @@ public class ProductController {
             return "redirect:/product/add";
         }
         User user = (User) authentication.getPrincipal();
-        productService.addNewProduct(productAddForm, imageDTO, user);
+        productService.addNewProduct(productAddForm, user);
         return "redirect:/profile";
     }
 

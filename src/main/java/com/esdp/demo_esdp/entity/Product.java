@@ -32,7 +32,7 @@ public class Product {
 
 
     @NotNull
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
