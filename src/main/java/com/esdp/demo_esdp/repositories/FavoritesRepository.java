@@ -19,4 +19,7 @@ public interface FavoritesRepository extends JpaRepository<Favorites, Long> {
     @Query("select f from Favorites f where f.user.email = :email and f.product.status = :status")
     List<Favorites> getFavoritesUser(@Param("email") String email,@Param("status") String status);
 
+
+    @Query("select f from Favorites f where f.product.id = :id")
+    List<Favorites> getFavoritesByProductId(@Param("id") Long id);
 }
