@@ -16,6 +16,7 @@
         <#list styles as styleSource>
             <link rel="stylesheet" href="${styleSource}">
         </#list>
+        <script src="//code.jivosite.com/widget/ZK2dXhprrI" async></script>
     </head>
     <body>
 
