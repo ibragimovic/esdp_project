@@ -1,11 +1,13 @@
 <#import "partials/main.ftlh" as main />
 
 <@main.renderWith>
+<#assign security=JspTaglibs["http://www.springframework.org/security/tags"]/>
     <#if dto??>
         <h1>Личная информация</h1>
         <p>${(dto.name)!'-- missing --'} ${(dto.lastname)!'-- missing --'} - ${(dto.email)!'-- email missing --'}</p>
-
-
+        <@security.authorize access="isAuthenticated()">
+            <p>logged in as <@security.authentication property="principal.username" /></p>
+        </@security.authorize>
         <nav>
             <div class="nav nav-tabs mb-3" id="nav-tab" role="tablist">
                 <a class="nav-item nav-link active" id="nav-main-tab" data-toggle="tab" href="#nav-main" role="tab"
@@ -86,7 +88,4 @@
     <#else>
         <h1>Пользователь не найден!</h1>
     </#if>
-<#--    <div class="bottom-box">-->
-<#--        <a href="/">На главную страницу</a>-->
-<#--    </div>-->
 </@main.renderWith>

@@ -1,4 +1,5 @@
 <#macro renderWith title="Main page" scripts=[] styles=[]>
+    <#assign security=JspTaglibs["http://www.springframework.org/security/tags"]/>
     <!doctype html>
     <html lang="en">
     <head>
@@ -28,29 +29,36 @@
             </button>
             <div class="collapse navbar-collapse" id="topNavbar">
                 <ul class="navbar-nav mr-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/register">Регистрация</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/login">Войти</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/profile">Профиль</a>
-                    </li>
+                    <@security.authorize access="! isAuthenticated()">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/register">Регистрация</a>
+                        </li>
+                    </@security.authorize>
+                    <@security.authorize access="! isAuthenticated()">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/login">Войти</a>
+                        </li>
+                    </@security.authorize>
+                    <@security.authorize access="isAuthenticated()">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/profile">Профиль</a>
+                        </li>
+                    </@security.authorize>
                 </ul>
-                <form action="/logout" method="post">
-                    <#if _csrf??>
-                        <input type="hidden" name="${(_csrf.parameterName)!'csrf'}" value="${(_csrf.token)!'--no-token--'}"/>
-                    </#if>
-                    <input type="submit" value="Выйти" class="btn btn-secondary">
-                </form>
+                <@security.authorize access="isAuthenticated()">
+                    <form action="/logout" method="post">
+                        <#if _csrf??>
+                            <input type="hidden" name="${(_csrf.parameterName)!'csrf'}" value="${(_csrf.token)!'--no-token--'}"/>
+                        </#if>
+                        <input type="submit" value="Выйти" class="btn btn-secondary">
+                    </form>
+                </@security.authorize>
             </div>
         </nav>
         <#if categories??>
             <#list categories as category>
-        <p class="category_list"><a href="/category?id=${category.id}">${category.name}</a></p>
+                <p class="category_list"><a href="/category?id=${category.id}">${category.name}</a></p>
             </#list>
-            <#else>
         </#if>
 
         <div class="content">
