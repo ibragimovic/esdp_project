@@ -1,9 +1,10 @@
 package com.esdp.demo_esdp.service;
 
 import com.esdp.demo_esdp.dto.UserResponseDTO;
+import com.esdp.demo_esdp.dto.UserUpdateForm;
 import com.esdp.demo_esdp.entity.User;
-import com.esdp.demo_esdp.exeption.UserAlreadyRegisteredException;
-import com.esdp.demo_esdp.exeption.UserNotFoundException;
+import com.esdp.demo_esdp.exception.UserAlreadyRegisteredException;
+import com.esdp.demo_esdp.exception.UserNotFoundException;
 import com.esdp.demo_esdp.dto.UserRegisterForm;
 import com.esdp.demo_esdp.repositories.UserRepository;
 import lombok.AllArgsConstructor;
@@ -31,6 +32,19 @@ public class UserService {
                 .build();
 
         userRepository.save(user);
+
+        return UserResponseDTO.from(user);
+    }
+
+    public UserResponseDTO update(UserUpdateForm form) {
+        if (!userRepository.existsById(form.getId())) {
+            throw new UserNotFoundException();
+        }
+
+
+        userRepository.updateUserData(form.getName(), form.getLastName(), form.getEmail(), form.getTelNumber(), form.getLogin(), form.getId());
+
+        var user = userRepository.findById(form.getId()).get();
 
         return UserResponseDTO.from(user);
     }

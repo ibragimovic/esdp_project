@@ -1,32 +1,37 @@
 package com.esdp.demo_esdp.service;
 
+import com.esdp.demo_esdp.dto.FavoritesDTO;
 import com.esdp.demo_esdp.entity.Favorites;
 import com.esdp.demo_esdp.entity.Product;
 import com.esdp.demo_esdp.entity.User;
-import com.esdp.demo_esdp.exeption.ResourceNotFoundException;
-import com.esdp.demo_esdp.exeption.UserNotFoundException;
+import com.esdp.demo_esdp.enums.ProductStatus;
+import com.esdp.demo_esdp.exception.UserNotFoundException;
 import com.esdp.demo_esdp.repositories.FavoritesRepository;
-import com.esdp.demo_esdp.repositories.ProductRepository;
 import com.esdp.demo_esdp.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class FavoritesService {
-    private final ProductRepository productRepository;
     private final UserRepository userRepository;
     private final FavoritesRepository favoritesRepository;
 
 
-    public void addToFavorites(Long userId, Long productId){
-        User user=findUserById(userId);
-        Product product=findProductById(productId);
+    public List<FavoritesDTO> getFavoritesUser(String email) {
+        return favoritesRepository.getFavoritesUser(email, ProductStatus.ACCEPTED.name())
+                .stream().map(FavoritesDTO::from).collect(Collectors.toList());
+    }
 
-        Optional<Favorites> favoritesOpt=favoritesRepository.findByUserAndProduct(user,product);
-        if(favoritesOpt.isEmpty()){
+
+    public void addToFavorites(Long userId, Product product) {
+        User user = findUserById(userId);
+        Optional<Favorites> favoritesOpt = favoritesRepository.findByUserAndProduct(user, product);
+        if (favoritesOpt.isEmpty()) {
             favoritesRepository.save(Favorites.builder()
                     .user(user)
                     .product(product)
@@ -34,25 +39,22 @@ public class FavoritesService {
         }
     }
 
-    public void removeFromFavorites(Long userId,Long productId){
-        User user=findUserById(userId);
-        Product product=findProductById(productId);
-
-        Optional<Favorites> favoritesOpt=favoritesRepository.findByUserAndProduct(user,product);
-        if(favoritesOpt.isPresent()){
+    public void removeFromFavorites(Long userId, Product product) {
+        User user = findUserById(userId);
+        Optional<Favorites> favoritesOpt = favoritesRepository.findByUserAndProduct(user, product);
+        if (favoritesOpt.isPresent()) {
             favoritesRepository.delete(favoritesOpt.get());
         }
     }
 
 
     //this method will be moved to UserService later
-    protected User findUserById(Long userId) throws UserNotFoundException{
-        return userRepository.findById(userId).orElseThrow(()-> new UserNotFoundException());
+    protected User findUserById(Long userId) throws UserNotFoundException {
+        return userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException());
     }
 
-    //this method will be moved to ProductService later
-    protected Product findProductById(Long productId) throws ResourceNotFoundException{
-        return productRepository.findById(productId).orElseThrow( ()->new ResourceNotFoundException());
+    public void deleteFavoritesByProductId(Long productId) {
+        favoritesRepository.deleteAll(favoritesRepository.getFavoritesByProductId(productId));
     }
 
 }

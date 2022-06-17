@@ -1,6 +1,8 @@
 package com.esdp.demo_esdp.controller;
 
 import com.esdp.demo_esdp.dto.UserRegisterForm;
+import com.esdp.demo_esdp.dto.UserUpdateForm;
+import com.esdp.demo_esdp.service.ProductService;
 import com.esdp.demo_esdp.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -21,13 +23,31 @@ import java.security.Principal;
 public class UserController {
 
     private final UserService userService;
+    private final ProductService productService;
 
     @GetMapping("/profile")
     public String pageCustomerProfile(Model model, Principal principal)
     {
         var user = userService.getByEmail(principal.getName());
         model.addAttribute("dto", user);
+//        model.addAttribute("products", ) сюда надо закинуть лист объявлений
+//        для профиля(все объявления пользователя)
         return "profile";
+    }
+
+    @PostMapping("/profile")
+    public String updateUserProfile(@Valid UserUpdateForm userRequestDto,
+                               BindingResult validationResult,
+                               RedirectAttributes attributes) {
+        attributes.addFlashAttribute("dto", userRequestDto);
+
+        if (validationResult.hasFieldErrors()) {
+            attributes.addFlashAttribute("errors", validationResult.getFieldErrors());
+            return "redirect:/profile";
+        }
+
+        userService.update(userRequestDto);
+        return "redirect:/profile";
     }
 
     @GetMapping("/register")

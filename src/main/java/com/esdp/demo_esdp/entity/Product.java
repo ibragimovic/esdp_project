@@ -1,5 +1,6 @@
 package com.esdp.demo_esdp.entity;
 
+import com.esdp.demo_esdp.enums.ProductStatus;
 import lombok.*;
 
 import javax.persistence.*;
@@ -31,7 +32,7 @@ public class Product {
 
 
     @NotNull
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
@@ -53,5 +54,15 @@ public class Product {
     @NotNull
     @Column(name = "data_add")
     private LocalDateTime dateAdd;
+
+
+    @Past
+    @NotNull
+    @Column(name = " end_of_payment")
+    private LocalDateTime endOfPayment;
+
+
+    @NotBlank
+    private String localities;
 }
 

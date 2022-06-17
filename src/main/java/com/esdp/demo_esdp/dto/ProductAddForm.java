@@ -2,11 +2,10 @@ package com.esdp.demo_esdp.dto;
 
 import lombok.Builder;
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
+import java.util.List;
 
 @Data
 @Builder
@@ -34,4 +33,9 @@ public class ProductAddForm {
     @NotNull
     @Positive
     private Integer price;
+
+
+    @NotBlank
+    @NotNull
+    private List<MultipartFile> images;
 }

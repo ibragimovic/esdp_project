@@ -1,37 +1,29 @@
 package com.esdp.demo_esdp.service;
 
-import com.esdp.demo_esdp.dto.ImageDTO;
 import com.esdp.demo_esdp.dto.ProductAddForm;
 import com.esdp.demo_esdp.dto.ProductDTO;
-import com.esdp.demo_esdp.entity.Images;
+import com.esdp.demo_esdp.entity.Favorites;
 import com.esdp.demo_esdp.entity.Product;
-import com.esdp.demo_esdp.entity.ProductStatus;
 import com.esdp.demo_esdp.entity.User;
-import com.esdp.demo_esdp.exeption.ResourceNotFoundException;
+import com.esdp.demo_esdp.enums.ProductStatus;
+import com.esdp.demo_esdp.exception.ResourceNotFoundException;
 import com.esdp.demo_esdp.repositories.CategoryRepository;
-import com.esdp.demo_esdp.repositories.ImagesRepository;
 import com.esdp.demo_esdp.repositories.ProductRepository;
-import com.esdp.demo_esdp.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class ProductService {
     private final ProductRepository productRepository;
-    private final UserRepository userRepository;
-    private final ImagesRepository imagesRepository;
     private final CategoryRepository categoryRepository;
+    private final ImagesService imagesService;
+    private final FavoritesService favoritesService;
 
     @Value("${upload.path}")
     private String uploadPath;
@@ -66,59 +58,37 @@ public class ProductService {
     }
 
 
-    public void addNewProduct(ProductAddForm productAddForm, ImageDTO imageDTO, User user) {
-        try {
-            var category = categoryRepository.getCategory(productAddForm.getCategoryId())
-                    .orElseThrow(ResourceNotFoundException::new);
-            if (imageDTO.getImages() != null) {
-                File upload = new File(uploadPath);
-                if (!upload.exists()) {
-                    upload.mkdir();
-                }
-                var product = Product.builder()
-                        .name(productAddForm.getName())
-                        .category(category)
-                        .user(user)
-                        .description(productAddForm.getDescription())
-                        .price(productAddForm.getPrice())
-                        .status(ProductStatus.MODERNIZATION)
-                        .dateAdd(LocalDateTime.now())
-                        .build();
-                for (int i = 0; i < imageDTO.getImages().size(); i++) {
-                    String uuid = UUID.randomUUID().toString();
-                    String resulFileName = uuid + "." + imageDTO.getImages().get(i).getOriginalFilename();
-                    imageDTO.getImages().get(i).transferTo(new File(uploadPath + resulFileName));
-                    Images image = Images.builder()
-                            .path(resulFileName)
-                            .product(product)
-                            .build();
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void addNewProduct(ProductAddForm productAddForm, User user) {
+        var category = categoryRepository.getCategory(productAddForm.getCategoryId())
+                .orElseThrow(ResourceNotFoundException::new);
+        var product = Product.builder()
+                .name(productAddForm.getName())
+                .category(category)
+                .user(user)
+                .description(productAddForm.getDescription())
+                .price(productAddForm.getPrice())
+                .status(ProductStatus.MODERNIZATION)
+                .dateAdd(LocalDateTime.now())
+                .build();
+        productRepository.save(product);
+        imagesService.saveImagesFile(productAddForm.getImages(),product);
     }
 
 
     public void deleteProductById(Long productId, User user) {
         if (user.getEmail().equals(productRepository.getPublicationUserEmail(productId))
                 || user.getRole().equals("Admin")) {
-            var imageProduct = imagesRepository.getImagesProduct(productId);
-            if (!imageProduct.isEmpty()) {
-                imageProduct.forEach(i -> imagesRepository.deleteById(i.getId()));
-            }
+            imagesService.deleteImagesFile(productId);
+            favoritesService.deleteFavoritesByProductId(productId);
             productRepository.deleteById(productId);
-            var paths = imagesRepository.getProductImagePath(productId);
-            paths.forEach(i -> {
-                try {
-                    Files.delete(Paths.get(uploadPath + i));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
-
         } else {
             throw new ResourceNotFoundException();
         }
+    }
+
+    protected Product findProductById(Long productId) throws ResourceNotFoundException {
+        return productRepository.findById(productId).orElseThrow(
+                () -> new ResourceNotFoundException(String.format("product with id %s was not found", productId))
+        );
     }
 }
