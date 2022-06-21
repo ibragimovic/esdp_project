@@ -32,6 +32,8 @@ public class User {
     @Email
     private String email;
 
+    private String activationCode;
+
     @NotBlank
     @Size(max = 25)
     private String login;
