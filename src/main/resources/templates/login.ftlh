@@ -14,6 +14,8 @@
                 <input type="hidden" name="${(_csrf.parameterName)!'csrf'}" value="${(_csrf.token)!'--no-token--'}"/>
             </#if>
 
+            ${message?ifExists}
+
             <div class="form-group">
                 <label for="email">Адрес почты</label>
                 <input type="email" name="username" class="form-control" id="email" placeholder="Ваш адрес почты"
