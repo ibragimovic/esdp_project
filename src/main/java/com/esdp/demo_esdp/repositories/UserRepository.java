@@ -31,4 +31,6 @@ public interface UserRepository extends JpaRepository<User,Long> {
                         @Param("telNumber") String telNumber,
                         @Param("login") String login,
                         @Param("id") Long id);
+
+    User findByActivationCode(String code);
 }
