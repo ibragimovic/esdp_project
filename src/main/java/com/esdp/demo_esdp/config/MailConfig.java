@@ -18,19 +18,19 @@ public class MailConfig {
     private String password;
     @Value("${spring.mail.port}")
     private int port;
-//    @Value("${spring.mail.protocol}")
-//    private String protocol;
-//    @Value("${mail.debug}")
+    @Value("${spring.mail.protocol}")
+    private String protocol;
+    @Value("mail.smtp.ssl.enable")
+    private String enable;
+    //    @Value("${mail.debug}")
 //    private String debug;
-//    @Value("mail.smtp.ssl.enable")
-//    private String enable;
 //    @Value("${spring.mail.properties.mail.smtp.auth}")
 //    private String auth;
 //    @Value("${spring.mail.properties.mail.smtp.starttls.enable}")
 //    private String starttls;
 
     @Bean
-    public JavaMailSender getMailSender(){
+    public JavaMailSender getMailSender() {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
 
         mailSender.setHost(host);
@@ -39,15 +39,15 @@ public class MailConfig {
         mailSender.setPassword(password);
 
         Properties properties = mailSender.getJavaMailProperties();
-        properties.put("mail.transport.protocol", "smtp");;
+        properties.put("mail.transport.protocol", protocol);
+        ;
         properties.put("mail.debug", true);
         properties.setProperty("mail.smtp.auth", "true");
-//        properties.setProperty("spring.mail.properties.mail.smtp.ssl.trust", "smtp.gmail.com");
-        properties.put("mail.smtp.starttls.enable","true");
+        properties.put("mail.smtp.starttls.enable", "true");
         properties.put("mail.smtp.auth", "true");
         properties.put("mail.smtps.ssl.checkserveridentity", "true");
         properties.put("mail.smtps.ssl.trust", "*");
-        properties.put("mail.smtp.ssl.enable", "true");
+        properties.put("mail.smtp.ssl.enable", enable);
         return mailSender;
     }
 }
