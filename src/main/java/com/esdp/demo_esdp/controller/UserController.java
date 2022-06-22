@@ -61,7 +61,7 @@ public class UserController {
                                BindingResult validationResult,
                                RedirectAttributes attributes) {
         attributes.addFlashAttribute("dto", userRequestDto);
-
+        attributes.addFlashAttribute("message", "Необходимо активировать пользователя, проверьте почту");
         if (validationResult.hasFieldErrors()) {
             attributes.addFlashAttribute("errors", validationResult.getFieldErrors());
             return "redirect:/register";
