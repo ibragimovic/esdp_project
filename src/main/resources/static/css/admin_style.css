@@ -568,3 +568,48 @@ body {
     margin-left: 4px;
 }
 
+/* product
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+.box {
+    flex-basis: 256px;
+    height: 256px;
+}
+
+.box-128 {
+    flex-basis: 128px;
+    height: 128px;
+}
+
+.product-icon {
+    width: 300px;
+
+}
+
+.img {
+    display: inline-block;
+}
+
+.product {
+    padding-left: 20px;
+    width: 45%;
+    display: inline-block;
+    vertical-align: top;
+    height: 250px;
+}
+
+.product-img {
+    width: 300px;
+}
+
+
+.btnLink {
+    display: inline-block;
+    background-color: royalblue;
+    color: #ffffff;
+    border-radius: 5px;
+    text-align: center;
+    margin-top: 2px;
+    padding: 5px 15px;
+    margin-bottom: 40px;
+    text-decoration: none
+}
