@@ -2,7 +2,6 @@ package com.esdp.demo_esdp.service;
 
 import com.esdp.demo_esdp.dto.ProductAddForm;
 import com.esdp.demo_esdp.dto.ProductDTO;
-import com.esdp.demo_esdp.entity.Favorites;
 import com.esdp.demo_esdp.entity.Product;
 import com.esdp.demo_esdp.entity.User;
 import com.esdp.demo_esdp.enums.ProductStatus;
@@ -16,6 +15,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -45,7 +46,7 @@ public class ProductService {
     }
 
     public Page<ProductDTO> getProducts(Pageable pageable) {
-        return productRepository.getProducts(ProductStatus.ACCEPTED.name(), pageable)
+        return productRepository.getProducts(ProductStatus.ACCEPTED, pageable)
                 .map(ProductDTO::from);
     }
 
@@ -90,5 +91,19 @@ public class ProductService {
         return productRepository.findById(productId).orElseThrow(
                 () -> new ResourceNotFoundException(String.format("product with id %s was not found", productId))
         );
+    }
+
+    public List<ProductDTO> getProductsAll (){
+        return productRepository.findAll()
+                .stream().map(ProductDTO::from).collect(Collectors.toList());
+    }
+
+    public void deleteProductId(Long id){
+        productRepository.deleteById(id);
+    }
+
+
+    public void updateProductStatusId(String status,Long id){
+        productRepository.updateProductStatus(status,id);
     }
 }
