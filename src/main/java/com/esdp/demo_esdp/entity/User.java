@@ -44,7 +44,6 @@ public class User {
     @Size(min = 8)
     private String password;
 
-    private String path;
 
     @Column
     @Builder.Default
