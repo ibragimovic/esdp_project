@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -31,4 +32,7 @@ public interface UserRepository extends JpaRepository<User,Long> {
                         @Param("telNumber") String telNumber,
                         @Param("login") String login,
                         @Param("id") Long id);
+
+    @Query("select u from User u where u.role <> :role ")
+    List<User> getUsers(@Param("role") String role);
 }
