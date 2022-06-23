@@ -121,7 +121,7 @@
                     <h3>Admin</h3>
                 </li>
                 <li>
-                    <a href="#0">
+                    <a href="/admin">
                         <svg>
                             <use xlink:href="#pages"></use>
                         </svg>
