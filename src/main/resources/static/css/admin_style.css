@@ -613,3 +613,11 @@ body {
     margin-bottom: 40px;
     text-decoration: none
 }
+
+
+.status {
+    margin-top: -250px;
+    padding-left: 900px;
+    display: inline-block;
+    vertical-align: top;
+}
