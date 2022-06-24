@@ -14,6 +14,7 @@ public class UserResponseDTO {
     private String login;
     private String email;
     private String telNumber;
+    private boolean enabled;
 
     public static UserResponseDTO from(User user) {
         return builder()
@@ -23,6 +24,7 @@ public class UserResponseDTO {
                 .login(user.getLogin())
                 .email(user.getEmail())
                 .telNumber(user.getTelNumber())
+                .enabled(user.isEnabled())
                 .build();
     }
 }
