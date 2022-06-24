@@ -66,7 +66,12 @@ public class UserService {
                 .stream().map(UserResponseDTO::from).collect(Collectors.toList());
     }
 
-    public void deleteUser(Long id){
-        userRepository.deleteById(id);
+    public void blockingUser(Long id) {
+        var user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
+        if (user.isEnabled()) {
+            userRepository.updateEnabledUser(false, user.getId());
+        } else {
+            userRepository.updateEnabledUser(true, user.getId());
+        }
     }
 }
