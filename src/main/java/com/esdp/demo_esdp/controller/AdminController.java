@@ -31,18 +31,12 @@ public class AdminController {
     }
 
 
-    @PostMapping("/user-delete")
+    @PostMapping("/user-blocking")
     public String deleteUserId(Long id){
-        userService.deleteUser(id);
+        userService.blockingUser(id);
         return "redirect:/admin/users";
     }
 
-
-    @PostMapping("/product-delete")
-    public String deleteProductId(Long id){
-        productService.deleteProductId(id);
-        return "redirect:/admin";
-    }
 
 
     @PostMapping("/product-update-status")
