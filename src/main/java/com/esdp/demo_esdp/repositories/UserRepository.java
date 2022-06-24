@@ -35,4 +35,9 @@ public interface UserRepository extends JpaRepository<User,Long> {
 
     @Query("select u from User u where u.role <> :role ")
     List<User> getUsers(@Param("role") String role);
+
+    @Transactional
+    @Modifying
+    @Query(value = "update users  set enabled = :enabled where id = :id", nativeQuery = true)
+    void updateEnabledUser(@Param("enabled") Boolean enabled, @Param("id") Long id);
 }
