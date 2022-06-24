@@ -54,10 +54,8 @@ public class ProductController {
 
     @PostMapping("/product/delete")
     public String deleteProductById(@RequestParam("productId") Long productId,
-                                    Authentication authentication) {
-        User user = (User) authentication.getPrincipal();
-        productService.deleteProductById(productId, user);
-        return "redirect:/product";
+                                    Principal principal) {
+        return "redirect:/" + productService.deleteProductById(productId, principal.getName());
     }
 
     @GetMapping("/product/search-category")
