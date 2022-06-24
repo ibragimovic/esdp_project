@@ -15,15 +15,21 @@
                     <h5>Фамилия:${user.lastname}</h5>
                     <h5>${user.telNumber}</h5>
                     <div style="padding-top: 35px; margin-bottom: 20px">
-                        <form method="post" action="/admin/user-delete">
+                        <form method="post" action="/admin/user-blocking">
                             <#if _csrf??>
                                 <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
                                        value="${(_csrf.token)!'--no-token--'}"/>
                             </#if>
                             <input type="hidden" name="id" value="${user.id}">
-                            <button class="btn btn-danger"
-                                    style="width:200px; margin-right: 10px; margin-bottom: 20px ">Удалить пользователя
-                            </button>
+                            <#if user.enabled != false>
+                                <button class="btn btn-danger"
+                                        style="width:200px; margin-right: 10px; margin-bottom: 20px ">Заблокировать
+                                </button>
+                                <#else>
+                                    <button class="btn btn-success"
+                                            style="width:200px; margin-right: 10px; margin-bottom: 20px ">Разблокировать
+                                    </button>
+                                </#if>
                         </form>
                     </div>
                 </div>
