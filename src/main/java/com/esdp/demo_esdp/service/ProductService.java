@@ -2,13 +2,14 @@ package com.esdp.demo_esdp.service;
 
 import com.esdp.demo_esdp.dto.ProductAddForm;
 import com.esdp.demo_esdp.dto.ProductDTO;
-import com.esdp.demo_esdp.entity.Favorites;
 import com.esdp.demo_esdp.entity.Product;
 import com.esdp.demo_esdp.entity.User;
 import com.esdp.demo_esdp.enums.ProductStatus;
 import com.esdp.demo_esdp.exception.ResourceNotFoundException;
+import com.esdp.demo_esdp.exception.UserNotFoundException;
 import com.esdp.demo_esdp.repositories.CategoryRepository;
 import com.esdp.demo_esdp.repositories.ProductRepository;
+import com.esdp.demo_esdp.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -16,6 +17,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +27,7 @@ public class ProductService {
     private final CategoryRepository categoryRepository;
     private final ImagesService imagesService;
     private final FavoritesService favoritesService;
+    private final UserRepository userRepository;
 
     @Value("${upload.path}")
     private String uploadPath;
@@ -45,7 +49,7 @@ public class ProductService {
     }
 
     public Page<ProductDTO> getProducts(Pageable pageable) {
-        return productRepository.getProducts(ProductStatus.ACCEPTED.name(), pageable)
+        return productRepository.getProducts(ProductStatus.ACCEPTED, pageable)
                 .map(ProductDTO::from);
     }
 
@@ -75,7 +79,8 @@ public class ProductService {
     }
 
 
-    public void deleteProductById(Long productId, User user) {
+    public String deleteProductById(Long productId, String email) {
+        var user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
         if (user.getEmail().equals(productRepository.getPublicationUserEmail(productId))
                 || user.getRole().equals("Admin")) {
             imagesService.deleteImagesFile(productId);
@@ -84,11 +89,23 @@ public class ProductService {
         } else {
             throw new ResourceNotFoundException();
         }
+        if (user.getRole().equals("Admin")) return "admin";
+        return "profile";
     }
 
     protected Product findProductById(Long productId) throws ResourceNotFoundException {
         return productRepository.findById(productId).orElseThrow(
                 () -> new ResourceNotFoundException(String.format("product with id %s was not found", productId))
         );
+    }
+
+    public List<ProductDTO> getProductsAll (){
+        return productRepository.findAll()
+                .stream().map(ProductDTO::from).collect(Collectors.toList());
+    }
+
+
+    public void updateProductStatusId(String status,Long id){
+        productRepository.updateProductStatus(status,id);
     }
 }
