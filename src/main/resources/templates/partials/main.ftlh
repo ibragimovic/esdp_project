@@ -16,6 +16,7 @@
         <#list styles as styleSource>
             <link rel="stylesheet" href="${styleSource}">
         </#list>
+        <script src="//code.jivosite.com/widget/ZK2dXhprrI" async></script>
     </head>
     <body>
 
@@ -50,7 +51,7 @@
                         <#if _csrf??>
                             <input type="hidden" name="${(_csrf.parameterName)!'csrf'}" value="${(_csrf.token)!'--no-token--'}"/>
                         </#if>
-                        <input type="submit" value="Выйти" class="btn btn-secondary">
+                        <input type="submit" value="Выйти" class="btn btn-secondary" id="logOut">
                     </form>
                 </@security.authorize>
             </div>
@@ -71,6 +72,18 @@
     <#list scripts as scriptSource>
         <script src="${scriptSource}"></script>
     </#list>
+
+    <script>
+        const inButton = document.getElementById("logOut")
+        inButton.addEventListener("click", function () {
+            var isExit = confirm("Вы действительно хотите выйти из профиля?");
+            if (isExit){
+                alert( "Вы вышли из профиля" );
+            }else {
+                alert( "Вы остались в профиле" );
+            }
+        })
+    </script>
 
     </body>
     </html>

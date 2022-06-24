@@ -10,5 +10,6 @@ create table users
     email    varchar   not null,
     password varchar   not null,
     enabled boolean NOT NULL default true,
-    role varchar(16) NOT NULL default 'USER'
+    role varchar(16) NOT NULL default 'USER',
+    activation_code varchar
 );

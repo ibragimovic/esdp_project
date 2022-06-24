@@ -33,6 +33,8 @@ public interface UserRepository extends JpaRepository<User,Long> {
                         @Param("login") String login,
                         @Param("id") Long id);
 
+    User findByActivationCode(String code);
+
     @Query("select u from User u where u.role <> :role ")
     List<User> getUsers(@Param("role") String role);
 
