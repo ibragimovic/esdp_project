@@ -8,13 +8,16 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 
     Page<Category> findCategoriesByParentNull(Pageable pageable);
+    List<Category> findCategoriesByParentNull();
 
     Page<Category> findCategoriesByParentId(Long id, Pageable pageable);
+    List<Category> findCategoriesByParentId(Long id);
 
     @Query("select c from Category c where c.id = :id ")
     Optional<Category> getCategory(@Param("id") Long id);
