@@ -11,13 +11,13 @@ public class CategoryDTO {
 
     private Long id;
     private String name;
-    private Category parent_id;
+    private Category parent;
 
     public static CategoryDTO from(Category category){
         return builder()
                 .id(category.getId())
                 .name(category.getName())
-                .parent_id(category.getParent())
+                .parent(category.getParent())
                 .build();
     }
 }
