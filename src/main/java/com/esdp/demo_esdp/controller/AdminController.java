@@ -1,13 +1,12 @@
 package com.esdp.demo_esdp.controller;
 
+import com.esdp.demo_esdp.exception.ProductNotFoundException;
 import com.esdp.demo_esdp.service.ProductService;
 import com.esdp.demo_esdp.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/admin")
@@ -43,5 +42,12 @@ public class AdminController {
     public String updateStatusProduct(String status ,Long id){
         productService.updateProductStatusId(status, id);
         return "redirect:/admin";
+    }
+
+    @PostMapping("/product_add_top")
+    public String addProductToTop(@RequestParam Long id) throws ProductNotFoundException {
+        productService.addProductToTop(id);
+        return "redirect:/admin";
+
     }
 }
