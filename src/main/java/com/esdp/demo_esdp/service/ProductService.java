@@ -34,17 +34,17 @@ public class ProductService {
 
 
     public Page<ProductDTO> getProductName(String name, Pageable pageable) {
-        return productRepository.getProductName(name.toLowerCase(), ProductStatus.ACCEPTED.name(), pageable)
+        return productRepository.getProductName(name.toLowerCase(), ProductStatus.ACCEPTED, pageable)
                 .map(ProductDTO::from);
     }
 
     public Page<ProductDTO> getProductCategory(String category, Pageable pageable) {
-        return productRepository.getProductName(category.toLowerCase(), ProductStatus.ACCEPTED.name(), pageable)
+        return productRepository.getProductName(category.toLowerCase(), ProductStatus.ACCEPTED, pageable)
                 .map(ProductDTO::from);
     }
 
     public Page<ProductDTO> getProductPrice(Integer from, Integer before, Pageable pageable) {
-        return productRepository.getProductPrice(from, before, ProductStatus.ACCEPTED.name(), pageable)
+        return productRepository.getProductPrice(from, before, ProductStatus.ACCEPTED, pageable)
                 .map(ProductDTO::from);
     }
 
@@ -75,7 +75,7 @@ public class ProductService {
                 .dateAdd(LocalDateTime.now())
                 .build();
         productRepository.save(product);
-        imagesService.saveImagesFile(productAddForm.getImages(),product);
+        imagesService.saveImagesFile(productAddForm.getImages(), product);
     }
 
 
@@ -99,13 +99,38 @@ public class ProductService {
         );
     }
 
-    public List<ProductDTO> getProductsAll (){
+    public List<ProductDTO> getProductsAll() {
         return productRepository.findAll()
                 .stream().map(ProductDTO::from).collect(Collectors.toList());
     }
 
 
-    public void updateProductStatusId(String status,Long id){
-        productRepository.updateProductStatus(status,id);
+    public void updateProductStatusId(String status, Long id) {
+        productRepository.updateProductStatus(status, id);
+    }
+
+
+    public List<ProductDTO> getProductsUser(String email) {
+        return productRepository.getProductsUser(email)
+                .stream().map(ProductDTO::from).collect(Collectors.toList());
+    }
+
+    public List<ProductDTO> getProductsStatus(String status) {
+        if (status.equals(ProductStatus.ACCEPTED.name())) {
+            return productRepository.getProductsStatus(ProductStatus.ACCEPTED)
+                    .stream().map(ProductDTO::from).collect(Collectors.toList());
+        } else if (status.equals(ProductStatus.MODERNIZATION.name())) {
+            return productRepository.getProductsStatus(ProductStatus.MODERNIZATION)
+                    .stream().map(ProductDTO::from).collect(Collectors.toList());
+        } else if (status.equals(ProductStatus.DECLINED.name())) {
+            return productRepository.getProductsStatus(ProductStatus.DECLINED)
+                    .stream().map(ProductDTO::from).collect(Collectors.toList());
+        }
+        throw new ResourceNotFoundException();
+    }
+
+    public List<ProductDTO> getProductsName(String name) {
+        return productRepository.getProductsName(name.toLowerCase())
+                .stream().map(ProductDTO::from).collect(Collectors.toList());
     }
 }
