@@ -11,31 +11,30 @@ import java.util.List;
 @Builder
 public class ProductAddForm {
     @NotNull
-    @Size(min=4, max=35, message = "Length must be >= 4 and <= 24")
-    @Pattern(regexp = "^[^\\d\\s]+$", message = "Should contain only letters")
+//    @Size(min=4, max=35, message = "Length must be >= 4 and <= 24")
+//    @Pattern(regexp = "^[^\\d\\s]+$", message = "Should contain only letters")
     private String name;
 
     @NotNull
     @Positive
     private Long categoryId;
 
+//    @NotNull
+//    @Positive
+//    private Long userId;
 
     @NotNull
-    @Positive
-    private Long userId;
-
-
-    @NotNull
-    @Size(min=4, max=128, message = "Length must be >= 4 and <= 24")
-    @Pattern(regexp = "^[^\\d\\s]+$", message = "Should contain only letters")
+//    @Size(min=4, max=128, message = "Length must be >= 4 and <= 24")
+//    @Pattern(regexp = "^[^\\d\\s]+$", message = "Should contain only letters")
     private String description;
 
     @NotNull
     @Positive
     private Integer price;
 
-
     @NotBlank
     @NotNull
     private List<MultipartFile> images;
+
+    private String locality;
 }
