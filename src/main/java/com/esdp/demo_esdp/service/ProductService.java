@@ -5,6 +5,7 @@ import com.esdp.demo_esdp.dto.ProductDTO;
 import com.esdp.demo_esdp.entity.Product;
 import com.esdp.demo_esdp.entity.User;
 import com.esdp.demo_esdp.enums.ProductStatus;
+import com.esdp.demo_esdp.exception.ProductNotFoundException;
 import com.esdp.demo_esdp.exception.ResourceNotFoundException;
 import com.esdp.demo_esdp.exception.UserNotFoundException;
 import com.esdp.demo_esdp.repositories.CategoryRepository;
@@ -107,5 +108,11 @@ public class ProductService {
 
     public void updateProductStatusId(String status,Long id){
         productRepository.updateProductStatus(status,id);
+    }
+
+    public void addProductToTop(Long productId) throws ProductNotFoundException {
+        var product = productRepository.findById(productId).orElseThrow(()->new ProductNotFoundException("Не найден продукт с id",productId.toString()));
+        product.setDateAdd(LocalDateTime.now());
+        productRepository.save(product);
     }
 }
