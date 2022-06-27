@@ -30,10 +30,12 @@
                     <h5>Категория: ${product.category.name}</h5>
                 </div>
                 <div class="status">
+
+
                     <h5>Статус: ${product.status}</h5>
                     <form method="post" action="/admin/product-update-status">
 
-                        <select name="status" id="status"style="margin-bottom: 50px; margin-right: 25px;">
+                        <select name="status" id="status" style="margin-bottom: 50px; margin-right: 25px;">
                             <option value="ACCEPTED">ACCEPTED</option>
                             <option value="DECLINED">DECLINED</option>
                             <option hidden>*********************</option>
@@ -53,6 +55,15 @@
                         </#if>
                         <input type="hidden" name="productId" value="${product.id}">
                         <button class="btn btn-danger" style="width:170px;">Удалить</button>
+                    </form>
+
+                    <form action="/admin/product_add_top" method="post">
+                        <#if _csrf??>
+                            <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
+                                   value="${(_csrf.token)!'--no-token--'}"/>
+                        </#if>
+                        <input type="hidden" name="id" value="${product.id}">
+                        <button type="submit" class="btn btn-success" style="width:170px; margin-top: 55px">Добавить в топ</button>
                     </form>
                 </div>
             </div>
