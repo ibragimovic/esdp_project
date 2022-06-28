@@ -9,6 +9,8 @@ import com.esdp.demo_esdp.service.UserService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -98,6 +100,17 @@ public class ProductController {
             propertiesService.fillPaginationDataModel(products, propertiesService.getDefaultPageSize(), model, uri);
             return "index";
         }
+    }
+
+
+    @GetMapping("/")
+    public String getTopProducts(Model model,@PageableDefault(sort = "endOfPayment", direction = Sort.Direction.DESC)Pageable page){
+        var topProducts = productService.getTopProduct(page);
+        var products = productService.getProductsToMainPage(page);
+        model.addAttribute("top_products",topProducts.getContent());
+        model.addAttribute("products",products.getContent());
+        return "index";
+
     }
 
 }

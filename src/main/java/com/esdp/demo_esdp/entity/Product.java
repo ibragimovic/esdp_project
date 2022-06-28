@@ -56,7 +56,7 @@ public class Product {
     private LocalDateTime dateAdd;
 
 
-    @Past
+
     @NotNull
     @Column(name = " end_of_payment")
     private LocalDateTime endOfPayment;
