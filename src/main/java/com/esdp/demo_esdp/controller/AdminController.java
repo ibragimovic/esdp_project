@@ -45,8 +45,8 @@ public class AdminController {
     }
 
     @PostMapping("/product_add_top")
-    public String addProductToTop(@RequestParam Long id) throws ProductNotFoundException {
-        productService.addProductToTop(id);
+    public String addProductToTop(@RequestParam Long id,@RequestParam Integer hour) throws ProductNotFoundException {
+        productService.addProductToTop(id,hour);
         return "redirect:/admin";
 
     }

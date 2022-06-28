@@ -3,44 +3,45 @@
 
 <#-- обрабатываем его, и передаём ему список скриптов, которые необходимо подключить-->
 <@main.renderWith>
-    <div class="jumbotron jumbotron-fluid">
-      <div class="container">
-        <h1 class="display-4">Arenda.KG</h1>
-        <p class="lead">Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...</p>
-      </div>
-    </div>
-    <div class="d-flex justify-content-between flex-wrap">
-        <div class="card mb-2" style="width: 18rem;">
-          <img class="card-img-top" src="https://via.placeholder.com/120x80.png" alt="Card image cap">
-          <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
-          </div>
-        </div>
-        <div class="card mb-2" style="width: 18rem;">
-          <img class="card-img-top" src="https://via.placeholder.com/120x80.png" alt="Card image cap">
-          <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
-          </div>
-        </div>
-        <div class="card mb-2" style="width: 18rem;">
-          <img class="card-img-top" src="https://via.placeholder.com/120x80.png" alt="Card image cap">
-          <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
-          </div>
-        </div>
-        <div class="card mb-2" style="width: 18rem;">
-          <img class="card-img-top" src="https://via.placeholder.com/120x80.png" alt="Card image cap">
-          <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
-          </div>
-        </div>
-    </div>
+    <#if top_products??>
+
+        <#list top_products as product>
+            <h2>Топ публикаций</h2>
+            <div class="flex flex-column box flex-v-center">
+            <a href="/product/${product.id}">
+                <div class="img flex flex-column flex-v-center box-128">
+                    <img class="product-icon" src="https://via.placeholder.com/120x80.png">
+                </div>
+            </a>
+            <div class="product">
+                <h3><a href="/product/${product.id}">
+                        ${product.name}
+                    </a></h3>
+                <h4>Объявление добавил: ${product.user.email}</h4>
+                <h5>Цена: ${product.price} сом</h5>
+                <h5>Категория: ${product.category.name}</h5>
+                <h5>В топе до: ${product.endOfPayment}</h5>
+            </div>
+        </#list>
+        <h2>Остальные публикации</h2>
+        <#list products as product>
+            <div class="flex flex-column box flex-v-center">
+            <a href="/product/${product.id}">
+                <div class="img flex flex-column flex-v-center box-128">
+                    <img class="product-icon" src="https://via.placeholder.com/120x80.png">
+                </div>
+            </a>
+            <div class="product">
+                <h3><a href="/product/${product.id}">
+                        ${product.name}
+                    </a></h3>
+                <h4>Объявление добавил: ${product.user.email}</h4>
+                <h5>Цена: ${product.price} сом</h5>
+                <h5>Категория: ${product.category.name}</h5>
+                <h5>Оплачено до: ${product.endOfPayment}</h5>
+            </div>
+        </#list>
+        <#else>
+
+    </#if>
 </@main.renderWith>

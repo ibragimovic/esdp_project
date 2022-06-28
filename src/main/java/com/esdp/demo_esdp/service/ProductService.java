@@ -110,9 +110,25 @@ public class ProductService {
         productRepository.updateProductStatus(status,id);
     }
 
-    public void addProductToTop(Long productId) throws ProductNotFoundException {
+    public void addProductToTop(Long productId,Integer hour) throws ProductNotFoundException {
         var product = productRepository.findById(productId).orElseThrow(()->new ProductNotFoundException("Не найден продукт с id",productId.toString()));
-        product.setDateAdd(LocalDateTime.now());
-        productRepository.save(product);
+        if (product.getEndOfPayment().isAfter(LocalDateTime.now())){
+            product.setEndOfPayment(product.getEndOfPayment().plusHours(hour));
+            productRepository.save(product);
+        }else if (product.getEndOfPayment().isBefore(LocalDateTime.now())) {
+            product.setEndOfPayment(LocalDateTime.now().plusHours(hour));
+            productRepository.save(product);
+        }
+    }
+
+    public Page<ProductDTO> getTopProduct(Pageable pageable){
+        var products = productRepository.findTopProduct(ProductStatus.ACCEPTED,pageable);
+        return products.map(ProductDTO::from);
+
+    }
+
+    public Page<ProductDTO> getProductsToMainPage(Pageable pageable) {
+        return productRepository.getProductsToMainPage(ProductStatus.ACCEPTED, pageable)
+                .map(ProductDTO::from);
     }
 }

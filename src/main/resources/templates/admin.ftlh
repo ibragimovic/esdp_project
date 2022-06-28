@@ -31,7 +31,6 @@
                 </div>
                 <div class="status">
 
-
                     <h5>Статус: ${product.status}</h5>
                     <form method="post" action="/admin/product-update-status">
 
@@ -56,17 +55,29 @@
                         <input type="hidden" name="productId" value="${product.id}">
                         <button class="btn btn-danger" style="width:170px;">Удалить</button>
                     </form>
+                </div>
 
+<div class="status" style="display: inline">
                     <form action="/admin/product_add_top" method="post">
                         <#if _csrf??>
                             <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
                                    value="${(_csrf.token)!'--no-token--'}"/>
                         </#if>
                         <input type="hidden" name="id" value="${product.id}">
-                        <button type="submit" class="btn btn-success" style="width:170px; margin-top: 55px">Добавить в топ</button>
+                        <div class="form-group" style="margin-top: 10px">
+                            <div style="margin-top: -100px">
+                            <select class="form-control" name="hour" id="hour" style="width: 150px">
+                                <option  selected value="24">на 24 часа</option>
+                                <option value="48">на 48 часов</option>
+                                <option value="72">на 72 часа</option>
+                            </select>
+                            </div>
+                            <button type="submit" class="btn btn-success" style="width:140px; margin-right: 770px">Добавить в топ</button>
+                        </div>
                     </form>
                 </div>
             </div>
+            <br>
         </#list>
     </div>
 
