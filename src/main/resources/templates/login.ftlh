@@ -7,6 +7,8 @@
             <div>
                 <#if error!false >
                     <p style="color:red">Неверные имя пользователя или пароль !</p>
+<#--                    <else if activation_code!=null>-->
+<#--                        <p style="color:red">Необходимо активировать пользователя через почту !</p>-->
                 </#if>
             </div>
 
