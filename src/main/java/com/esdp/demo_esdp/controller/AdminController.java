@@ -23,6 +23,7 @@ public class AdminController {
 
     @GetMapping()
     public String getAdmin(Model model) {
+        model.addAttribute("users", userService.getUsers());
         model.addAttribute("products", productService.getProductsAll());
         return "admin";
     }
@@ -51,6 +52,7 @@ public class AdminController {
 
     @GetMapping("/product/search-name")
     public String getProductName(@RequestParam @NotBlank String name, Model model, Pageable pageable) {
+        model.addAttribute("users", userService.getUsers());
         var products = productService.getProductName(name, pageable);
         if (products.isEmpty()) {
             return "error404";
@@ -62,8 +64,9 @@ public class AdminController {
 
 
     @GetMapping("/products/search-user")
-    public String getProductUser(@RequestParam @NotBlank String name, Model model, Pageable pageable) {
-        var products = productService.getProductsUser(name);
+    public String getProductUser(String user_name, Model model, Pageable pageable) {
+        model.addAttribute("users", userService.getUsers());
+        var products = productService.getProductsUser(user_name);
         if (products.isEmpty()) {
             return "error404";
         } else {
@@ -74,7 +77,8 @@ public class AdminController {
 
 
     @GetMapping("/products/search-status")
-    public String getProductsStatus(@RequestParam @NotBlank String status, Model model) {
+    public String getProductsStatus(String status, Model model) {
+        model.addAttribute("users", userService.getUsers());
         var products = productService.getProductsStatus(status);
         if (products.isEmpty()) {
             return "error404";
