@@ -59,4 +59,23 @@ public class CategoryService {
         }
         return hierarchicalDTOList;
     }
+
+    public List<HierarchicalCategoryDTO> getHierarchicalCategories() {
+        List<HierarchicalCategoryDTO> hierarchicalDTOList = categoryRepository.findCategoriesByParentNull()
+                .stream().map(HierarchicalCategoryDTO::from).collect(Collectors.toList());
+        for(HierarchicalCategoryDTO firstLevelCategory: hierarchicalDTOList) {
+            List<HierarchicalCategoryDTO> secondLevelHierarchicalDTOList = categoryRepository
+                    .findCategoriesByParentId(firstLevelCategory.getId())
+                    .stream().map(HierarchicalCategoryDTO::from).collect(Collectors.toList());
+            firstLevelCategory.setSubCategories(secondLevelHierarchicalDTOList);
+            for(HierarchicalCategoryDTO secondLevelCategory: secondLevelHierarchicalDTOList) {
+                List<HierarchicalCategoryDTO> thirdLevelHierarchicalDTOList = categoryRepository
+                        .findCategoriesByParentId(secondLevelCategory.getId()).stream()
+                        .map(HierarchicalCategoryDTO::from).collect(Collectors.toList());
+                secondLevelCategory.setSubCategories(thirdLevelHierarchicalDTOList);
+            }
+        }
+        return hierarchicalDTOList;
+    }
+
 }
