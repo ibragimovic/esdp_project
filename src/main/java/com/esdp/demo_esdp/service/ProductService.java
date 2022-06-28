@@ -5,6 +5,7 @@ import com.esdp.demo_esdp.dto.ProductDTO;
 import com.esdp.demo_esdp.entity.Product;
 import com.esdp.demo_esdp.entity.User;
 import com.esdp.demo_esdp.enums.ProductStatus;
+import com.esdp.demo_esdp.exception.ProductNotFoundException;
 import com.esdp.demo_esdp.exception.ResourceNotFoundException;
 import com.esdp.demo_esdp.exception.UserNotFoundException;
 import com.esdp.demo_esdp.repositories.CategoryRepository;
@@ -132,5 +133,27 @@ public class ProductService {
     public List<ProductDTO> getProductsName(String name) {
         return productRepository.getProductsName(name.toLowerCase())
                 .stream().map(ProductDTO::from).collect(Collectors.toList());
+    }
+
+    public void addProductToTop(Long productId,Integer hour) throws ProductNotFoundException {
+        var product = productRepository.findById(productId).orElseThrow(()->new ProductNotFoundException("Не найден продукт с id",productId.toString()));
+        if (product.getEndOfPayment().isAfter(LocalDateTime.now())){
+            product.setEndOfPayment(product.getEndOfPayment().plusHours(hour));
+            productRepository.save(product);
+        }else if (product.getEndOfPayment().isBefore(LocalDateTime.now())) {
+            product.setEndOfPayment(LocalDateTime.now().plusHours(hour));
+            productRepository.save(product);
+        }
+    }
+
+    public Page<ProductDTO> getTopProduct(Pageable pageable){
+        var products = productRepository.findTopProduct(ProductStatus.ACCEPTED,pageable);
+        return products.map(ProductDTO::from);
+
+    }
+
+    public Page<ProductDTO> getProductsToMainPage(Pageable pageable) {
+        return productRepository.getProductsToMainPage(ProductStatus.ACCEPTED, pageable)
+                .map(ProductDTO::from);
     }
 }

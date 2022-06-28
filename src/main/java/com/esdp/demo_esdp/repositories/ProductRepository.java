@@ -54,4 +54,11 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query("select p from Product p where lower(p.name) like  %:name%")
     List<Product> getProductsName(@Param("name") String name);
+
+    @Query("select p from Product p where p.endOfPayment>=current_timestamp and p.status = :status")
+    Page<Product> findTopProduct(@Param("status") ProductStatus status,Pageable pageable);
+
+    @Query("select p from Product p where p.status = :status and p.endOfPayment <= current_timestamp order by p.dateAdd")
+    Page<Product> getProductsToMainPage(@Param("status") ProductStatus status, Pageable pageable);
+
 }

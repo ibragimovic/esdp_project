@@ -46,7 +46,7 @@ public class UserService {
                 user.getName() + " " + user.getLastname(), user.getActivationCode()
         );
 
-        mailSender.send(user.getEmail(),"Activation code", message);
+//        mailSender.send(user.getEmail(),"Activation code", message);
 
         return UserResponseDTO.from(user);
     }

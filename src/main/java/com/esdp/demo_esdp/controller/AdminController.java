@@ -1,5 +1,6 @@
 package com.esdp.demo_esdp.controller;
 
+import com.esdp.demo_esdp.exception.ProductNotFoundException;
 import com.esdp.demo_esdp.service.ProductService;
 import com.esdp.demo_esdp.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -47,6 +48,13 @@ public class AdminController {
     public String updateStatusProduct(String status, Long id) {
         productService.updateProductStatusId(status, id);
         return "redirect:/admin";
+    }
+
+    @PostMapping("/product_add_top")
+    public String addProductToTop(@RequestParam Long id,@RequestParam Integer hour) throws ProductNotFoundException {
+        productService.addProductToTop(id,hour);
+        return "redirect:/admin";
+
     }
 
 

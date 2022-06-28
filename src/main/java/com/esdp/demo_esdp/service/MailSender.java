@@ -7,10 +7,9 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
-import javax.mail.SendFailedException;
-
 @Service
 public class MailSender{
+
     @Autowired
     private JavaMailSender mailSender;
 
