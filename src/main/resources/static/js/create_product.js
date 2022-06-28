@@ -80,44 +80,69 @@ function onExpandableTextareaInput({ target:elm }){
 }
 
 
+
 const newProductForm=document.getElementById("newProductForm");
 let images=document.getElementById("file-input");
 
-function handleCreateProductForm(e){
-    e.preventDefault();
-    let form=e.target;
-    let data=new FormData(form);
-    let newProductData={
-        name:data.get("time"),
-        categoryId:data.get("categoryId"),
-        description:data.get("description"),
-        price:data.get("price"),
-        locality:data.get("locality")
+// function handleCreateProductForm(e){
+//     e.preventDefault();
+//     let form=e.target;
+//     let data=new FormData(form);
+//
+//     let uploadedImages=[];
+//     for (const file of images.files) {
+//         uploadedImages.push(file);
+//     }
+//
+//     let newProductData={
+//         name:data.get("name"),
+//         categoryId:parseInt(data.get("categoryId")),
+//         description:data.get("description"),
+//         price:parseInt(data.get("price")),
+//         locality:data.get("locality")
+//     }
+//
+//     formData = new FormData();
+//
+//     formData.append("files", uploadedImages);
+//     formData.append('properties', new Blob([JSON.stringify(newProductData)], {
+//         type: "application/json"
+//     }));
+//
+//
+//     const csrfToken = document.cookie.replace(/(?:(?:^|.*;\s*)XSRF-TOKEN\s*\=\s*([^;]*).*$)|^.*$/, '$1');
+//
+//     fetch("/product/create", {
+//         method:"POST",
+//         headers: {
+//             'Content-Type': false,
+//             'X-XSRF-TOKEN': csrfToken
+//         },
+//         data: formData
+//     })
+// }
+
+var current_fs, next_fs, previous_fs; //fieldsets
+var opacity;
+var current = 1;
+var steps = $("fieldset").length;
+
+function showLastStep(){
+    $("fieldset").hide()
+    setProgressBar(4)
+
+    $("#lastFs").show()
+
+    for(let i=0;i<steps;i++){
+        $("#progressbar li").eq(i).addClass("active");
     }
-
-    for (const file of images.files) {
-        newProductData.append("images", file);
-    }
-
-    fetch("/product/create", {
-        method:"POST",
-        body:JSON.stringify(newProductData),
-        headers: {
-            "Content-Type": "application/json"
-        }
-    })
-
 }
 
 
 $(document).ready(function () {
+    
 
     alertBox.hide();
-
-    var current_fs, next_fs, previous_fs; //fieldsets
-    var opacity;
-    var current = 1;
-    var steps = $("fieldset").length; 
 
     setProgressBar(current);
 
@@ -198,12 +223,7 @@ $(document).ready(function () {
         setProgressBar(--current);
     });
 
-    function setProgressBar(curStep) {
-        var percent = parseFloat(100 / steps) * curStep;
-        percent = percent.toFixed();
-        $(".progress-bar")
-            .css("width", percent + "%")
-    }
+
 
     $(".submit").click(function () {
         return false;
@@ -213,9 +233,16 @@ $(document).ready(function () {
         t.addEventListener('input', onExpandableTextareaInput)
     }
 
-    newProductForm.addEventListener('submit', handleCreateProductForm)
+    // newProductForm.addEventListener('submit', handleCreateProductForm)
 
 
 });
+
+function setProgressBar(curStep) {
+    var percent = parseFloat(100 / steps) * curStep;
+    percent = percent.toFixed();
+    $(".progress-bar")
+        .css("width", percent + "%")
+}
 
 

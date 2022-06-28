@@ -2,6 +2,7 @@ package com.esdp.demo_esdp.service;
 
 import com.esdp.demo_esdp.dto.ProductAddForm;
 import com.esdp.demo_esdp.dto.ProductDTO;
+import com.esdp.demo_esdp.entity.Category;
 import com.esdp.demo_esdp.entity.Favorites;
 import com.esdp.demo_esdp.entity.Product;
 import com.esdp.demo_esdp.entity.User;
@@ -9,6 +10,7 @@ import com.esdp.demo_esdp.enums.ProductStatus;
 import com.esdp.demo_esdp.exception.ResourceNotFoundException;
 import com.esdp.demo_esdp.repositories.CategoryRepository;
 import com.esdp.demo_esdp.repositories.ProductRepository;
+import com.esdp.demo_esdp.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -59,9 +61,10 @@ public class ProductService {
 
 
     public void addNewProduct(ProductAddForm productAddForm, User user) {
-        var category = categoryRepository.getCategory(productAddForm.getCategoryId())
+        Category category = categoryRepository.getCategory(productAddForm.getCategoryId())
                 .orElseThrow(ResourceNotFoundException::new);
-        var product = Product.builder()
+
+        Product product = Product.builder()
                 .name(productAddForm.getName())
                 .category(category)
                 .user(user)
@@ -69,6 +72,8 @@ public class ProductService {
                 .price(productAddForm.getPrice())
                 .status(ProductStatus.MODERNIZATION)
                 .dateAdd(LocalDateTime.now())
+                .localities(productAddForm.getLocality())
+                .endOfPayment(LocalDateTime.now().minusDays(30))
                 .build();
         productRepository.save(product);
         imagesService.saveImagesFile(productAddForm.getImages(),product);

@@ -1,13 +1,20 @@
 <#import "partials/main.ftlh" as main />
 
-<@main.renderWith title="Arenda.kg" scripts=["/js/create_product.js","/js/dropdown_script.js"] styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css","https://use.fontawesome.com/releases/v5.14.0/css/all.css","/css/create_product.css","/css/dropdown_style.css"]>
+<#if lastStep??>
+    <#assign scripts_js = ["/js/create_product.js","/js/dropdown_script.js","/js/showLastStep.js"]>
+<#else>
+    <#assign scripts_js = ["/js/create_product.js","/js/dropdown_script.js"]>
+</#if>
+
+<@main.renderWith title="Arenda.kg" scripts=scripts_js styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css","https://use.fontawesome.com/releases/v5.14.0/css/all.css","/css/create_product.css","/css/dropdown_style.css"]>
     <div class="container-fluid">
         <div class="row justify-content-center">
             <div class="col-10 text-center pt-5">
+                <#if lastStep??></#if>
                 <div class="card">
                     <h2 id="heading">новое объявление</h2>
                     <p>Заполните все поля, чтобы перейти к следующему шагу</p>
-                    <form id="newProductForm" method="post" modelAttribute="newProduct" action="/product/create" enctype="multipart/form-data">
+                    <form id="newProductForm" method="POST" action="/product/create" enctype="multipart/form-data" modelAttribute="newProductData">
                         <!-- progressbar -->
                         <ul id="progressbar">
                             <li class="active" id="account"><strong>Изображения</strong></li>
@@ -70,13 +77,15 @@
                                 <label class="fieldlabels mt-3">Выберите категорию:</label>
                                 <div class="select-box">
                                     <div class="options-container">
-                                        <#list select_categories as cat>
-                                            <div class="option">
-                                                <input type="radio" class="radio radio-input" id="category_${cat.id}"
-                                                       name="categoryId" value="${cat.id}"/>
-                                                <label for="category_${cat.id}">${cat.name}</label>
-                                            </div>
-                                        </#list>
+                                        <#if select_categories??>
+                                            <#list select_categories as cat>
+                                                <div class="option">
+                                                    <input type="radio" class="radio radio-input" id="category_${cat.id}"
+                                                           name="categoryId" value="${cat.id}"/>
+                                                    <label for="category_${cat.id}">${cat.name}</label>
+                                                </div>
+                                            </#list>
+                                        </#if>
                                     </div>
 
                                     <div class="selected">
@@ -123,13 +132,15 @@
                                 <label class="fieldlabels mt-2">Выберите город:</label>
                                 <div class="select-box mb-5 pb-5">
                                     <div class="options-container">
-                                        <#list localities as local>
-                                            <div class="option">
-                                                <input type="radio" class="radio radio-input" id="local_${local.id}"
-                                                       name="locality" value="${local.name}"/>
-                                                <label for="local_${local.id}">${local.name}</label>
-                                            </div>
-                                        </#list>
+                                        <#if localities??>
+                                            <#list localities as local>
+                                                <div class="option">
+                                                    <input type="radio" class="radio radio-input" id="local_${local.id}"
+                                                           name="locality" value="${local.name}"/>
+                                                    <label for="local_${local.id}">${local.name}</label>
+                                                </div>
+                                            </#list>
+                                        </#if>
 
                                     </div>
 
@@ -145,11 +156,13 @@
 
                             </div>
 
+                            <input type="hidden" name="${(_csrf.parameterName)!'csrf'}" value="${(_csrf.token)!'--no-token--'}"/>
+
                             <input type="submit" class="next action-button" value="Submit" />
                             <input type="button" class="previous action-button-previous"
                                    value="Назад" />
                         </fieldset>
-                        <fieldset>
+                        <fieldset id="lastFs">
                             <div class="form-card">
                                 <div class="row">
                                     <div class="col-7">

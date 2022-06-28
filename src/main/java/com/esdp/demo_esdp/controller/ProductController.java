@@ -1,6 +1,5 @@
 package com.esdp.demo_esdp.controller;
 
-import com.esdp.demo_esdp.dto.CategoryDTO;
 import com.esdp.demo_esdp.dto.ImageDTO;
 import com.esdp.demo_esdp.dto.ProductAddForm;
 import com.esdp.demo_esdp.entity.User;
@@ -8,8 +7,6 @@ import com.esdp.demo_esdp.service.*;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,8 +18,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
-import java.security.Principal;
-import java.util.List;
 
 @Controller
 @RequestMapping("/product")
@@ -113,12 +108,18 @@ public class ProductController {
         return "create_product";
     }
 
-    @ResponseBody
     @PostMapping("/create")
-    public ResponseEntity<Void> createNewProductPOST(@RequestBody ProductAddForm newProduct, Authentication authentication){
+    public String createNewProductPOST(
+            @ModelAttribute("newProductData") ProductAddForm newProduct,
+            Model model, Authentication authentication
+    ){
+        User user=userService.getUserByEmail(authentication.getName());
+        productService.addNewProduct(newProduct,user);
 
-
-        return new ResponseEntity<>(HttpStatus.OK);
+        model.addAttribute("lastStep",true);
+        return "create_product";
     }
+
+
 
 }
