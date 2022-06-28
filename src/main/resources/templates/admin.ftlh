@@ -3,15 +3,74 @@
 
 <#-- обрабатываем его, и передаём ему список скриптов, которые необходимо подключить-->
 <@admin.renderWith>
-    <div class="" style="margin-bottom: 50px; text-align: right">
-        <form method="post" action="/">
-            <#if _csrf??>
-                <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
-                       value="${(_csrf.token)!'--no-token--'}"/>
-            </#if>
-            <input style="margin-right: 120px; background: lightgray; height: 35px">
-            <button class="btn btn-danger" style="width:80px; height: 35px">Поиск</button>
-        </form>
+    <div style="margin-bottom: 50px; margin-left: 300px">
+        <h3 style="display: inline-block; margin-right: 15px">Найти все совпадения по:</h3>
+        <select name="type" id="type" style="display: inline-block">
+            <option value="name">названию</option>
+            <option value="user-product">пользователю</option>
+            <option value="modernization">статусу modernization</option>
+            <option value="accepted">статусу accepted</option>
+            <option value="declined">статусу declined</option>
+        </select>
+
+        <div class="" style="margin-bottom: 50px; text-align: right; display: inline-block">
+            <div id="name" class="name">
+                <form method="get" action="/admin/product/search-name">
+                    <#if _csrf??>
+                        <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
+                               value="${(_csrf.token)!'--no-token--'}"/>
+                    </#if>
+                    <input name="name" style="margin-right: 120px; background: lightgray;">
+                    <button class="btn btn-outline-success" type="submit" style="margin-right: 25px">Поиск</button>
+                </form>
+            </div>
+            <div id="user-product" style="display: none">
+                <form class="d-flex" id="user-productFrom" method="get" action="/admin/products/search-user">
+                    <#if _csrf??>
+                        <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
+                               value="${(_csrf.token)!'--no-token--'}"/>
+                    </#if>
+                    <input name="user-product" style="margin-right: 120px; background: lightgray;">
+                    <button class="btn btn-outline-success" type="submit" style="margin-right: 25px">Поиск</button>
+                </form>
+            </div>
+            <div id="modernization" style="display: none">
+                <form class="d-flex" id="modernizationForm" method="get" action="/admin/products/search-status">
+                    <#if _csrf??>
+                        <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
+                               value="${(_csrf.token)!'--no-token--'}"/>
+                    </#if>
+                    <input name="status" value="MODERNIZATION" type="hidden">
+                    <button class="btn btn-outline-success" type="submit" style="margin-top: 42px; margin-right: -90px">
+                        Поиск
+                    </button>
+                </form>
+            </div>
+            <div id="accepted" style="display: none">
+                <form class="d-flex" id="acceptedForm" method="get" action="/admin/products/search-status">
+                    <#if _csrf??>
+                        <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
+                               value="${(_csrf.token)!'--no-token--'}"/>
+                    </#if>
+                    <input name="status" value="ACCEPTED" type="hidden">
+                    <button class="btn btn-outline-success" type="submit" style="margin-top: 42px; margin-right: -90px">
+                        Поиск
+                    </button>
+                </form>
+            </div>
+            <div id="declined" style="display: none">
+                <form class="d-flex" id="declinedForm" method="get" action="/admin/products/search-status">
+                    <#if _csrf??>
+                        <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
+                               value="${(_csrf.token)!'--no-token--'}"/>
+                    </#if>
+                    <input name="status" value="DECLINED" type="hidden">
+                    <button class="btn btn-outline-success" type="submit" style="margin-top: 42px; margin-right: -90px">
+                        Поиск
+                    </button>
+                </form>
+            </div>
+        </div>
     </div>
     <div class="flex flex-wrap" id="itemList">
         <#list products as product>
@@ -81,4 +140,42 @@
         </#list>
     </div>
 
+    <script>
+        $(document).ready(
+            function () {
+                $("#type").change(function () {
+                    if ($(this).val() == "name") {
+                        $('#name')[0].style.display = 'block'
+                        $('#user-product')[0].style.display = 'none'
+                        $('#modernization')[0].style.display = 'none'
+                        $('#accepted')[0].style.display = 'none'
+                        $('#declined')[0].style.display = 'none'
+                    } else if ($(this).val() == "user-product") {
+                        $('#name')[0].style.display = 'none'
+                        $('#user-product')[0].style.display = 'block'
+                        $('#modernization')[0].style.display = 'none'
+                        $('#accepted')[0].style.display = 'none'
+                        $('#declined')[0].style.display = 'none'
+                    } else if ($(this).val() == "modernization") {
+                        $('#name')[0].style.display = 'none'
+                        $('#user-product')[0].style.display = 'none'
+                        $('#modernization')[0].style.display = 'block'
+                        $('#accepted')[0].style.display = 'none'
+                        $('#declined')[0].style.display = 'none'
+                    } else if ($(this).val() == "accepted") {
+                        $('#name')[0].style.display = 'none'
+                        $('#user-product')[0].style.display = 'none'
+                        $('#modernization')[0].style.display = 'none'
+                        $('#accepted')[0].style.display = 'block'
+                        $('#declined')[0].style.display = 'none'
+                    } else {
+                        $('#name')[0].style.display = 'none'
+                        $('#user-product')[0].style.display = 'none'
+                        $('#modernization')[0].style.display = 'none'
+                        $('#accepted')[0].style.display = 'none'
+                        $('#declined')[0].style.display = 'block'
+                    }
+                });
+            })
+    </script>
 </@admin.renderWith>

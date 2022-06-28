@@ -9,9 +9,14 @@
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
         <title>${title}</title>
+        <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon/favicon-16x16.png">
+        <link rel="manifest" href="/images/favicon/site.webmanifest">
         <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css" />
-        <script type="text/javascript" src="/webjars/jquery/jquery.min.js" ></script>
-        <script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js" ></script>
+        <script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
+        <script type="text/javascript" src="webjars/popper.js/umd/popper.min.js"></script>
+        <script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js"></script>
         <link rel="stylesheet" href="/css/main.css">
         <#list styles as styleSource>
             <link rel="stylesheet" href="${styleSource}">

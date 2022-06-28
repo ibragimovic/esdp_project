@@ -1,24 +1,18 @@
 package com.esdp.demo_esdp.service;
 
-import com.esdp.demo_esdp.dto.ProductDTO;
+import com.esdp.demo_esdp.dto.UserRegisterForm;
 import com.esdp.demo_esdp.dto.UserResponseDTO;
 import com.esdp.demo_esdp.dto.UserUpdateForm;
 import com.esdp.demo_esdp.entity.User;
-import com.esdp.demo_esdp.enums.ProductStatus;
 import com.esdp.demo_esdp.exception.UserAlreadyRegisteredException;
 import com.esdp.demo_esdp.exception.UserNotFoundException;
-import com.esdp.demo_esdp.dto.UserRegisterForm;
 import com.esdp.demo_esdp.repositories.UserRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.mail.MailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
 import java.util.UUID;
-
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Service

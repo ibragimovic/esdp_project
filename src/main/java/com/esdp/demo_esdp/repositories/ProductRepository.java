@@ -11,22 +11,22 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
-import java.time.LocalDateTime;
 import java.util.List;
+
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query("select p from Product p where lower(p.name) like  %:name% and p.status = :status ")
-    Page<Product> getProductName(@Param("name") String name, @Param("status") String status, Pageable pageable);
+    Page<Product> getProductName(@Param("name") String name, @Param("status") ProductStatus status, Pageable pageable);
 
     @Query("select p from Product p where lower(p.category.name) like %:category% and p.status = :status")
-    Page<Product> getProductCategory(@Param("category") String category, @Param("status") String status, Pageable pageable);
+    Page<Product> getProductCategory(@Param("category") String category, @Param("status") ProductStatus status, Pageable pageable);
 
     @Query("select p from Product p where p.price >= :from and p.price <= :before and p.status = :status")
-    Page<Product> getProductPrice(@Param("from") Integer from, @Param("before") Integer before, @Param("status") String status, Pageable pageable);
+    Page<Product> getProductPrice(@Param("from") Integer from, @Param("before") Integer before, @Param("status") ProductStatus status, Pageable pageable);
 
     @Query("select p from Product p where p.user.email = :email and p.status = :status")
-    List<Product> getProductUser(@Param("email") String email, @Param("status") String status);
+    List<Product> getProductUser(@Param("email") String email, @Param("status") ProductStatus status);
 
     @Query("select p from Product p where p.status = :status order by p.dateAdd")
     Page<Product> getProducts(@Param("status") ProductStatus status, Pageable pageable);
@@ -42,6 +42,18 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Modifying
     @Query(value = "update products  set status = :status where id = :id", nativeQuery = true)
     void updateProductStatus(@Param("status") String status, @Param("id") Long id);
+
+
+    @Query("select p from Product p where p.user.email = :email")
+    List<Product> getProductsUser(@Param("email") String email);
+
+
+    @Query("select p from Product p where p.status = :status")
+    List<Product> getProductsStatus(@Param("status") ProductStatus status);
+
+
+    @Query("select p from Product p where lower(p.name) like  %:name%")
+    List<Product> getProductsName(@Param("name") String name);
 
     @Query("select p from Product p where p.endOfPayment>=current_timestamp and p.status = :status")
     Page<Product> findTopProduct(@Param("status") ProductStatus status,Pageable pageable);
