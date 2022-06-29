@@ -1,4 +1,4 @@
-<#macro renderWith title="Main page" scripts=[] styles=[]>
+<#macro renderWith title="Arenda.KG" scripts=[] styles=[]>
     <#assign security=JspTaglibs["http://www.springframework.org/security/tags"]/>
     <!doctype html>
     <html lang="en">
@@ -34,7 +34,7 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="topNavbar">
-                <ul class="navbar-nav mr-auto">
+                <ul class="navbar-nav ml-auto">
                     <@security.authorize access="! isAuthenticated()">
                         <li class="nav-item">
                             <a class="nav-link" href="/register">Регистрация</a>

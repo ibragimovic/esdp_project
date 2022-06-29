@@ -1,6 +1,6 @@
 <#import "partials/main.ftlh" as main />
 
-<@main.renderWith>
+<@main.renderWith title="Регистрация">
     <h2>Please register</h2>
     <form action="/register" method="post">
 
