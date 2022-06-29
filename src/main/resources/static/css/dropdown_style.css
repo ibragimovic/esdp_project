@@ -4,6 +4,7 @@
   max-width: 400px;
   flex-direction: column;
   font-family: 'Roboto', sans-serif;
+  z-index:2;
 }
 
 .select-box .options-container {

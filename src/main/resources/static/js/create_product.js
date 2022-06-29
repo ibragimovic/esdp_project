@@ -84,43 +84,6 @@ function onExpandableTextareaInput({ target:elm }){
 const newProductForm=document.getElementById("newProductForm");
 let images=document.getElementById("file-input");
 
-// function handleCreateProductForm(e){
-//     e.preventDefault();
-//     let form=e.target;
-//     let data=new FormData(form);
-//
-//     let uploadedImages=[];
-//     for (const file of images.files) {
-//         uploadedImages.push(file);
-//     }
-//
-//     let newProductData={
-//         name:data.get("name"),
-//         categoryId:parseInt(data.get("categoryId")),
-//         description:data.get("description"),
-//         price:parseInt(data.get("price")),
-//         locality:data.get("locality")
-//     }
-//
-//     formData = new FormData();
-//
-//     formData.append("files", uploadedImages);
-//     formData.append('properties', new Blob([JSON.stringify(newProductData)], {
-//         type: "application/json"
-//     }));
-//
-//
-//     const csrfToken = document.cookie.replace(/(?:(?:^|.*;\s*)XSRF-TOKEN\s*\=\s*([^;]*).*$)|^.*$/, '$1');
-//
-//     fetch("/product/create", {
-//         method:"POST",
-//         headers: {
-//             'Content-Type': false,
-//             'X-XSRF-TOKEN': csrfToken
-//         },
-//         data: formData
-//     })
-// }
 
 var current_fs, next_fs, previous_fs; //fieldsets
 var opacity;
@@ -138,6 +101,28 @@ function showLastStep(){
     }
 }
 
+function hasMinLength(input){
+    if(input.value.length>=input.minLength){
+        return true;
+    }else{
+        return false;
+    }
+}
+
+function hasInvalidInputs(inputs){
+    let hasInvalidInputs=false;
+
+    if(inputs.length!=0){
+        for(let i of inputs){
+            if( (i.tagName=="INPUT" && !i.checkValidity()) || (i.tagName=="TEXTAREA" && !hasMinLength(i)) ){
+                i.parentElement.classList.add("error")
+                hasInvalidInputs=true
+            }
+        }
+    }
+    return hasInvalidInputs;
+}
+
 
 $(document).ready(function () {
     
@@ -152,7 +137,10 @@ $(document).ready(function () {
         next_fs = $(this).parent().next();
 
         let allInputs = e.target.parentElement.getElementsByClassName('input')
+
         let allRadioInputs = e.target.parentElement.getElementsByClassName('radio-input')
+
+        let validInputs=e.target.parentElement.getElementsByClassName("valid")
 
 
         if (hasEmptyInput(allInputs) || !(isRadioInputChecked(allRadioInputs)) ) {
@@ -161,34 +149,35 @@ $(document).ready(function () {
                 alertBox.slideUp(500);
             });
 
-        } else {
-            //Add Class Active
-            $("#progressbar li").eq($("fieldset").index(next_fs)).addClass("active");
+        } else if (! hasInvalidInputs(validInputs)) {
+            if(current<3){
+                //Add Class Active
+                $("#progressbar li").eq($("fieldset").index(next_fs)).addClass("active");
 
-            //show the next fieldset
-            next_fs.show();
-            //hide the current fieldset with style
-            current_fs.animate({
-                opacity: 0
-            }, {
-                step: function (now) {
-                    // for making fielset appear animation
-                    opacity = 1 - now;
+                //show the next fieldset
+                next_fs.show();
+                //hide the current fieldset with style
+                current_fs.animate({
+                    opacity: 0
+                }, {
+                    step: function (now) {
+                        // for making fielset appear animation
+                        opacity = 1 - now;
 
-                    current_fs.css({
-                        'display': 'none',
-                        'position': 'relative'
-                    });
-                    next_fs.css({
-                        'opacity': opacity
-                    });
-                },
-                duration: 500
-            });
-            setProgressBar(++current);
+                        current_fs.css({
+                            'display': 'none',
+                            'position': 'relative'
+                        });
+                        next_fs.css({
+                            'opacity': opacity
+                        });
+                    },
+                    duration: 500
+                });
+                setProgressBar(++current);
+            }
 
         }
-
     });
 
     $(".previous").click(function () {
@@ -224,16 +213,10 @@ $(document).ready(function () {
     });
 
 
-
-    $(".submit").click(function () {
-        return false;
-    })
-
     for(let t of textareaInputs){
         t.addEventListener('input', onExpandableTextareaInput)
     }
 
-    // newProductForm.addEventListener('submit', handleCreateProductForm)
 
 
 });

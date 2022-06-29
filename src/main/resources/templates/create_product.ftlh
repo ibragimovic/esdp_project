@@ -6,7 +6,7 @@
     <#assign scripts_js = ["/js/create_product.js","/js/dropdown_script.js"]>
 </#if>
 
-<@main.renderWith title="Arenda.kg" scripts=scripts_js styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css","https://use.fontawesome.com/releases/v5.14.0/css/all.css","/css/create_product.css","/css/dropdown_style.css"]>
+<@main.renderWith title="Arenda.kg" scripts=scripts_js styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css","https://use.fontawesome.com/releases/v5.14.0/css/all.css","/css/create_product.css","/css/dropdown_style.css","/css/error_message.css"]>
     <div class="container-fluid">
         <div class="row justify-content-center">
             <div class="col-10 text-center pt-5">
@@ -42,8 +42,11 @@
                                         <h2 class="steps">Шаг 1 - 3</h2>
                                     </div>
                                 </div>
-                                <label class="fieldlabels">Название товара?</label> <input type="text" name="name"
-                                                                                           placeholder="Наименование" required class="input" />
+                                <label class="fieldlabels">Название товара?</label>
+                                <div class="input-group mb-3">
+                                    <input type="text" name="name" placeholder="Наименование" minlength="10" required="required" class="input valid" />
+                                    <div class="error-message">* Название должно содержать 10 или более символов.</div>
+                                </div>
 
                                 <div class="row justify-content-center">
                                 <div class="upload-container col-10">
@@ -98,8 +101,14 @@
                                 </div>
 
                                 <label class="fieldlabels mt-5">Описание товара:</label>
-                                <textarea class='autoExpand' rows='7' data-min-rows='7' placeholder='Добавьте описание к вашему товару' name="description"></textarea>
 
+                                <div class="input-group mb-3">
+                                    <textarea class='autoExpand input valid'
+                                              rows='7' data-min-rows='7'
+                                              placeholder='Добавьте описание к вашему товару'
+                                              name="description" minlength="4" required="required"></textarea>
+                                    <div class="error-message">* Описание должно содержать 4 или более символов.</div>
+                                </div>
 
                             </div>
 
@@ -121,11 +130,17 @@
 
 
                                 <label class="fieldlabels mt-4">Установите цену аренды:</label>
-                                <div class="flex flex-row">
-                                    <input type="number" min="0" name="price" placeholder="В день (сом)"
-                                           class="mb-5 w-40 me-5 input" id="dayRent" onkeyup="calcWeekRent()" />
-                                    <input type="number" min="0" placeholder="В неделю (сом)"
-                                           class="mb-5 w-40 input" id="weekRent" readonly/>
+                                <div class="row">
+                                    <div class="input-group mb-5 col-6 row">
+                                        <input type="number" min="1" name="price" placeholder="В день (сом)"
+                                               class="input valid col-12" id="dayRent" onkeyup="calcWeekRent()" required="required"/>
+                                        <div class="error-message col-12">* Цена аренды должна быть больше 1</div>
+                                    </div>
+
+                                    <div class="col-6">
+                                        <input type="number" min="0" placeholder="В неделю (сом)"
+                                               class="mb-5 input" id="weekRent" readonly/>
+                                    </div>
 
                                 </div>
 
