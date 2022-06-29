@@ -1,6 +1,6 @@
 <#import "partials/main.ftlh" as main />
 
-<@main.renderWith>
+<@main.renderWith title="Профиль">
 <#assign security=JspTaglibs["http://www.springframework.org/security/tags"]/>
     <#if dto??>
         <h1>Личная информация</h1>

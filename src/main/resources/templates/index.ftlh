@@ -2,7 +2,7 @@
 <#import "partials/main.ftlh" as main />
 
 <#-- обрабатываем его, и передаём ему список скриптов, которые необходимо подключить-->
-<@main.renderWith>
+<@main.renderWith title="Cтраница пользователя">
     <#if top_products??>
 
         <#list top_products as product>
