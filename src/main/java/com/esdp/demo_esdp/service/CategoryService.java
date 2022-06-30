@@ -3,6 +3,7 @@ package com.esdp.demo_esdp.service;
 import com.esdp.demo_esdp.dto.CategoryDTO;
 import com.esdp.demo_esdp.dto.HierarchicalCategoryDTO;
 import com.esdp.demo_esdp.dto.ProductDTO;
+import com.esdp.demo_esdp.dto.UserResponseDTO;
 import com.esdp.demo_esdp.entity.Category;
 import com.esdp.demo_esdp.repositories.CategoryRepository;
 import com.esdp.demo_esdp.repositories.ProductRepository;
@@ -60,4 +61,9 @@ public class CategoryService {
         return hierarchicalDTOList;
     }
 
+
+    public List<CategoryDTO> getCategories() {
+        return categoryRepository.findAll()
+                .stream().map(CategoryDTO::from).collect(Collectors.toList());
+    }
 }
