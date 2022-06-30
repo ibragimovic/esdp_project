@@ -51,6 +51,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query("select p from Product p where p.status = :status")
     List<Product> getProductsStatus(@Param("status") ProductStatus status);
 
+    @Query("select p from Product p where p.category.id = :id")
+    List<Product> getProductsCategory(@Param("id") Long id);
 
     @Query("select p from Product p where lower(p.name) like  %:name%")
     List<Product> getProductsName(@Param("name") String name);
