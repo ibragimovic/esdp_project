@@ -34,7 +34,12 @@ public class CategoryService {
         var parent = categoryRepository.findCategoriesByParentNull(pageable);
         return parent.map(CategoryDTO::from);
     }
-
+    public List<CategoryDTO> getCategory() {
+        return categoryRepository.findCategoriesByParentNull()
+                        .stream()
+                .map(CategoryDTO::from)
+                .collect(Collectors.toList());
+    }
     public Page<CategoryDTO> geSecondCategory(Long parentId, Pageable pageable) {
         var category = categoryRepository.findCategoriesByParentId(parentId, pageable);
         return category.map(CategoryDTO::from);

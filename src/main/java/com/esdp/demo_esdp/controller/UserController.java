@@ -27,8 +27,7 @@ public class UserController {
     {
         var user = userService.getByEmail(principal.getName());
         model.addAttribute("dto", user);
-//        model.addAttribute("products", ) сюда надо закинуть лист объявлений
-//        для профиля(все объявления пользователя)
+        model.addAttribute("products", productService.getProductsUser(principal.getName()));
         return "profile";
     }
 

@@ -3,6 +3,10 @@ package com.esdp.demo_esdp.controller;
 import com.esdp.demo_esdp.dto.ImageDTO;
 import com.esdp.demo_esdp.dto.ProductAddForm;
 import com.esdp.demo_esdp.entity.User;
+import com.esdp.demo_esdp.service.CategoryService;
+import com.esdp.demo_esdp.service.ProductService;
+import com.esdp.demo_esdp.service.PropertiesService;
+import com.esdp.demo_esdp.service.UserService;
 import com.esdp.demo_esdp.service.*;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -105,6 +109,8 @@ public class ProductController {
     public String getTopProducts(Model model,@PageableDefault(sort = "endOfPayment", direction = Sort.Direction.DESC)Pageable page){
         var topProducts = productService.getTopProduct(page);
         var products = productService.getProductsToMainPage(page);
+        var category = categoryService.getCategory();
+        model.addAttribute("categories", category);
         model.addAttribute("top_products",topProducts.getContent());
         model.addAttribute("products",products.getContent());
         return "index";
