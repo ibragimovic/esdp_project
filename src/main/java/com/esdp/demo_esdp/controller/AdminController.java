@@ -1,6 +1,7 @@
 package com.esdp.demo_esdp.controller;
 
 import com.esdp.demo_esdp.exception.ProductNotFoundException;
+import com.esdp.demo_esdp.service.CategoryService;
 import com.esdp.demo_esdp.service.ProductService;
 import com.esdp.demo_esdp.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -20,11 +21,13 @@ import javax.validation.constraints.NotBlank;
 public class AdminController {
     private final UserService userService;
     private final ProductService productService;
+    private final CategoryService categoryService;
 
 
     @GetMapping()
     public String getAdmin(Model model) {
         model.addAttribute("users", userService.getUsers());
+        model.addAttribute("categories", categoryService.getCategories());
         model.addAttribute("products", productService.getProductsAll());
         return "admin";
     }
@@ -51,8 +54,8 @@ public class AdminController {
     }
 
     @PostMapping("/product_add_top")
-    public String addProductToTop(@RequestParam Long id,@RequestParam Integer hour) throws ProductNotFoundException {
-        productService.addProductToTop(id,hour);
+    public String addProductToTop(@RequestParam Long id, @RequestParam Integer hour) throws ProductNotFoundException {
+        productService.addProductToTop(id, hour);
         return "redirect:/admin";
 
     }
@@ -61,6 +64,7 @@ public class AdminController {
     @GetMapping("/product/search-name")
     public String getProductName(@RequestParam @NotBlank String name, Model model, Pageable pageable) {
         model.addAttribute("users", userService.getUsers());
+        model.addAttribute("categories", categoryService.getCategories());
         var products = productService.getProductName(name, pageable);
         if (products.isEmpty()) {
             return "error404";
@@ -72,9 +76,10 @@ public class AdminController {
 
 
     @GetMapping("/products/search-user")
-    public String getProductUser(String user_name, Model model, Pageable pageable) {
+    public String getProductUser(String userEmail, Model model, Pageable pageable) {
         model.addAttribute("users", userService.getUsers());
-        var products = productService.getProductsUser(user_name);
+        model.addAttribute("categories", categoryService.getCategories());
+        var products = productService.getProductsUser(userEmail);
         if (products.isEmpty()) {
             return "error404";
         } else {
@@ -87,7 +92,22 @@ public class AdminController {
     @GetMapping("/products/search-status")
     public String getProductsStatus(String status, Model model) {
         model.addAttribute("users", userService.getUsers());
+        model.addAttribute("categories", categoryService.getCategories());
         var products = productService.getProductsStatus(status);
+        if (products.isEmpty()) {
+            return "error404";
+        } else {
+            model.addAttribute("products", products);
+            return "admin";
+        }
+    }
+
+
+    @GetMapping("/products/search-category")
+    public String getProductUser(Long categoryId, Model model) {
+        model.addAttribute("users", userService.getUsers());
+        model.addAttribute("categories", categoryService.getCategories());
+        var products = productService.getProductsCategory(categoryId);
         if (products.isEmpty()) {
             return "error404";
         } else {

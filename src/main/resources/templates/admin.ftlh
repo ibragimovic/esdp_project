@@ -3,11 +3,12 @@
 
 <#-- обрабатываем его, и передаём ему список скриптов, которые необходимо подключить-->
 <@admin.renderWith>
-    <div style="margin-bottom: 50px; margin-left: 300px">
+    <div style="margin-bottom: 50px; margin-left: 60px">
         <h3 style="display: inline-block; margin-right: 15px">Найти все совпадения по:</h3>
         <select name="type" id="type" style="display: inline-block">
             <option value="name">названию</option>
             <option value="user-product">пользователю</option>
+            <option value="category-product">категории</option>
             <option value="status">статусу</option>
         </select>
 
@@ -28,9 +29,26 @@
                         <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
                                value="${(_csrf.token)!'--no-token--'}"/>
                     </#if>
-                    <select name="user_name" id="user_name" style="margin-bottom: 50px; margin-right: 25px;">
+                    <select name="userEmail" id="userEmail" style="margin-bottom: 50px; margin-right: 25px;">
                         <#list users as user>
                             <option value="${user.email}">${user.email}</option>
+                        </#list>
+                    </select>
+                    <button class="btn btn-outline-success" type="submit"
+                            style="margin-top: -25px; margin-right: -70px">
+                        Поиск
+                    </button>
+                </form>
+            </div>
+            <div id="category-product" style="display: none">
+                <form class="d-flex" id="category-productFrom" method="get" action="/admin/products/search-category">
+                    <#if _csrf??>
+                        <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
+                               value="${(_csrf.token)!'--no-token--'}"/>
+                    </#if>
+                    <select name="categoryId" id="categoryId" style="margin-bottom: 50px; margin-right: 25px;">
+                        <#list categories as category>
+                            <option value="${category.id}">${category.name}</option>
                         </#list>
                     </select>
                     <button class="btn btn-outline-success" type="submit"
@@ -105,7 +123,7 @@
                     </div>
                 </div>
 
-<div class="status" style="display: inline">
+                <div class="product-vip" style="display: inline">
                     <form action="/admin/product_add_top" method="post">
                         <#if _csrf??>
                             <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
@@ -113,14 +131,16 @@
                         </#if>
                         <input type="hidden" name="id" value="${product.id}">
                         <div class="form-group" style="margin-top: 10px">
-                            <div style="margin-top: -100px">
-                            <select class="form-control" name="hour" id="hour" style="width: 150px">
-                                <option  selected value="24">на 24 часа</option>
-                                <option value="48">на 48 часов</option>
-                                <option value="72">на 72 часа</option>
-                            </select>
+                            <div style="margin-top: -80px">
+                                <select class="form-control" name="hour" id="hour" style="width: 150px">
+                                    <option selected value="24">на 24 часа</option>
+                                    <option value="48">на 48 часов</option>
+                                    <option value="72">на 72 часа</option>
+                                </select>
                             </div>
-                            <button type="submit" class="btn btn-success" style="width:140px; margin-right: 770px">Добавить в топ</button>
+                            <button type="submit" class="btn btn-success" style="width:140px; margin-right: 1370px">
+                                Добавить в топ
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -136,14 +156,22 @@
                     if ($(this).val() == "name") {
                         $('#name')[0].style.display = 'block'
                         $('#user-product')[0].style.display = 'none'
+                        $('#category-product')[0].style.display = 'none'
                         $('#statusForm')[0].style.display = 'none'
                     } else if ($(this).val() == "user-product") {
                         $('#name')[0].style.display = 'none'
                         $('#user-product')[0].style.display = 'block'
+                        $('#category-product')[0].style.display = 'none'
+                        $('#statusForm')[0].style.display = 'none'
+                    } else if ($(this).val() == "category-product") {
+                        $('#name')[0].style.display = 'none'
+                        $('#user-product')[0].style.display = 'none'
+                        $('#category-product')[0].style.display = 'block'
                         $('#statusForm')[0].style.display = 'none'
                     } else {
                         $('#name')[0].style.display = 'none'
                         $('#user-product')[0].style.display = 'none'
+                        $('#category-product')[0].style.display = 'none'
                         $('#statusForm')[0].style.display = 'block'
                     }
                 });

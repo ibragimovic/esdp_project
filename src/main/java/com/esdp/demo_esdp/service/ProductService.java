@@ -156,4 +156,9 @@ public class ProductService {
         return productRepository.getProductsToMainPage(ProductStatus.ACCEPTED, pageable)
                 .map(ProductDTO::from);
     }
+
+    public List<ProductDTO> getProductsCategory(Long id) {
+        return productRepository.getProductsCategory(id)
+                .stream().map(ProductDTO::from).collect(Collectors.toList());
+    }
 }
