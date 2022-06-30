@@ -7,6 +7,7 @@ import com.esdp.demo_esdp.service.CategoryService;
 import com.esdp.demo_esdp.service.ProductService;
 import com.esdp.demo_esdp.service.PropertiesService;
 import com.esdp.demo_esdp.service.UserService;
+import com.esdp.demo_esdp.service.*;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -16,9 +17,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
@@ -33,6 +32,7 @@ public class ProductController {
     private final ProductService productService;
     private final PropertiesService propertiesService;
     private final UserService userService;
+    private final LocalitiesService localitiesService;
     private final CategoryService categoryService;
 
     @GetMapping("/product/add")
@@ -116,5 +116,27 @@ public class ProductController {
         return "index";
 
     }
+
+    @GetMapping("/product/create")
+    public String createNewProductGET(Model model) {
+
+        model.addAttribute("localities", localitiesService.getLocalitiesDTOs());
+        model.addAttribute("select_categories", categoryService.getEndCategory());
+        return "create_product";
+    }
+
+    @PostMapping("/product/create")
+    public String createNewProductPOST(
+            @ModelAttribute("newProductData") ProductAddForm newProduct,
+            Model model, Authentication authentication
+    ){
+        User user=userService.getUserByEmail(authentication.getName());
+        productService.addNewProduct(newProduct,user);
+
+        model.addAttribute("lastStep",true);
+        return "create_product";
+    }
+
+
 
 }

@@ -6,6 +6,7 @@ import com.esdp.demo_esdp.dto.UserUpdateForm;
 import com.esdp.demo_esdp.entity.User;
 import com.esdp.demo_esdp.exception.UserAlreadyRegisteredException;
 import com.esdp.demo_esdp.exception.UserNotFoundException;
+import com.esdp.demo_esdp.dto.UserRegisterForm;
 import com.esdp.demo_esdp.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -97,5 +98,9 @@ public class UserService {
         } else {
             userRepository.updateEnabledUser(true, user.getId());
         }
+    }
+
+    public User getUserByEmail(String email){
+        return userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
     }
 }

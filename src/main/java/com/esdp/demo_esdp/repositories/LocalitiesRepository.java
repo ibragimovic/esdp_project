@@ -12,7 +12,7 @@ import java.util.List;
 @Repository
 public interface LocalitiesRepository extends JpaRepository<Localities,Long> {
 
-//    @Query("select l from Localities l where l.parent is not null")
-//    List<Localities> findAllChildren();
+    @Query("select l from Localities l where l.parent is not null")
+    List<Localities> findAllChildren();
 
 }

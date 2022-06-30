@@ -72,7 +72,7 @@ public class LocalitiesService {
 
     //this method will be modified
     public List<LocalitiesDTO> getLocalitiesDTOs(){
-        return localitiesRepository.findAll().stream().map(LocalitiesDTO::from).collect(Collectors.toList());
+        return localitiesRepository.findAllChildren().stream().map(LocalitiesDTO::from).collect(Collectors.toList());
     }
 
     //this method will be modified

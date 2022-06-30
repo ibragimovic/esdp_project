@@ -1,0 +1,23 @@
+.error-message {
+    color: #cc0033;
+    display: inline-block;
+    font-size: 12px;
+    line-height: 15px;
+    margin: -10px 0 0;
+}
+
+.input-group .error-message {
+    display: none;
+}
+
+.error input[type=text],
+.error textarea,
+.error #dayRent
+{
+    border: 2px solid #cc0033 !important;
+    outline: none !important;
+}
+
+.error .error-message {
+    display: inline-block;
+}
