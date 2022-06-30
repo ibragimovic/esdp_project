@@ -59,12 +59,6 @@ $(document).ready(function () {
       let thisRadioInput = optionElem.firstElementChild;
       thisRadioInput.checked = true
 
-      console.log("this options container")
-      console.log(thisOptionsContainer)
-
-      console.log("this e.target")
-      console.log(e.target)
-
       thisSelected.innerHTML = optionElem.querySelector("label").innerHTML;
       thisOptionsContainer.classList.remove("active");
     });
