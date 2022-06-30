@@ -3,6 +3,7 @@ package com.esdp.demo_esdp.controller;
 import com.esdp.demo_esdp.dto.ImageDTO;
 import com.esdp.demo_esdp.dto.ProductAddForm;
 import com.esdp.demo_esdp.entity.User;
+import com.esdp.demo_esdp.service.CategoryService;
 import com.esdp.demo_esdp.service.ProductService;
 import com.esdp.demo_esdp.service.PropertiesService;
 import com.esdp.demo_esdp.service.UserService;
@@ -32,6 +33,7 @@ public class ProductController {
     private final ProductService productService;
     private final PropertiesService propertiesService;
     private final UserService userService;
+    private final CategoryService categoryService;
 
     @GetMapping("/product/add")
     public String getAddPage(Model model) {
@@ -107,6 +109,8 @@ public class ProductController {
     public String getTopProducts(Model model,@PageableDefault(sort = "endOfPayment", direction = Sort.Direction.DESC)Pageable page){
         var topProducts = productService.getTopProduct(page);
         var products = productService.getProductsToMainPage(page);
+        var category = categoryService.getCategory();
+        model.addAttribute("categories", category);
         model.addAttribute("top_products",topProducts.getContent());
         model.addAttribute("products",products.getContent());
         return "index";
