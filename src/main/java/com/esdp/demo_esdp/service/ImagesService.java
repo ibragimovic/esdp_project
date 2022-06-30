@@ -53,10 +53,6 @@ public class ImagesService {
     }
 
     public void deleteImagesFile(Long productId) {
-        var imageProduct = imagesRepository.getImagesProduct(productId);
-        if (!imageProduct.isEmpty()) {
-            imageProduct.forEach(i -> imagesRepository.deleteById(i.getId()));
-        }
         var paths = imagesRepository.getProductImagePath(productId);
         paths.forEach(i -> {
             try {
@@ -65,6 +61,10 @@ public class ImagesService {
                 e.printStackTrace();
             }
         });
+        var imageProduct = imagesRepository.getImagesProduct(productId);
+        if (!imageProduct.isEmpty()) {
+            imageProduct.forEach(i -> imagesRepository.deleteById(i.getId()));
+        }
     }
 
     @SneakyThrows
