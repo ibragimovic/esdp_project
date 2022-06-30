@@ -4,9 +4,8 @@
 <#-- обрабатываем его, и передаём ему список скриптов, которые необходимо подключить-->
 <@main.renderWith title="Cтраница пользователя">
     <#if top_products??>
-
+        <h2>Топ публикаций</h2>
         <#list top_products as product>
-            <h2>Топ публикаций</h2>
             <div class="flex flex-column box flex-v-center">
             <a href="/product/${product.id}">
                 <div class="img flex flex-column flex-v-center box-128">
