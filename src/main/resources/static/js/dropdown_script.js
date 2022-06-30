@@ -47,7 +47,7 @@ $(document).ready(function () {
 
       let optionElem;
 
-      if(e.target.tagName==="LABEL" || e.target.tagName==="INPUT"){
+      if(e.target.tagName==="LABEL" || e.target.tagName=="INPUT"){
         optionElem=e.target.parentElement
       }else{
         optionElem=e.target
