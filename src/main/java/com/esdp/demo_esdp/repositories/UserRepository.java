@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -31,4 +32,14 @@ public interface UserRepository extends JpaRepository<User,Long> {
                         @Param("telNumber") String telNumber,
                         @Param("login") String login,
                         @Param("id") Long id);
+
+    User findByActivationCode(String code);
+
+    @Query("select u from User u where u.role <> :role ")
+    List<User> getUsers(@Param("role") String role);
+
+    @Transactional
+    @Modifying
+    @Query(value = "update users  set enabled = :enabled where id = :id", nativeQuery = true)
+    void updateEnabledUser(@Param("enabled") Boolean enabled, @Param("id") Long id);
 }

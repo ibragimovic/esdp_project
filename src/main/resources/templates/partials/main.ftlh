@@ -1,4 +1,4 @@
-<#macro renderWith title="Main page" scripts=[] styles=[]>
+<#macro renderWith title="Arenda.KG" scripts=[] styles=[]>
     <#assign security=JspTaglibs["http://www.springframework.org/security/tags"]/>
     <!doctype html>
     <html lang="en">
@@ -9,9 +9,14 @@
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
         <title>${title}</title>
+        <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon/favicon-16x16.png">
+        <link rel="manifest" href="/images/favicon/site.webmanifest">
         <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css" />
-        <script type="text/javascript" src="/webjars/jquery/jquery.min.js" ></script>
-        <script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js" ></script>
+        <script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
+        <script type="text/javascript" src="webjars/popper.js/umd/popper.min.js"></script>
+        <script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js"></script>
         <link rel="stylesheet" href="/css/main.css">
         <#list styles as styleSource>
             <link rel="stylesheet" href="${styleSource}">
@@ -29,7 +34,7 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="topNavbar">
-                <ul class="navbar-nav mr-auto">
+                <ul class="navbar-nav ml-auto">
                     <@security.authorize access="! isAuthenticated()">
                         <li class="nav-item">
                             <a class="nav-link" href="/register">Регистрация</a>
@@ -51,7 +56,7 @@
                         <#if _csrf??>
                             <input type="hidden" name="${(_csrf.parameterName)!'csrf'}" value="${(_csrf.token)!'--no-token--'}"/>
                         </#if>
-                        <input type="submit" value="Выйти" class="btn btn-secondary">
+                        <input type="submit" value="Выйти" class="btn btn-secondary" id="logOut">
                     </form>
                 </@security.authorize>
             </div>
@@ -72,6 +77,18 @@
     <#list scripts as scriptSource>
         <script src="${scriptSource}"></script>
     </#list>
+
+    <script>
+        const inButton = document.getElementById("logOut")
+        inButton.addEventListener("click", function () {
+            var isExit = confirm("Вы действительно хотите выйти из профиля?");
+            if (isExit){
+                alert( "Вы вышли из профиля" );
+            }else {
+                alert( "Вы остались в профиле" );
+            }
+        })
+    </script>
 
     </body>
     </html>

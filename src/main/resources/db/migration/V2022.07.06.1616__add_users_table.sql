@@ -9,7 +9,7 @@ create table users
     login    varchar   not null,
     email    varchar   not null,
     password varchar   not null,
-    path       varchar(255),
     enabled boolean NOT NULL default true,
-    role varchar(16) NOT NULL default 'USER'
+    role varchar(16) NOT NULL default 'USER',
+    activation_code varchar
 );

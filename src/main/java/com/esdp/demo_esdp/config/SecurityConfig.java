@@ -42,6 +42,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticated();
 
         http.authorizeRequests()
+                .antMatchers("/admin/**")
+                .hasAnyAuthority("Admin");
+
+        http.authorizeRequests()
                 .anyRequest()
                 .permitAll();
 
@@ -53,7 +57,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         String fetchUsersQuery = "select email, password, enabled"
                 + " from users"
-                + " where email = ?";
+                + " where email =? and activation_code is null";
 
         String fetchRolesQuery = "select email, role"
                 + " from users"

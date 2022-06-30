@@ -32,6 +32,8 @@ public class User {
     @Email
     private String email;
 
+    private String activationCode;
+
     @NotBlank
     @Size(max = 25)
     private String login;
@@ -44,7 +46,6 @@ public class User {
     @Size(min = 8)
     private String password;
 
-    private String path;
 
     @Column
     @Builder.Default

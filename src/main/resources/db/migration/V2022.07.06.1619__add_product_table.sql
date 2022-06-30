@@ -16,6 +16,6 @@ create table products
             references users,
     status         varchar(255),
     data_add       timestamp not null,
-    end_of_payment timestamp not null,
+    end_of_payment timestamp not null default '1900-01-01 00:00:00' ,
     localities     varchar(255)
 );

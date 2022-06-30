@@ -12,9 +12,9 @@ public class UserResponseDTO {
     private String name;
     private String lastname;
     private String login;
-    private String path;
     private String email;
     private String telNumber;
+    private boolean enabled;
 
     public static UserResponseDTO from(User user) {
         return builder()
@@ -22,9 +22,9 @@ public class UserResponseDTO {
                 .name(user.getName())
                 .lastname(user.getLastname())
                 .login(user.getLogin())
-                .path(user.getPath())
                 .email(user.getEmail())
                 .telNumber(user.getTelNumber())
+                .enabled(user.isEnabled())
                 .build();
     }
 }

@@ -8,10 +8,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
@@ -64,7 +61,7 @@ public class UserController {
                                BindingResult validationResult,
                                RedirectAttributes attributes) {
         attributes.addFlashAttribute("dto", userRequestDto);
-
+        attributes.addFlashAttribute("message", "Необходимо активировать пользователя, проверьте почту");
         if (validationResult.hasFieldErrors()) {
             attributes.addFlashAttribute("errors", validationResult.getFieldErrors());
             return "redirect:/register";
@@ -76,7 +73,21 @@ public class UserController {
 
     @GetMapping("/login")
     public String loginPage(@RequestParam(required = false, defaultValue = "false") Boolean error, Model model) {
+
         model.addAttribute("error", error);
+        return "login";
+    }
+
+    @GetMapping("/activate/{code}")
+    public String activate(Model model, @PathVariable String code){
+        boolean isActivated = userService.activateUser(code);
+
+        if(isActivated){
+            model.addAttribute("message", "Пользователь успешно активирован");
+        }else {
+            model.addAttribute("message", "Код активации не найден");
+        }
+
         return "login";
     }
 }

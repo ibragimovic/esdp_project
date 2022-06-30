@@ -7,6 +7,8 @@ import com.esdp.demo_esdp.service.*;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,9 +20,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import java.security.Principal;
 
 @Controller
-@RequestMapping("/product")
 @RequiredArgsConstructor
 public class ProductController {
     private final ProductService productService;
@@ -29,12 +31,12 @@ public class ProductController {
     private final LocalitiesService localitiesService;
     private final CategoryService categoryService;
 
-    @GetMapping("/add")
+    @GetMapping("/product/add")
     public String getAddPage(Model model) {
         return "add-product";
     }
 
-    @PostMapping("/add")
+    @PostMapping("/product/add")
     public String addNewProduct(@Valid ProductAddForm productAddForm,
                                 @Valid ImageDTO imageDTO,
                                 BindingResult validationResult,
@@ -50,15 +52,13 @@ public class ProductController {
         return "redirect:/profile";
     }
 
-    @PostMapping("/delete")
+    @PostMapping("/product/delete")
     public String deleteProductById(@RequestParam("productId") Long productId,
-                                    Authentication authentication) {
-        User user = (User) authentication.getPrincipal();
-        productService.deleteProductById(productId, user);
-        return "redirect:/product";
+                                    Principal principal) {
+        return "redirect:/" + productService.deleteProductById(productId, principal.getName());
     }
 
-    @GetMapping("/search-category")
+    @GetMapping("/product/search-category")
     public String getProductCategory(@RequestParam("category") @NotBlank String category,
                                      Model model,
                                      Pageable pageable, HttpServletRequest uriBuilder) {
@@ -72,7 +72,7 @@ public class ProductController {
         }
     }
 
-    @GetMapping("/search-name")
+    @GetMapping("/product/search-name")
     public String getProductName(@RequestParam("name") @NotBlank String name, Model model,
                                  Pageable pageable, HttpServletRequest uriBuilder) {
         var products = productService.getProductName(name, pageable);
@@ -85,7 +85,7 @@ public class ProductController {
         }
     }
 
-    @GetMapping("/search-price")
+    @GetMapping("/product/search-price")
     public String getProductPrice(@RequestParam("from") @NonNull @Min(1) Integer from,
                                   @RequestParam("before") @NonNull @Min(1) Integer before,
                                   Model model,
@@ -100,7 +100,18 @@ public class ProductController {
         }
     }
 
-    @GetMapping("/create")
+
+    @GetMapping("/")
+    public String getTopProducts(Model model,@PageableDefault(sort = "endOfPayment", direction = Sort.Direction.DESC)Pageable page){
+        var topProducts = productService.getTopProduct(page);
+        var products = productService.getProductsToMainPage(page);
+        model.addAttribute("top_products",topProducts.getContent());
+        model.addAttribute("products",products.getContent());
+        return "index";
+
+    }
+
+    @GetMapping("/product/create")
     public String createNewProductGET(Model model) {
 
         model.addAttribute("localities", localitiesService.getLocalitiesDTOs());
@@ -108,7 +119,7 @@ public class ProductController {
         return "create_product";
     }
 
-    @PostMapping("/create")
+    @PostMapping("/product/create")
     public String createNewProductPOST(
             @ModelAttribute("newProductData") ProductAddForm newProduct,
             Model model, Authentication authentication

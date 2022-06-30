@@ -1,5 +1,6 @@
 package com.esdp.demo_esdp.service;
 
+import com.esdp.demo_esdp.dto.UserRegisterForm;
 import com.esdp.demo_esdp.dto.UserResponseDTO;
 import com.esdp.demo_esdp.dto.UserUpdateForm;
 import com.esdp.demo_esdp.entity.User;
@@ -11,11 +12,16 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
 @Service
 @AllArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder encoder;
+    private final MailSender mailSender;
 
     public UserResponseDTO register(UserRegisterForm form) {
         if (userRepository.existsByEmail(form.getEmail())) {
@@ -29,9 +35,19 @@ public class UserService {
                 .telNumber(form.getTelNumber())
                 .login(form.getLogin())
                 .password(encoder.encode(form.getPassword()))
+                .activationCode(UUID.randomUUID().toString())
                 .build();
 
         userRepository.save(user);
+
+        String message = String.format(
+          "Здравствуйте %s! \n"+
+                  "Добро пожаловать на сайт Arenda.kg \n"+
+                  "Пожалуйста, для активации перейдите по следующей ссылке: http://localhost:8080/activate/%s",
+                user.getName() + " " + user.getLastname(), user.getActivationCode()
+        );
+
+//        mailSender.send(user.getEmail(),"Activation code", message);
 
         return UserResponseDTO.from(user);
     }
@@ -54,6 +70,34 @@ public class UserService {
                 .orElseThrow(UserNotFoundException::new);
 
         return UserResponseDTO.from(user);
+    }
+
+    public boolean activateUser(String code) {
+        User user = userRepository.findByActivationCode(code);
+
+        if(user==null){
+            return false;
+        }
+
+        user.setActivationCode(null);
+
+        userRepository.updateUserData(user.getName(), user.getLastname(), user.getEmail(), user.getTelNumber(), user.getLogin(), user.getId());
+
+        return true;
+    }
+
+    public List<UserResponseDTO> getUsers() {
+        return userRepository.getUsers("Admin")
+                .stream().map(UserResponseDTO::from).collect(Collectors.toList());
+    }
+
+    public void blockingUser(Long id) {
+        var user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
+        if (user.isEnabled()) {
+            userRepository.updateEnabledUser(false, user.getId());
+        } else {
+            userRepository.updateEnabledUser(true, user.getId());
+        }
     }
 
     public User getUserByEmail(String email){
