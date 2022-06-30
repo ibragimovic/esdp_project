@@ -5,11 +5,13 @@ const searchBox = document.getElementsByClassName("search-box");
 const optionsList = document.getElementsByClassName("option");
 
 
+
 const filterList = searchTerm => {
   searchTerm = searchTerm.toLowerCase();
 
   for (let o of optionsList) {
-    let label = o.firstElementChild.nextElementSibling.innerText.toLowerCase();
+    let label = o.lastElementChild.innerText.toLowerCase();
+
     if (label.indexOf(searchTerm) != -1) {
       o.style.display = "block";
     } else {
@@ -42,13 +44,28 @@ $(document).ready(function () {
 
   for (let o of optionsList) {
     o.addEventListener("click", (e) => {
-      let thisSelected = e.target.parentElement.nextElementSibling;
-      let thisOptionsContainer = e.target.parentElement;
 
-      let thisRadioInput = o.firstElementChild;
+      let optionElem;
+
+      if(e.target.tagName==="LABEL" || e.target.tagName==="INPUT"){
+        optionElem=e.target.parentElement
+      }else{
+        optionElem=e.target
+      }
+
+      let thisSelected = optionElem.parentElement.nextElementSibling;
+      let thisOptionsContainer = optionElem.parentElement;
+
+      let thisRadioInput = optionElem.firstElementChild;
       thisRadioInput.checked = true
 
-      thisSelected.innerHTML = o.querySelector("label").innerHTML;
+      console.log("this options container")
+      console.log(thisOptionsContainer)
+
+      console.log("this e.target")
+      console.log(e.target)
+
+      thisSelected.innerHTML = optionElem.querySelector("label").innerHTML;
       thisOptionsContainer.classList.remove("active");
     });
 
@@ -64,6 +81,5 @@ $(document).ready(function () {
     }
 
   }
-
 
 })
