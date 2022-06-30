@@ -621,3 +621,9 @@ body {
     display: inline-block;
     vertical-align: top;
 }
+
+.product-vip{
+    margin-top: -250px;
+    display: inline-block;
+    vertical-align: top;
+}
