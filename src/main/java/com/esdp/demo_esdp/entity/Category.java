@@ -1,10 +1,12 @@
 package com.esdp.demo_esdp.entity;
 
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+
 
 @Entity
 @Table(name = "category")
@@ -26,5 +28,6 @@ public class Category {
 
     @ManyToOne
     @JoinColumn(name = "parent_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Category parent;
 }

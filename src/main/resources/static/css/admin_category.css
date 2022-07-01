@@ -1,0 +1,46 @@
+
+/* Стиль вкладок */
+.tab {
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+}
+
+/* Стиль кнопок внутри вкладок */
+.tab button {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+    font-size: 17px;
+}
+
+/* Изменение цвета фона кнопок при наведении курсора мыши */
+.tab button:hover {
+    background-color: #ddd;
+}
+
+/* Создание активного/текущего класса связей вкладок */
+.tab button.active {
+    background-color: #ccc;
+}
+
+/* Стиль содержимого вкладки */
+.tabcontent {
+    display: none;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-top: none;
+}
+
+/* Стиль кнопки закрытия */
+.topright {
+    float: right;
+    cursor: pointer;
+    font-size: 28px;
+}
+
+.topright:hover {color: red;}

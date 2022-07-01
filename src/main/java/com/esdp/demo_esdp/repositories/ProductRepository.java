@@ -34,8 +34,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query("select p.user.email from Product p where p.id = :id ")
     String getPublicationUserEmail(@Param("id") Long id);
 
-    @Query("select p from Product p where p.category = :categoryId order by p.dateAdd")
-    Page<Product> findProductsByCategoryId(Long categoryId, Pageable pageable);
+    @Query("select p from Product p where p.category = :categoryId and p.status = :status order by p.dateAdd")
+    Page<Product> findProductsByCategoryId(Long categoryId,@Param("status") ProductStatus status, Pageable pageable);
 
 
     @Transactional
@@ -54,4 +54,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query("select p from Product p where lower(p.name) like  %:name%")
     List<Product> getProductsName(@Param("name") String name);
+
+    @Query(value = "select p from Product p where p.category.id =:id or p.category.parent.id = :id")
+    List<Product> findProductsByCategory(Long id);
 }
