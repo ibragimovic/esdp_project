@@ -13,7 +13,9 @@
         <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css"/>
         <script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
         <script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="/webjars/popper.js/umd/popper.min.js"></script>
         <link rel="stylesheet" type="text/css" href="/css/admin_style.css"/>
+        <link rel="stylesheet" type="text/css" href="/css/admin_category.css"/>
 
     </head>
     <body>
@@ -137,7 +139,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#0">
+                    <a href="/admin/category">
                         <svg>
                             <use xlink:href="#trends"></use>
                         </svg>

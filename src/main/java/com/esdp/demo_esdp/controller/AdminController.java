@@ -1,11 +1,10 @@
 package com.esdp.demo_esdp.controller;
 
-import com.esdp.demo_esdp.exception.ProductNotFoundException;
-import com.esdp.demo_esdp.service.CategoryService;
 import com.esdp.demo_esdp.service.ProductService;
 import com.esdp.demo_esdp.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 
 @Controller
@@ -114,6 +114,41 @@ public class AdminController {
             model.addAttribute("products", products);
             return "admin";
         }
+    }
+
+
+
+
+    @GetMapping("/category")
+    public String changeCategoryNamePage(Model model) {
+        var categories = categoryService.getHierarchicalCategories();
+        model.addAttribute("categoriesList", categories);
+        return "admin_category";
+    }
+
+    @PostMapping("/create/category")
+    public String createCategory(@RequestParam(name = "parent_id") Long categoryId, @Valid CategoryDTO dto) {
+        categoryService.createCategory(categoryId, dto);
+        return "redirect:/admin/category";
+    }
+
+    @PostMapping("/change/category/name")
+    public String changeNameCategory(@RequestParam(name = "id") Long categoryId, @Param("newName") String newName) throws CategoryNotFoundException {
+        categoryService.changeNameCategory(newName, categoryId);
+        return "redirect:/admin/category";
+    }
+
+
+    @PostMapping("/delete/category")
+    public String deleteOneCategory(@RequestParam(name = "id") Long categoryId) throws CategoryNotFoundException {
+        categoryService.deleteCategory(categoryId);
+        return "redirect:/admin/category";
+    }
+
+    @PostMapping("/change/parent/category")
+    public String changeParentByCategory(@RequestParam(name = "category_id") Long category_id,@RequestParam(name = "parent_id") Long parent_id) throws CategoryNotFoundException {
+        categoryService.changeSubcategory(category_id,parent_id);
+        return "redirect:/admin/category";
     }
 
 }
