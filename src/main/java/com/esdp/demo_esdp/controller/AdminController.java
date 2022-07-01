@@ -1,5 +1,9 @@
 package com.esdp.demo_esdp.controller;
 
+import com.esdp.demo_esdp.dto.CategoryDTO;
+import com.esdp.demo_esdp.exception.CategoryNotFoundException;
+import com.esdp.demo_esdp.exception.ProductNotFoundException;
+import com.esdp.demo_esdp.service.CategoryService;
 import com.esdp.demo_esdp.service.ProductService;
 import com.esdp.demo_esdp.service.UserService;
 import lombok.RequiredArgsConstructor;
