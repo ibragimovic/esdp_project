@@ -1,6 +1,6 @@
 <#import "partials/main.ftlh" as main />
 
-<@main.renderWith>
+<@main.renderWith title="Профиль">
 <#assign security=JspTaglibs["http://www.springframework.org/security/tags"]/>
     <#if dto??>
         <h1>Личная информация</h1>
@@ -20,9 +20,25 @@
             <div class="tab-pane fade show active" id="nav-main" role="tabpanel" aria-labelledby="nav-main-tab">
 
                 <#if products??>
-                    <#list products as product>
-                        <p class="product_list"><a href="/product?id=${product.id}">${product.name}</a></p>
-                    </#list>
+                    <div class="flex flex-wrap" id="itemList">
+                        <#list products as product>
+                            <div class="flex flex-column box flex-v-center">
+                                <a href="/product/${product.id}">
+                                    <div class="img flex flex-column flex-v-center box-128">
+                                        <img class="product-icon" src="https://via.placeholder.com/120x80.png">
+                                    </div>
+                                </a>
+                                <div class="product">
+                                    <h3><a href="/product/${product.id}">
+                                            ${product.name}
+                                        </a></h3>
+                                    <h5>Цена: ${product.price} сом</h5>
+                                    <h5>Категория: ${product.category.name}</h5>
+                                </div>
+                            </div>
+                            <br>
+                        </#list>
+                    </div>
                 <#else>
                     <h3>У вас нет объявлений</h3>
                     <div>

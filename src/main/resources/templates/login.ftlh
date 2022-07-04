@@ -1,6 +1,6 @@
 <#import "partials/main.ftlh" as main />
 
-<@main.renderWith>
+<@main.renderWith title="Логин">
     <div>
         <h2>Please sign in</h2>
         <form action="/login" method="post">
