@@ -44,8 +44,8 @@
                                 </div>
                                 <label class="fieldlabels">Название товара?</label>
                                 <div class="input-group mb-3">
-                                    <input type="text" name="name" placeholder="Наименование" minlength="10" required="required" class="input valid" />
-                                    <div class="error-message">* Название должно содержать 10 или более символов.</div>
+                                    <input type="text" name="name" placeholder="Наименование" minlength="4" required="required" autocomplete="off" class="input valid" />
+                                    <div class="error-message">* Название должно содержать 4 или более символов.</div>
                                 </div>
 
                                 <div class="row justify-content-center">
