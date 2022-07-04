@@ -1,6 +1,7 @@
 package com.esdp.demo_esdp.service;
 
 import com.esdp.demo_esdp.dto.UserRegisterForm;
+import com.esdp.demo_esdp.dto.UserRegisterOAuth2Form;
 import com.esdp.demo_esdp.dto.UserResponseDTO;
 import com.esdp.demo_esdp.dto.UserUpdateForm;
 import com.esdp.demo_esdp.entity.User;
@@ -21,6 +22,16 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder encoder;
     private final MailSender mailSender;
+
+    public void registerOAuth2User (UserRegisterOAuth2Form form) {
+        var user = User.builder()
+                .email(form.getEmail())
+                .name(form.getName())
+                .lastname(form.getLastName())
+                .login(form.getLogin())
+                .build();
+        userRepository.save(user);
+    }
 
     public UserResponseDTO register(UserRegisterForm form) {
         if (userRepository.existsByEmail(form.getEmail())) {
@@ -46,9 +57,13 @@ public class UserService {
                 user.getName() + " " + user.getLastname(), user.getActivationCode()
         );
 
-//        mailSender.send(user.getEmail(),"Activation code", message);
+        mailSender.send(user.getEmail(),"Activation code", message);
 
         return UserResponseDTO.from(user);
+    }
+
+    public boolean isUserExistByEmail (String email) {
+        return userRepository.existsByEmail(email);
     }
 
     public UserResponseDTO update(UserUpdateForm form) {
