@@ -44,6 +44,11 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     void updateProductStatus(@Param("status") String status, @Param("id") Long id);
 
 
+    @Transactional
+    @Modifying
+    @Query(value = "update products  set category_id = :category where id = :id", nativeQuery = true)
+    void updateProductCategory(@Param("category") Long category, @Param("id") Long id);
+
     @Query("select p from Product p where p.user.email = :email")
     List<Product> getProductsUser(@Param("email") String email);
 
@@ -65,5 +70,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
 
     @Query(value = "select p from Product p where p.category.id =:id or p.category.parent.id = :id")
-    List<Product> findProductsByCategory(Long id);
+    List<Product> findProductsByCategory(@Param("id") Long id);
+
 }
