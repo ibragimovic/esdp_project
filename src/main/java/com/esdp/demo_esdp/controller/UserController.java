@@ -5,6 +5,7 @@ import com.esdp.demo_esdp.dto.UserUpdateForm;
 import com.esdp.demo_esdp.service.ProductService;
 import com.esdp.demo_esdp.service.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -23,19 +24,25 @@ public class UserController {
     private final ProductService productService;
 
     @GetMapping("/profile")
-    public String pageCustomerProfile(Model model, Principal principal)
-    {
-        var user = userService.getByEmail(principal.getName());
+    public String pageCustomerProfile(Model model, Principal principal) {
+        String email;
+        if(principal instanceof OAuth2AuthenticationToken) {
+            OAuth2AuthenticationToken oAuth2AuthenticationToken = (OAuth2AuthenticationToken) principal;
+            email = oAuth2AuthenticationToken.getPrincipal().getAttribute("email");
+        } else {
+            email = principal.getClass().getName();
+        }
+
+        var user = userService.getByEmail(email);
         model.addAttribute("dto", user);
-//        model.addAttribute("products", ) сюда надо закинуть лист объявлений
-//        для профиля(все объявления пользователя)
+        model.addAttribute("products", productService.getProductsUser(email));
         return "profile";
     }
 
     @PostMapping("/profile")
     public String updateUserProfile(@Valid UserUpdateForm userRequestDto,
-                               BindingResult validationResult,
-                               RedirectAttributes attributes) {
+                                    BindingResult validationResult,
+                                    RedirectAttributes attributes) {
         attributes.addFlashAttribute("dto", userRequestDto);
 
         if (validationResult.hasFieldErrors()) {
@@ -69,13 +76,6 @@ public class UserController {
 
         userService.register(userRequestDto);
         return "redirect:/login";
-    }
-
-    @GetMapping("/login")
-    public String loginPage(@RequestParam(required = false, defaultValue = "false") Boolean error, Model model) {
-
-        model.addAttribute("error", error);
-        return "login";
     }
 
     @GetMapping("/activate/{code}")
