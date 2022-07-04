@@ -5,9 +5,9 @@
     <#if dto??>
         <h1>Личная информация</h1>
         <p>${(dto.name)!'-- missing --'} ${(dto.lastname)!'-- missing --'} - ${(dto.email)!'-- email missing --'}</p>
-        <@security.authorize access="isAuthenticated()">
-            <p>logged in as <@security.authentication property="principal.username" /></p>
-        </@security.authorize>
+<#--        <@security.authorize access="isAuthenticated()">-->
+<#--            <p>logged in as <@security.authentication property="principal.username" /></p>-->
+<#--        </@security.authorize>-->
         <nav>
             <div class="nav nav-tabs mb-3" id="nav-tab" role="tablist">
                 <a class="nav-item nav-link active" id="nav-main-tab" data-toggle="tab" href="#nav-main" role="tab"
