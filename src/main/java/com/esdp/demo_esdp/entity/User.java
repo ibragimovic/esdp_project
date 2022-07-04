@@ -39,10 +39,8 @@ public class User {
     private String login;
 
     @Size(min = 13,max = 13)
-    @NotBlank
     private String telNumber;
 
-    @NotBlank
     @Size(min = 8)
     private String password;
 
@@ -57,6 +55,5 @@ public class User {
     @Column(length = 128)
     @Builder.Default
     private String role = "USER";
-
 
 }
