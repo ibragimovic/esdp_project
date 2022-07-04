@@ -16,7 +16,7 @@
         <div class="form-group">
             <label for="lastName">Фамилия</label>
             <input type="text" name="lastName" class="form-control" id="lastName" placeholder="Ваша фамилия"
-                   value="${(dto.lastname)!''}" required autofocus>
+                   value="${(dto.lastName)!''}" required autofocus>
         </div>
         <div class="form-group">
             <label for="login">Логин</label>
