@@ -30,7 +30,7 @@ public class UserController {
             OAuth2AuthenticationToken oAuth2AuthenticationToken = (OAuth2AuthenticationToken) principal;
             email = oAuth2AuthenticationToken.getPrincipal().getAttribute("email");
         } else {
-            email = principal.getClass().getName();
+            email = principal.getName();
         }
 
         var user = userService.getByEmail(email);

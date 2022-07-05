@@ -67,12 +67,12 @@ public class AdminController {
 
     @GetMapping("/product/search-name")
     public String getProductName(@RequestParam @NotBlank String name, Model model, Pageable pageable) {
-        model.addAttribute("users", userService.getUsers());
-        model.addAttribute("categories", categoryService.getCategories());
         var products = productService.getProductName(name, pageable);
         if (products.isEmpty()) {
             return "error404";
         } else {
+            model.addAttribute("users", userService.getUsers());
+            model.addAttribute("categories", categoryService.getCategories());
             model.addAttribute("products", products);
             return "admin";
         }
@@ -81,12 +81,12 @@ public class AdminController {
 
     @GetMapping("/products/search-user")
     public String getProductUser(String userEmail, Model model, Pageable pageable) {
-        model.addAttribute("users", userService.getUsers());
-        model.addAttribute("categories", categoryService.getCategories());
         var products = productService.getProductsUser(userEmail);
         if (products.isEmpty()) {
             return "error404";
         } else {
+            model.addAttribute("users", userService.getUsers());
+            model.addAttribute("categories", categoryService.getCategories());
             model.addAttribute("products", products);
             return "admin";
         }
@@ -95,12 +95,12 @@ public class AdminController {
 
     @GetMapping("/products/search-status")
     public String getProductsStatus(String status, Model model) {
-        model.addAttribute("users", userService.getUsers());
-        model.addAttribute("categories", categoryService.getCategories());
         var products = productService.getProductsStatus(status);
         if (products.isEmpty()) {
             return "error404";
         } else {
+            model.addAttribute("users", userService.getUsers());
+            model.addAttribute("categories", categoryService.getCategories());
             model.addAttribute("products", products);
             return "admin";
         }
@@ -109,12 +109,12 @@ public class AdminController {
 
     @GetMapping("/products/search-category")
     public String getProductUser(Long categoryId, Model model) {
-        model.addAttribute("users", userService.getUsers());
-        model.addAttribute("categories", categoryService.getCategories());
         var products = productService.getProductsCategory(categoryId);
         if (products.isEmpty()) {
             return "error404";
         } else {
+            model.addAttribute("users", userService.getUsers());
+            model.addAttribute("categories", categoryService.getCategories());
             model.addAttribute("products", products);
             return "admin";
         }

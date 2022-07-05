@@ -13,7 +13,7 @@
                     <h4 class="card-title"><u>${user.email}</u></h4>
                     <h5>Имя:${user.name}</h5>
                     <h5>Фамилия:${user.lastname}</h5>
-                    <h5>${user.telNumber}</h5>
+                    <h5>${user.telNumber!''}</h5>
                     <div style="padding-top: 35px; margin-bottom: 20px">
                         <form method="post" action="/admin/user-blocking">
                             <#if _csrf??>
