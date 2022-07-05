@@ -5,6 +5,7 @@
     <body>
     <h2>Работа с категориями</h2>
     <select readonly="on" class="form-control" name="category_id" id="category_id">
+        <option>Посмотреть категории</option>
         <#list categoriesList as category>
             <option>${category.name}</option>
 
@@ -145,7 +146,10 @@
 
                         <#list category.subCategories as child>
                             <option value="${child.id}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${child.name}</option>
-
+                            <#list child.subCategories as grandSon>
+                                <option value="${grandSon.id}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${grandSon.name}</option>
+                            </#list>
                         </#list>
                     </#list>
                 </select>

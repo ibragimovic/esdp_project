@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
@@ -72,4 +73,11 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query(value = "select p from Product p where p.category.id =:id or p.category.parent.id = :id")
     List<Product> findProductsByCategory(@Param("id") Long id);
 
+    @Query("select p from Product p where p.category.id = :id and p.status = :status")
+    Page<Product> getProductsByCategoryId(@Param("id") Long id,@Param("status") ProductStatus status,Pageable pageable);
+
+    @Query("select p from Product p where p.category.id = :id and p.category.parent.id = :categoryId and p.status = :status")
+    List<Product> getProductsByCategory(@Param("id") Long id, @Param("categoryId") Long categoryId, @Param("status") ProductStatus status);
+
+    List<Product> findProductsByCategoryIdAndStatus(Long id,ProductStatus status);
 }
