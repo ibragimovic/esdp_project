@@ -57,7 +57,7 @@
         "use strict";
         if (i > 100) {
             clearInterval(loop1);
-            selector1.textContent = 4;
+            selector1.textContent = 0;
         } else {
             selector1.textContent = randomNum();
             i++;
