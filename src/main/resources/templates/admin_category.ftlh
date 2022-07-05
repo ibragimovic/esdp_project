@@ -4,6 +4,21 @@
 <@admin.renderWith scripts=["js/categories.js"]>
     <body>
     <h2>Работа с категориями</h2>
+    <select readonly="on" class="form-control" name="category_id" id="category_id">
+        <#list categoriesList as category>
+            <option>${category.name}</option>
+
+            <#list category.subCategories as child>
+                <option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${child.name}</option>
+
+                <#list child.subCategories as grandSon>
+                    <option>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${grandSon.name}</option>
+
+                </#list>
+            </#list>
+        </#list>
+    </select>
     <div class="tab">
         <button class="tablinks" onclick="categoryEvent(event, 'create')" id="defaultOpen">Создать категорию</button>
         <button class="tablinks" onclick="categoryEvent(event, 'changeName')">Сменить имя категории</button>
@@ -28,11 +43,6 @@
 
                         <#list category.subCategories as child>
                             <option value="${child.id}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${child.name}</option>
-
-                            <#list child.subCategories as grandSon>
-                                <option value="${grandSon.id}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${grandSon.name}</option>
-                            </#list>
                         </#list>
                     </#list>
                 </select>
@@ -45,9 +55,9 @@
                 <input type="text" name="name" class="form-control" placeholder="Введите название категории" aria-describedby="inputGroup-sizing-lg" required>
 
             </div>
-                <div style="margin-top: 50px">
-                    <button type="submit" style="margin-top: 100px" class="btn btn-primary createCategory">Создать</button>
-                </div>
+            <div style="margin-top: 50px">
+                <button type="submit" style="margin-top: 100px" class="btn btn-primary createCategory">Создать</button>
+            </div>
         </form>
     </div>
 
@@ -123,47 +133,42 @@
     <div id="changeParent" class="tabcontent">
         <h4>Сменить родителя категории:</h4>
         <form name="categoryForm" id="categoryForm" action="/admin/change/parent/category" method="post">
-        <div class="form-group">
-            <#if _csrf??>
-                <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
-                       value="${(_csrf.token)!'--no-token--'}"/>
-            </#if>
-            <label for="category_id">Выберите категорию:</label>
-            <select class="form-control" name="category_id" id="category_id" required>
-                <#list categoriesList as category>
-                    <option value="${category.id}">${category.name}</option>
+            <div class="form-group">
+                <#if _csrf??>
+                    <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
+                           value="${(_csrf.token)!'--no-token--'}"/>
+                </#if>
+                <label for="category_id">Выберите категорию:</label>
+                <select class="form-control" name="category_id" id="category_id" required>
+                    <#list categoriesList as category>
+                        <option value="${category.id}">${category.name}</option>
 
-                    <#list category.subCategories as child>
-                        <option value="${child.id}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${child.name}</option>
-
-                        <#list child.subCategories as grandSon>
-                            <option value="${grandSon.id}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${grandSon.name}</option>
+                        <#list category.subCategories as child>
+                            <option value="${child.id}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${child.name}</option>
 
                         </#list>
                     </#list>
-                </#list>
-            </select>
-        </div>
+                </select>
+            </div>
 
-<#--   Select Parent Category-->
-        <div class="form-group">
-            <#if _csrf??>
-                <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
-                       value="${(_csrf.token)!'--no-token--'}"/>
-            </#if>
-            <label for="category_id">Выберите категорию родитель:</label>
-            <select class="form-control" name="parent_id" id="parent_id" required>
-                <option selected value="0">Сделать главным категорием</option>
-                <#list categoriesList as category>
-                    <option value="${category.id}">${category.name}</option>
+            <#--   Select Parent Category-->
+            <div class="form-group">
+                <#if _csrf??>
+                    <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
+                           value="${(_csrf.token)!'--no-token--'}"/>
+                </#if>
+                <label for="category_id">Выберите категорию родитель:</label>
+                <select class="form-control" name="parent_id" id="parent_id" required>
+                    <option selected value="0">Сделать главным категорием</option>
+                    <#list categoriesList as category>
+                        <option value="${category.id}">${category.name}</option>
 
-                    <#list category.subCategories as child>
-                        <option value="${child.id}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${child.name}</option>
+                        <#list category.subCategories as child>
+                            <option value="${child.id}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${child.name}</option>
+                        </#list>
                     </#list>
-                </#list>
-            </select>
-        </div>
+                </select>
+            </div>
             <div style="margin-top: 50px">
                 <button type="submit" style="margin-top: 105px" class="btn btn-primary changeCategoryParent">Изменить</button>
             </div>
@@ -172,7 +177,7 @@
 
 
 
-<#--    JS-->
+    <#--    JS-->
     <script>
         function categoryEvent(evt, cityName) {
             var i, tabcontent, tablinks;
