@@ -8,7 +8,7 @@
               content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-        <title>{title}</title>
+        <title>${title}</title>
         <script src="https://kit.fontawesome.com/fffc56ff9f.js" crossorigin="anonymous"></script>
         <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css"/>
         <script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
