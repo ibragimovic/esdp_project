@@ -1,16 +1,16 @@
 <#import "partials/admin_template.ftlh" as admin />
 
-
 <@admin.renderWith title="Список пользователей">
+    <h2>Список пользователей</h2>
     <table class="table table-striped">
       <thead>
         <tr>
-          <th scope="col">#</th>
+          <th scope="col"><i class="fas fa-list-ol"></i></th>
           <th scope="col">Имя</th>
           <th scope="col">Фамилия</th>
-          <th scope="col">Email</th>
-          <th scope="col">Тел</th>
-          <th scope="col">Action</th>
+          <th scope="col"><i class="fas fa-envelope"></i></th>
+          <th scope="col"><i class="fas fa-phone"></i></th>
+          <th scope="col"><i class="fas fa-user-edit"></i></th>
         </tr>
       </thead>
       <tbody>
@@ -39,6 +39,4 @@
         </#list>
       </tbody>
     </table>
-
-
 </@admin.renderWith>
