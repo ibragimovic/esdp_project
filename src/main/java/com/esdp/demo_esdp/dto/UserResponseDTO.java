@@ -15,6 +15,7 @@ public class UserResponseDTO {
     private String email;
     private String telNumber;
     private boolean enabled;
+    private String role;
 
     public static UserResponseDTO from(User user) {
         return builder()
@@ -25,6 +26,7 @@ public class UserResponseDTO {
                 .email(user.getEmail())
                 .telNumber(user.getTelNumber())
                 .enabled(user.isEnabled())
+                .role(user.getRole())
                 .build();
     }
 }
