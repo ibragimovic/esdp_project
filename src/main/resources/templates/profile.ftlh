@@ -98,9 +98,10 @@
                     <div>
                         <#if errors?? >
                             <p>Входные данные с ошибками!</p>
-                            <#list errors as fieldError>
-                                <p>${fieldError.field} - ${fieldError.defaultMessage!'-- no message --'}</p>
-                            </#list>
+<#--                            <#list errors as fieldError>-->
+<#--                                <p>${fieldError.field} - ${fieldError.defaultMessage!'-- no message --'}</p>-->
+<#--                            </#list>-->
+                            <p>${errors}</p>
                         </#if>
                     </div>
                 </form>
