@@ -1,19 +1,22 @@
 <#import "partials/main.ftlh" as main />
 
 <@main.renderWith title="Профиль">
-<#assign security=JspTaglibs["http://www.springframework.org/security/tags"]/>
+    <#assign security=JspTaglibs["http://www.springframework.org/security/tags"]/>
     <#if dto??>
         <h1>Личная информация</h1>
         <p>${(dto.name)!'-- missing --'} ${(dto.lastname)!'-- missing --'} - ${(dto.email)!'-- email missing --'}</p>
-<#--        <@security.authorize access="isAuthenticated()">-->
-<#--            <p>logged in as <@security.authentication property="principal.username" /></p>-->
-<#--        </@security.authorize>-->
+    <#--        <@security.authorize access="isAuthenticated()">-->
+    <#--            <p>logged in as <@security.authentication property="principal.username" /></p>-->
+    <#--        </@security.authorize>-->
         <nav>
             <div class="nav nav-tabs mb-3" id="nav-tab" role="tablist">
                 <a class="nav-item nav-link active" id="nav-main-tab" data-toggle="tab" href="#nav-main" role="tab"
                    aria-controls="nav-main" aria-selected="true">Мои объявления</a>
                 <a class="nav-item nav-link" id="nav-settings-tab" data-toggle="tab" href="#nav-settings" role="tab"
                    aria-controls="nav-settings" aria-selected="false">Настройки профиля</a>
+                <a class="nav-item nav-link" id="nav-update-password-tab" data-toggle="tab" href="#nav-update-password"
+                   role="tab"
+                   aria-controls="nav-settings" aria-selected="false">Изменения пароля</a>
                 <#if dto.role = "Admin">
                     <a class="nav-item nav-link" id="nav-settings-tab" href="/admin">Админ панель</a>
                 </#if>
@@ -98,6 +101,59 @@
                             <#list errors as fieldError>
                                 <p>${fieldError.field} - ${fieldError.defaultMessage!'-- no message --'}</p>
                             </#list>
+                        </#if>
+                    </div>
+                </form>
+            </div>
+            <div class="tab-pane fade" id="nav-update-password" role="tabpanel"
+                 aria-labelledby="nav-update-password-tab">
+
+                <form action="/update-password" method="post">
+
+                    <#if _csrf??>
+                        <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
+                               value="${(_csrf.token)!'--no-token--'}"/>
+                    </#if>
+
+
+                    <div class="form-group col-md-6">
+                        <label for="name">Старый пароль</label>
+                        <input type="password" name="oldPassword" id="oldPassword" value="${(userPassword.oldPassword)!''}"
+                               class="form-control"
+                               placeholder="Старый пароль" required
+                               autofocus required autocomplete="off">
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        <label for="lastName">Новый пароль</label>
+                        <input type="password" name="newPassword" id="newPassword" value="${(userPassword.newPassword)!''}"
+                               class="form-control"
+                               placeholder="Новый пароль"
+                               required autofocus required autocomplete="off">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="login">Повторение нового пароля</label>
+                        <input type="password" name="repeatingPassword" id="repeatingPassword" value="${(userPassword.repeatingPassword)!''}"
+                               class="form-control"
+                               placeholder="Повторение нового пароля" required autofocus required autocomplete="off">
+                    </div>
+
+                    <div>
+                        <button type="submit" class="btn btn-primary">Сохранить</button>
+                    </div>
+                    <div>
+                        <#if errorsPassword?? >
+                            <p>Входные данные с ошибками!</p>
+                            <#list errorsPassword as fieldError>
+                                <p>${fieldError.field} - ${fieldError.defaultMessage!'-- no message --'}</p>
+                            </#list>
+                        </#if>
+                        <#if errorPassword?? >
+                            <#if errorPassword = false >
+                                <p style="color:red; margin-top: 10px">Пароли не совпадают!</p>
+                            <#else>
+                                <p style="color: green; margin-top: 10px">Пароль успешно изменен!</p>
+                            </#if>
                         </#if>
                     </div>
                 </form>

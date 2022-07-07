@@ -1,13 +1,9 @@
 package com.esdp.demo_esdp.service;
 
-import com.esdp.demo_esdp.dto.UserRegisterForm;
-import com.esdp.demo_esdp.dto.UserRegisterOAuth2Form;
-import com.esdp.demo_esdp.dto.UserResponseDTO;
-import com.esdp.demo_esdp.dto.UserUpdateForm;
+import com.esdp.demo_esdp.dto.*;
 import com.esdp.demo_esdp.entity.User;
 import com.esdp.demo_esdp.exception.UserAlreadyRegisteredException;
 import com.esdp.demo_esdp.exception.UserNotFoundException;
-import com.esdp.demo_esdp.dto.UserRegisterForm;
 import com.esdp.demo_esdp.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,7 +20,7 @@ public class UserService {
     private final PasswordEncoder encoder;
     private final MailSender mailSender;
 
-    public void registerOAuth2User (UserRegisterOAuth2Form form) {
+    public void registerOAuth2User(UserRegisterOAuth2Form form) {
         var user = User.builder()
                 .email(form.getEmail())
                 .name(form.getName())
@@ -52,18 +48,18 @@ public class UserService {
         userRepository.save(user);
 
         String message = String.format(
-          "Здравствуйте %s! \n"+
-                  "Добро пожаловать на сайт Arenda.kg \n"+
-                  "Пожалуйста, для активации перейдите по следующей ссылке: http://localhost:8080/activate/%s",
+                "Здравствуйте %s! \n" +
+                        "Добро пожаловать на сайт Arenda.kg \n" +
+                        "Пожалуйста, для активации перейдите по следующей ссылке: http://localhost:8080/activate/%s",
                 user.getName() + " " + user.getLastname(), user.getActivationCode()
         );
 
-        mailSender.send(user.getEmail(),"Activation code", message);
+        mailSender.send(user.getEmail(), "Activation code", message);
 
         return UserResponseDTO.from(user);
     }
 
-    public boolean isUserExistByEmail (String email) {
+    public boolean isUserExistByEmail(String email) {
         return userRepository.existsByEmail(email);
     }
 
@@ -90,7 +86,7 @@ public class UserService {
     public boolean activateUser(String code) {
         User user = userRepository.findByActivationCode(code);
 
-        if(user==null){
+        if (user == null) {
             return false;
         }
 
@@ -115,7 +111,22 @@ public class UserService {
         }
     }
 
-    public User getUserByEmail(String email){
+    public User getUserByEmail(String email) {
         return userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
+    }
+
+
+    private Boolean doPasswordsMatch(String rawPassword, String encodedPassword) {
+        return encoder.matches(rawPassword, encodedPassword);
+    }
+
+
+    public Boolean updateUserPassword(String email, UpdatePasswordDTO updatePasswordDTO) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(UserNotFoundException::new);
+        if (!doPasswordsMatch(updatePasswordDTO.getOldPassword(), user.getPassword())) return false;
+        if (!updatePasswordDTO.getNewPassword().equals(updatePasswordDTO.getRepeatingPassword())) return false;
+        userRepository.updateUserPassword(encoder.encode(updatePasswordDTO.getNewPassword()), user.getId());
+        return true;
     }
 }
