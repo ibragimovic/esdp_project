@@ -15,8 +15,10 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 import java.security.Principal;
+import java.util.Locale;
 
 @Validated
 @Controller
@@ -49,12 +51,6 @@ public class UserController {
                                     BindingResult validationResult,
                                     RedirectAttributes attributes) {
         attributes.addFlashAttribute("dto", userRequestDto);
-
-        if (validationResult.hasFieldErrors()) {
-            attributes.addFlashAttribute("errors", validationResult.getFieldErrors());
-            return "redirect:/profile";
-        }
-
         userService.update(userRequestDto);
         return "redirect:/profile";
     }
@@ -109,6 +105,13 @@ public class UserController {
     @ExceptionHandler(BindException.class)
     private String handlerBindEx(BindException exception, RedirectAttributes attributes) {
         attributes.addFlashAttribute("errorsPassword", exception.getFieldErrors());
+        return "redirect:/profile";
+    }
+
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    private String handlerConstraintViolationException(ConstraintViolationException exception, RedirectAttributes attributes) {
+        attributes.addFlashAttribute("errors", exception.getMessage());
         return "redirect:/profile";
     }
 }
