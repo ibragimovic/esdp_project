@@ -17,6 +17,7 @@
         <script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
         <script type="text/javascript" src="/webjars/popper.js/umd/popper.min.js"></script>
         <script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script type="text/javascript" src="/js/app.js"></script>
         <link rel="stylesheet" href="/css/main.css">
         <#list styles as styleSource>
             <link rel="stylesheet" href="${styleSource}">
@@ -34,6 +35,37 @@
                 </button>
                 <div class="collapse navbar-collapse" id="topNavbar">
                     <ul class="navbar-nav ml-auto">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="http://example.com" id="navbarCategoriesDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              Список категорий
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarCategoriesDropdownMenuLink">
+                              <li><a class="dropdown-item" href="#">Action</a></li>
+                              <li><a class="dropdown-item" href="#">Another action</a></li>
+                              <li class="dropdown-submenu">
+                                <a class="dropdown-item dropdown-toggle" href="#">Submenu</a>
+                                <ul class="dropdown-menu">
+                                  <li><a class="dropdown-item" href="#">Submenu action</a></li>
+                                  <li><a class="dropdown-item" href="#">Another submenu action</a></li>
+
+                                  <li class="dropdown-submenu">
+                                    <a class="dropdown-item dropdown-toggle" href="#">Subsubmenu</a>
+                                    <ul class="dropdown-menu">
+                                      <li><a class="dropdown-item" href="#">Subsubmenu action</a></li>
+                                      <li><a class="dropdown-item" href="#">Another subsubmenu action</a></li>
+                                    </ul>
+                                  </li>
+                                  <li class="dropdown-submenu">
+                                    <a class="dropdown-item dropdown-toggle" href="#">Second subsubmenu</a>
+                                    <ul class="dropdown-menu">
+                                      <li><a class="dropdown-item" href="#">Subsubmenu action</a></li>
+                                      <li><a class="dropdown-item" href="#">Another subsubmenu action</a></li>
+                                    </ul>
+                                  </li>
+                                </ul>
+                              </li>
+                            </ul>
+                          </li>
                         <li class="nav-item">
                             <a class="nav-link" href="/product/create">Подать объявление</a>
                         </li>
