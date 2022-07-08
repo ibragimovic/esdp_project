@@ -627,3 +627,7 @@ body {
     display: inline-block;
     vertical-align: top;
 }
+
+table tbody tr .action-btn {
+    vertical-align: middle;
+}

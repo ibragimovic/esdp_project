@@ -148,14 +148,14 @@
                 </li>
 
                 <li class="menu-heading">
-                    <h3>Settings</h3>
+                    <h3>Настройки</h3>
                 </li>
                 <li>
                     <a href="/profile">
                         <svg>
                             <use xlink:href="#settings"></use>
                         </svg>
-                        <span>Settings</span>
+                        <span>Профиль</span>
                     </a>
                 </li>
 

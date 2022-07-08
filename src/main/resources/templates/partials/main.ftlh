@@ -15,6 +15,7 @@
         <link rel="manifest" href="/images/favicon/site.webmanifest">
         <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css" />
         <script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
+        <script type="text/javascript" src="/webjars/popper.js/umd/popper.min.js"></script>
         <script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.bundle.min.js"></script>
         <link rel="stylesheet" href="/css/main.css">
         <#list styles as styleSource>
@@ -33,6 +34,9 @@
                 </button>
                 <div class="collapse navbar-collapse" id="topNavbar">
                     <ul class="navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/product/create">Подать объявление</a>
+                        </li>
                         <@security.authorize access="! isAuthenticated()">
                             <li class="nav-item">
                                 <a class="nav-link" href="/register">Регистрация</a>
@@ -44,20 +48,25 @@
                             </li>
                         </@security.authorize>
                         <@security.authorize access="isAuthenticated()">
-                            <li class="nav-item">
-                                <a class="nav-link" href="/profile">Профиль</a>
-                            </li>
+                            <form action="/logout" method="post">
+                                <#if _csrf??>
+                                    <input type="hidden" name="${(_csrf.parameterName)!'csrf'}" value="${(_csrf.token)!'--no-token--'}"/>
+                                </#if>
+                                <input type="submit" value="Выйти" class="btn btn-secondary" id="logOut">
+                            </form>
                         </@security.authorize>
                     </ul>
-                    <@security.authorize access="isAuthenticated()">
-                        <form action="/logout" method="post">
-                            <#if _csrf??>
-                                <input type="hidden" name="${(_csrf.parameterName)!'csrf'}" value="${(_csrf.token)!'--no-token--'}"/>
-                            </#if>
-                            <input type="submit" value="Выйти" class="btn btn-secondary" id="logOut">
-                        </form>
-                    </@security.authorize>
                 </div>
+                <@security.authorize access="isAuthenticated()">
+                    <form action="/logout" method="post">
+                        <#if _csrf??>
+                            <input type="hidden" name="${(_csrf.parameterName)!'csrf'}" value="${(_csrf.token)!'--no-token--'}"/>
+                        </#if>
+                        <button type="submit" class="btn btn-secondary" id="logOut">
+                            Выйти
+                        </button>
+                    </form>
+                </@security.authorize>
             </div>
         </nav>
         <div class="categories-header">
@@ -79,21 +88,24 @@
             </div>
         </div>
 
-    <#list scripts as scriptSource>
-        <script src="${scriptSource}"></script>
-    </#list>
+        <#list scripts as scriptSource>
+            <script src="${scriptSource}"></script>
+        </#list>
 
-    <script>
-        const inButton = document.getElementById("logOut")
-        inButton.addEventListener("click", function () {
-            var isExit = confirm("Вы действительно хотите выйти из профиля?");
-            if (isExit){
-                alert( "Вы вышли из профиля" );
-            }else {
-                alert( "Вы остались в профиле" );
+        <script>
+            const inButton = document.getElementById("logOut");
+            if(inButton !== null) {
+                inButton.addEventListener("click", function () {
+                    var isExit = confirm("Вы действительно хотите выйти из профиля?");
+                    if (isExit){
+                        alert( "Вы вышли из профиля" );
+                    }else {
+                        alert( "Вы остались в профиле" );
+                    }
+                });
             }
-        })
-    </script>
+
+        </script>
 
     </body>
     </html>

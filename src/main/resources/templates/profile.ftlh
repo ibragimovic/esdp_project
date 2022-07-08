@@ -14,6 +14,9 @@
                    aria-controls="nav-main" aria-selected="true">Мои объявления</a>
                 <a class="nav-item nav-link" id="nav-settings-tab" data-toggle="tab" href="#nav-settings" role="tab"
                    aria-controls="nav-settings" aria-selected="false">Настройки профиля</a>
+                <#if dto.role = "Admin">
+                    <a class="nav-item nav-link" id="nav-settings-tab" href="/admin">Админ панель</a>
+                </#if>
             </div>
         </nav>
         <div class="tab-content" id="nav-tabContent">

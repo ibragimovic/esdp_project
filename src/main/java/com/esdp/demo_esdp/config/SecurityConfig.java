@@ -54,7 +54,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.authorizeRequests()
                 .antMatchers("/admin/**")
-                .hasAnyAuthority("Admin");
+                .hasAnyAuthority("Admin")
+                .and().exceptionHandling().accessDeniedPage("/");
 
         http.authorizeRequests()
                 .anyRequest()
@@ -78,10 +79,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .usersByUsernameQuery(fetchUsersQuery)
                 .authoritiesByUsernameQuery(fetchRolesQuery)
                 .dataSource(dataSource);
-    }
-
-    @Override
-    public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/images/**", "/js/**", "/webjars/**");
     }
 }
