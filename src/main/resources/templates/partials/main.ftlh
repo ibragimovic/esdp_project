@@ -15,8 +15,7 @@
         <link rel="manifest" href="/images/favicon/site.webmanifest">
         <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css" />
         <script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
-        <script type="text/javascript" src="webjars/popper.js/umd/popper.min.js"></script>
-        <script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.bundle.min.js"></script>
         <link rel="stylesheet" href="/css/main.css">
         <#list styles as styleSource>
             <link rel="stylesheet" href="${styleSource}">
@@ -25,8 +24,9 @@
     </head>
     <body>
 
-    <div class="container">
+
         <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
+            <div class="container">
             <a class="navbar-brand" href="/">
                 <img src="/images/logo.png" height="30"/>
             </a>
@@ -60,19 +60,26 @@
                     </form>
                 </@security.authorize>
             </div>
+        </div>
         </nav>
-        <#if categories??>
-            <#list categories as category>
-                <p class="category_list"><a href="/category?id=${category.id}">${category.name}</a></p>
-            </#list>
-        </#if>
-
+        <div class="categories-header">
+            <div class="container">
+                <#if categories??>
+                    <#list categories as category>
+                        <p class="category_list"><a href="/category?id=${category.id}">${category.name}</a></p>
+                    </#list>
+                </#if>
+            </div>
+        </div>
         <div class="content">
-            <#nested>
+            <div class="container">
+                <#nested>
+            </div>
         </div>
         <div class="footer">
+            <div class="container">
+            </div>
         </div>
-    </div>
 
     <#list scripts as scriptSource>
         <script src="${scriptSource}"></script>
