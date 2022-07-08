@@ -23,44 +23,42 @@
         <script src="//code.jivosite.com/widget/ZK2dXhprrI" async></script>
     </head>
     <body>
-
-
         <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
             <div class="container">
-            <a class="navbar-brand" href="/">
-                <img src="/images/logo.png" height="30"/>
-            </a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#topNavbar">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="topNavbar">
-                <ul class="navbar-nav ml-auto">
-                    <@security.authorize access="! isAuthenticated()">
-                        <li class="nav-item">
-                            <a class="nav-link" href="/register">Регистрация</a>
-                        </li>
-                    </@security.authorize>
-                    <@security.authorize access="! isAuthenticated()">
-                        <li class="nav-item">
-                            <a class="nav-link" href="/login">Войти</a>
-                        </li>
-                    </@security.authorize>
+                <a class="navbar-brand" href="/">
+                    <img src="/images/logo.png" height="30"/>
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#topNavbar">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="topNavbar">
+                    <ul class="navbar-nav ml-auto">
+                        <@security.authorize access="! isAuthenticated()">
+                            <li class="nav-item">
+                                <a class="nav-link" href="/register">Регистрация</a>
+                            </li>
+                        </@security.authorize>
+                        <@security.authorize access="! isAuthenticated()">
+                            <li class="nav-item">
+                                <a class="nav-link" href="/login">Войти</a>
+                            </li>
+                        </@security.authorize>
+                        <@security.authorize access="isAuthenticated()">
+                            <li class="nav-item">
+                                <a class="nav-link" href="/profile">Профиль</a>
+                            </li>
+                        </@security.authorize>
+                    </ul>
                     <@security.authorize access="isAuthenticated()">
-                        <li class="nav-item">
-                            <a class="nav-link" href="/profile">Профиль</a>
-                        </li>
+                        <form action="/logout" method="post">
+                            <#if _csrf??>
+                                <input type="hidden" name="${(_csrf.parameterName)!'csrf'}" value="${(_csrf.token)!'--no-token--'}"/>
+                            </#if>
+                            <input type="submit" value="Выйти" class="btn btn-secondary" id="logOut">
+                        </form>
                     </@security.authorize>
-                </ul>
-                <@security.authorize access="isAuthenticated()">
-                    <form action="/logout" method="post">
-                        <#if _csrf??>
-                            <input type="hidden" name="${(_csrf.parameterName)!'csrf'}" value="${(_csrf.token)!'--no-token--'}"/>
-                        </#if>
-                        <input type="submit" value="Выйти" class="btn btn-secondary" id="logOut">
-                    </form>
-                </@security.authorize>
+                </div>
             </div>
-        </div>
         </nav>
         <div class="categories-header">
             <div class="container">
