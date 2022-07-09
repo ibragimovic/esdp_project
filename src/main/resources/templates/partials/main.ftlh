@@ -89,16 +89,6 @@
                         </@security.authorize>
                     </ul>
                 </div>
-                <@security.authorize access="isAuthenticated()">
-                    <form action="/logout" method="post">
-                        <#if _csrf??>
-                            <input type="hidden" name="${(_csrf.parameterName)!'csrf'}" value="${(_csrf.token)!'--no-token--'}"/>
-                        </#if>
-                        <button type="submit" class="btn btn-secondary" id="logOut">
-                            Выйти
-                        </button>
-                    </form>
-                </@security.authorize>
             </div>
         </nav>
         <div class="categories-header">
