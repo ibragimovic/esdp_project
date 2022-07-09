@@ -5,12 +5,12 @@
     <table class="table table-striped">
       <thead>
         <tr>
-          <th scope="col"><i class="fas fa-list-ol"></i></th>
+          <th scope="col"><i class="bi bi-hash"></i></th>
           <th scope="col">Имя</th>
           <th scope="col">Фамилия</th>
-          <th scope="col"><i class="fas fa-envelope"></i></th>
-          <th scope="col"><i class="fas fa-phone"></i></th>
-          <th scope="col"><i class="fas fa-user-edit"></i></th>
+          <th scope="col"><i class="bi bi-envelope"></i></th>
+          <th scope="col"><i class="bi bi-phone-fill"></i></th>
+          <th scope="col"><i class="bi bi-pencil-square"></i></th>
         </tr>
       </thead>
       <tbody>
