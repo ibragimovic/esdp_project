@@ -11,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -71,5 +72,15 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query(value = "select p from Product p where p.category.id =:id or p.category.parent.id = :id")
     List<Product> findProductsByCategory(@Param("id") Long id);
+
+    @Transactional
+    @Modifying
+    @Query(value = "update products  set end_of_payment = :date where id = :id", nativeQuery = true)
+    void updateProductEndOfPayment(@Param("date") LocalDateTime date, @Param("id") Long id);
+
+    @Transactional
+    @Modifying
+    @Query(value = "update products  set up_to_top = :date where id = :id", nativeQuery = true)
+    void updateProductUpToTop(@Param("date") LocalDateTime date, @Param("id") Long id);
 
 }

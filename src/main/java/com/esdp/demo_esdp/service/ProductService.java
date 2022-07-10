@@ -79,6 +79,7 @@ public class ProductService {
                 .dateAdd(LocalDateTime.now())
                 .localities(productAddForm.getLocality())
                 .endOfPayment(LocalDateTime.now().minusDays(30))
+                .up(LocalDateTime.now())
                 .build();
         productRepository.save(product);
         imagesService.saveImagesFile(productAddForm.getImages(), product);
@@ -143,12 +144,15 @@ public class ProductService {
     public void addProductToTop(Long productId,Integer hour) throws ProductNotFoundException {
         var product = productRepository.findById(productId).orElseThrow(()->new ProductNotFoundException("Не найден продукт с id",productId.toString()));
         if (product.getEndOfPayment().isAfter(LocalDateTime.now())){
-            product.setEndOfPayment(product.getEndOfPayment().plusHours(hour));
-            productRepository.save(product);
+            productRepository.updateProductEndOfPayment(product.getEndOfPayment().plusHours(hour),product.getId());
         }else if (product.getEndOfPayment().isBefore(LocalDateTime.now())) {
-            product.setEndOfPayment(LocalDateTime.now().plusHours(hour));
-            productRepository.save(product);
+            productRepository.updateProductEndOfPayment(LocalDateTime.now().plusHours(hour),product.getId());
         }
+    }
+
+    public void upProduct(Long productId) throws ProductNotFoundException {
+        var product = productRepository.findById(productId).orElseThrow(()->new ProductNotFoundException("Не найден продукт с id",productId.toString()));
+        productRepository.updateProductUpToTop(LocalDateTime.now(),product.getId());
     }
 
     public Page<ProductDTO> getTopProduct(Pageable pageable){
