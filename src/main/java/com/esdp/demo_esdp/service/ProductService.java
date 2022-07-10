@@ -19,7 +19,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.chrono.ChronoLocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -142,7 +144,7 @@ public class ProductService {
     }
 
     public void addProductToTop(Long productId,Integer hour) throws ProductNotFoundException {
-        var product = productRepository.findById(productId).orElseThrow(()->new ProductNotFoundException("Не найден продукт с id",productId.toString()));
+        var product = productRepository.findById(productId).orElseThrow(()->new ProductNotFoundException("Не найден продукт с id "+ productId));
         if (product.getEndOfPayment().isAfter(LocalDateTime.now())){
             productRepository.updateProductEndOfPayment(product.getEndOfPayment().plusHours(hour),product.getId());
         }else if (product.getEndOfPayment().isBefore(LocalDateTime.now())) {
@@ -151,8 +153,12 @@ public class ProductService {
     }
 
     public void upProduct(Long productId) throws ProductNotFoundException {
-        var product = productRepository.findById(productId).orElseThrow(()->new ProductNotFoundException("Не найден продукт с id",productId.toString()));
-        productRepository.updateProductUpToTop(LocalDateTime.now(),product.getId());
+        var product = productRepository.findById(productId).orElseThrow(()->new ProductNotFoundException("Не найден продукт с id " + productId));
+        if (product.getUp().getDayOfYear()!=LocalDateTime.now().getDayOfYear()) {
+            productRepository.updateProductUpToTop(LocalDateTime.now(), product.getId());
+        }else {
+            throw new ProductNotFoundException("Вы достигли максимального количества возможности делать UP!");
+        }
     }
 
     public Page<ProductDTO> getTopProduct(Pageable pageable){
