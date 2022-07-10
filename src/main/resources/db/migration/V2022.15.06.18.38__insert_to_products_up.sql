@@ -1,0 +1,1 @@
+alter table products add up_to_top timestamp not null;
