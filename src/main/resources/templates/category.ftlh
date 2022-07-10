@@ -1,7 +1,7 @@
 <#import "partials/main.ftlh" as main />
 
 <#-- <@main.renderWith scripts=["js/categories.js"]> -->
-<@main.renderWith styles=["/webjars/bootstrap-icons/font/bootstrap-icons.css"]>
+<@main.renderWith>
     <div class="jumbotron jumbotron-fluid">
         <div class="container">
             <h1 class="display-4">Arenda.KG</h1>

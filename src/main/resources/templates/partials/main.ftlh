@@ -18,6 +18,7 @@
         <script type="text/javascript" src="/webjars/popper.js/umd/popper.min.js"></script>
         <script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.bundle.min.js"></script>
         <script type="text/javascript" src="/js/app.js"></script>
+        <link rel="stylesheet" type="text/css" href="/webjars/bootstrap-icons/font/bootstrap-icons.css"/>
         <link rel="stylesheet" href="/css/main.css">
         <#list styles as styleSource>
             <link rel="stylesheet" href="${styleSource}">
@@ -35,37 +36,6 @@
                 </button>
                 <div class="collapse navbar-collapse" id="topNavbar">
                     <ul class="navbar-nav ml-auto">
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="http://example.com" id="navbarCategoriesDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                              Список категорий
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarCategoriesDropdownMenuLink">
-                              <li><a class="dropdown-item" href="#">Action</a></li>
-                              <li><a class="dropdown-item" href="#">Another action</a></li>
-                              <li class="dropdown-submenu">
-                                <a class="dropdown-item dropdown-toggle" href="#">Submenu</a>
-                                <ul class="dropdown-menu">
-                                  <li><a class="dropdown-item" href="#">Submenu action</a></li>
-                                  <li><a class="dropdown-item" href="#">Another submenu action</a></li>
-
-                                  <li class="dropdown-submenu">
-                                    <a class="dropdown-item dropdown-toggle" href="#">Subsubmenu</a>
-                                    <ul class="dropdown-menu">
-                                      <li><a class="dropdown-item" href="#">Subsubmenu action</a></li>
-                                      <li><a class="dropdown-item" href="#">Another subsubmenu action</a></li>
-                                    </ul>
-                                  </li>
-                                  <li class="dropdown-submenu">
-                                    <a class="dropdown-item dropdown-toggle" href="#">Second subsubmenu</a>
-                                    <ul class="dropdown-menu">
-                                      <li><a class="dropdown-item" href="#">Subsubmenu action</a></li>
-                                      <li><a class="dropdown-item" href="#">Another subsubmenu action</a></li>
-                                    </ul>
-                                  </li>
-                                </ul>
-                              </li>
-                            </ul>
-                          </li>
                         <li class="nav-item">
                             <a class="nav-link" href="/product/create">Подать объявление</a>
                         </li>
@@ -94,9 +64,45 @@
         <div class="categories-header">
             <div class="container">
                 <#if categories??>
-                    <#list categories as category>
-                        <p class="category_list"><a href="/category?id=${category.id}">${category.name}</a></p>
-                    </#list>
+                    <nav class="navbar navbar-expand-lg navbar-dark bg-secondary text-dark">
+                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#category_nav">
+                            <i class="bi bi-grid-3x3-gap"></i>
+                        </button>
+                        <div class="collapse navbar-collapse" id="category_nav">
+                            <ul class="navbar-nav">
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">Все категории</a>
+                                    <ul class="dropdown-menu">
+                                      <li><a class="dropdown-item" href="#"> Second level 1 </a></li>
+                                      <li><a class="dropdown-item" href="#"> Second level 2 &raquo </a>
+                                         <ul class="submenu dropdown-menu">
+                                            <li><a class="dropdown-item" href=""> Third level 1</a></li>
+                                            <li><a class="dropdown-item" href=""> Third level 2</a></li>
+                                            <li><a class="dropdown-item" href=""> Third level 3 &raquo </a>
+                                            <ul class="submenu dropdown-menu">
+                                                <li><a class="dropdown-item" href=""> Fourth level 1</a></li>
+                                                <li><a class="dropdown-item" href=""> Fourth level 2</a></li>
+                                            </ul>
+                                            </li>
+                                            <li><a class="dropdown-item" href=""> Second level  4</a></li>
+                                            <li><a class="dropdown-item" href=""> Second level  5</a></li>
+                                         </ul>
+                                      </li>
+                                      <li><a class="dropdown-item" href="#"> Dropdown item 3 </a></li>
+                                      <li><a class="dropdown-item" href="#"> Dropdown item 4 </a>
+                                    </ul>
+                                </li>
+                                <#list categories as category>
+                                    <li class="nav-item">
+                                        <a href="/category?id=${category.id}" class="nav-link category_item">
+                                            ${category.name}
+                                        </a>
+                                    </li>
+                                </#list>
+                            </ul>
+
+                        </div>
+                    </nav>
                 </#if>
             </div>
         </div>
