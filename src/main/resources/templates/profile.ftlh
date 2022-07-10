@@ -42,7 +42,16 @@
                                     <h5>Категория: ${product.category.name}</h5>
                                 </div>
                             </div>
+                            <form action="/up/product" method="post">
+                                <#if _csrf??>
+                                    <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
+                                           value="${(_csrf.token)!'--no-token--'}"/>
+                                </#if>
+                                <input name="id" value="${product.id}" hidden>
+                                <button type="submit" class="btn btn-primary">Up</button>
+                            </form>
                             <br>
+
                         </#list>
                     </div>
                 <#else>
