@@ -1,43 +1,69 @@
 $(document).ready(function() {
-    var categories_data = new Object();
-    var raw_categories_data = localStorage.getItem("categories_data");
-    if (raw_categories_data == null) {
-        renewCategoriesLocalStorage(categories_data);
+    var ttlInHours = 1;
+    var now = new Date().getTime();
+    var expireTime = localStorage.getItem('expireTime');
+    if (expireTime == null) {
+        setCategoriesToLocalStorage();
+        localStorage.setItem("expireTime", now);
     } else {
-        categories_data = JSON.parse(raw_categories_data);
-        var categories = categories_data.categories;
-        var expire = categories_data.expire;
-        var now = new Date();
-        var oneDay = 1000 * 60 * 60 * 24;
-        if(now - expire > oneDay) {
-            renewCategoriesLocalStorage(categories_data);
+        if (now - expireTime > ttlInHours * 60 * 60 * 1000) {
+            localStorage.setItem("expireTime", now);
+            setCategoriesToLocalStorage();
         }
     }
+    getCategoriesDropDownMenu();
 
-    $('.dropdown-menu a.dropdown-toggle').on('click', function(e) {
-      if (!$(this).next().hasClass('show')) {
-        $(this).parents('.dropdown-menu').first().find('.show').removeClass("show");
-      }
-      var $subMenu = $(this).next(".dropdown-menu");
-      $subMenu.toggleClass('show');
 
-      $(this).parents('li.nav-item.dropdown.show').on('hidden.bs.dropdown', function(e) {
-        $('.dropdown-submenu .show').removeClass("show");
-      });
-      return false;
+    // Prevent closing from click inside dropdown
+    $(document).on('click', '.dropdown-menu', function (e) {
+      e.stopPropagation();
     });
+
+    // make it as accordion for smaller screens
+    if ($(window).width() < 992) {
+        $('.dropdown-menu a').click(function(e){
+            e.preventDefault();
+        if($(this).next('.submenu').length){
+            $(this).next('.submenu').toggle();
+        }
+        $('.dropdown').on('hide.bs.dropdown', function () {
+            $(this).find('.submenu').hide();
+        })});
+    }
 });
 
-var renewCategoriesLocalStorage = function(categories_data) {
+var setCategoriesToLocalStorage = function() {
     var jqxhr = $.get( "/categories", function(data) {
         }).done(function(data) {
-            var expire = new Date();
-            expire.setDate(expire.getDate() + 1);
-            categories_data.categories = data;
-            categories_data.expire = expire;
-            localStorage.setItem("categories_data", JSON.stringify(categories_data));
+            localStorage.setItem("categories", JSON.stringify(data));
         }).fail(function() {
-            console.log( "network error" );
+            console.log("network error");
         }).always(function() {
         });
 };
+
+var getCategoriesDropDownMenu = function() {
+    var mainDropDownMenu = document.createElement('ul');
+    mainDropDownMenu.classList.add("dropdown-menu");
+
+    var subDropDownMenu = document.createElement('ul');
+    subDropDownMenu.classList.add("submenu", "dropdown-menu");
+
+    var listItem = document.createElement("li");
+
+    var menuLink = document.createElement("a");
+    menuLink.classList.add("dropdown-item");
+    menuLink.href = "#";
+
+    var categories = JSON.parse(localStorage.getItem("categories"));
+    categories.forEach(function(category) {
+        var ul = subDropDownMenu.cloneNode();
+        var subCategories1 = category.subCategories;
+//        if (subCategories1 != null) {
+//
+//            var li = listItem.cloneNode();
+//            var link = menuLink.cloneNode();
+//            link.innerText =
+//        }
+    });
+}
