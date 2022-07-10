@@ -104,7 +104,7 @@ public class CategoryService {
         var category = categoryRepository.findById(categoryId);
         var defaultCategory = categoryRepository.findCategoryByName("Прочее");
         if (category.equals(defaultCategory)) {
-            throw new CategoryNotFoundException("Нельзя изменять дефолтную категорию", defaultCategory.get().getName());
+            throw new CategoryNotFoundException("Нельзя изменять дефолтную категорию"+ defaultCategory.get().getName());
         }
         category.ifPresent(value -> value.setName(newName));
     }
@@ -137,7 +137,7 @@ public class CategoryService {
                 categoryRepository.delete(category);
             }
         } else {
-            throw new CategoryNotFoundException("Нельзя удалять категорию", defaultCategory.getName());
+            throw new CategoryNotFoundException("Нельзя удалять категорию"+defaultCategory.getName());
         }
     }
 
@@ -153,7 +153,7 @@ public class CategoryService {
             }
             categoryRepository.save(subCategory.get());
         } else
-            throw new CategoryNotFoundException("Нельзя изменять дефолтную категорию", defaultCategory.get().getName());
+            throw new CategoryNotFoundException("Нельзя изменять дефолтную категорию "+ defaultCategory.get().getName());
     }
 
 

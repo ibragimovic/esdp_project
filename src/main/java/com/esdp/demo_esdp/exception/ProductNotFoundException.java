@@ -12,8 +12,7 @@ public class ProductNotFoundException extends Throwable {
     private String resource;
     private String name;
 
-    public ProductNotFoundException(String resource, String name) {
+    public ProductNotFoundException(String resource) {
         this.resource = resource;
-        this.name = name;
     }
 }
