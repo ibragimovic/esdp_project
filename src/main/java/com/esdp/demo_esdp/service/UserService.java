@@ -6,7 +6,10 @@ import com.esdp.demo_esdp.exception.UserAlreadyRegisteredException;
 import com.esdp.demo_esdp.exception.UserNotFoundException;
 import com.esdp.demo_esdp.repositories.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -104,11 +107,7 @@ public class UserService {
 
     public void blockingUser(Long id) {
         var user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
-        if (user.isEnabled()) {
-            userRepository.updateEnabledUser(false, user.getId());
-        } else {
-            userRepository.updateEnabledUser(true, user.getId());
-        }
+        userRepository.updateEnabledUser(!user.isEnabled(), user.getId());
     }
 
     public User getUserByEmail(String email) {
@@ -128,5 +127,16 @@ public class UserService {
         if (!updatePasswordDTO.getNewPassword().equals(updatePasswordDTO.getRepeatingPassword())) return false;
         userRepository.updateUserPassword(encoder.encode(updatePasswordDTO.getNewPassword()), user.getId());
         return true;
+    }
+
+    public String getEmailFromAuthentication(Authentication authentication) {
+        String email;
+        if (authentication instanceof OAuth2AuthenticationToken) {
+            var attributes = ((DefaultOAuth2User)authentication.getPrincipal()).getAttributes();
+            email = attributes.get("email").toString();
+        }else {
+            email = authentication.getName();
+        }
+        return email;
     }
 }
