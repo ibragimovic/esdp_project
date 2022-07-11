@@ -7,27 +7,15 @@ import com.esdp.demo_esdp.dto.UserUpdateForm;
 import com.esdp.demo_esdp.entity.User;
 import com.esdp.demo_esdp.exception.UserAlreadyRegisteredException;
 import com.esdp.demo_esdp.exception.UserNotFoundException;
-import com.esdp.demo_esdp.dto.UserRegisterForm;
 import com.esdp.demo_esdp.repositories.UserRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
-import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
-import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -37,11 +25,6 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder encoder;
     private final MailSender mailSender;
-
-    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
-    @Autowired
-    private final OAuth2AuthorizedClientService authorizedClientService;
-
 
     public void registerOAuth2User (UserRegisterOAuth2Form form) {
         var user = User.builder()
@@ -127,11 +110,7 @@ public class UserService {
 
     public void blockingUser(Long id) {
         var user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
-        if (user.isEnabled()) {
-            userRepository.updateEnabledUser(false, user.getId());
-        } else {
-            userRepository.updateEnabledUser(true, user.getId());
-        }
+        userRepository.updateEnabledUser(!user.isEnabled(), user.getId());
     }
 
     public User getUserByEmail(String email){
