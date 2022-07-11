@@ -58,9 +58,12 @@ public class Product {
 
 
     @NotNull
-    @Column(name = " end_of_payment")
+    @Column(name = "end_of_payment")
     private LocalDateTime endOfPayment;
 
+    @NotNull
+    @Column(name = "up_to_top")
+    private LocalDateTime up;
 
     @NotBlank
     private String localities;

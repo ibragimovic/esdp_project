@@ -3,6 +3,7 @@ package com.esdp.demo_esdp.controller;
 import com.esdp.demo_esdp.dto.ImageDTO;
 import com.esdp.demo_esdp.dto.ProductAddForm;
 import com.esdp.demo_esdp.entity.User;
+import com.esdp.demo_esdp.exception.ProductNotFoundException;
 import com.esdp.demo_esdp.service.CategoryService;
 import com.esdp.demo_esdp.service.ProductService;
 import com.esdp.demo_esdp.service.PropertiesService;
@@ -137,6 +138,10 @@ public class ProductController {
         return "create_product";
     }
 
-
+    @PostMapping("/up/product")
+    public String upProduct(@RequestParam(name = "id") Long productId) throws ProductNotFoundException {
+        productService.upProduct(productId);
+        return "redirect:/";
+    }
 
 }

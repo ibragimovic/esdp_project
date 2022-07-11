@@ -17,7 +17,6 @@ public class CategoryControllerAdvice {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     private String categoryNotFound(CategoryNotFoundException ex, Model model) {
         model.addAttribute("resource", ex.getResource());
-        model.addAttribute("name", ex.getName());
         return "not_found";
     }
 }

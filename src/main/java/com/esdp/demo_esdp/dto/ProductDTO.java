@@ -20,6 +20,7 @@ public class ProductDTO {
     private String status;
     private LocalDateTime dateAdd;
     private LocalDateTime endOfPayment;
+    private LocalDateTime up_to_top;
     private String localities;
 
     public static ProductDTO from(Product product) {
@@ -34,6 +35,7 @@ public class ProductDTO {
                 .dateAdd(product.getDateAdd())
                 .endOfPayment(product.getEndOfPayment())
                 .localities(product.getLocalities())
+                .up_to_top(product.getUp())
                 .build();
     }
 }
