@@ -2,7 +2,8 @@ $(document).ready(function() {
     var ttlInHours = 1;
     var now = new Date().getTime();
     var expireTime = localStorage.getItem('expireTime');
-    if (expireTime == null) {
+    var categories = localStorage.getItem('categories');
+    if (expireTime == null || categories == null) {
         setCategoriesToLocalStorage();
         localStorage.setItem("expireTime", now);
     } else {
@@ -11,8 +12,7 @@ $(document).ready(function() {
             setCategoriesToLocalStorage();
         }
     }
-    getCategoriesDropDownMenu();
-
+    renderCategoriesDropDownMenu();
 
     // Prevent closing from click inside dropdown
     $(document).on('click', '.dropdown-menu', function (e) {
@@ -42,28 +42,53 @@ var setCategoriesToLocalStorage = function() {
         });
 };
 
-var getCategoriesDropDownMenu = function() {
-    var mainDropDownMenu = document.createElement('ul');
-    mainDropDownMenu.classList.add("dropdown-menu");
-
-    var subDropDownMenu = document.createElement('ul');
-    subDropDownMenu.classList.add("submenu", "dropdown-menu");
-
+var renderCategoriesDropDownMenu = function() {
+    var mainMenu = document.getElementById("category_menu");
+    if(mainMenu == null) {
+        return;
+    }
     var listItem = document.createElement("li");
-
     var menuLink = document.createElement("a");
     menuLink.classList.add("dropdown-item");
-    menuLink.href = "#";
 
     var categories = JSON.parse(localStorage.getItem("categories"));
     categories.forEach(function(category) {
-        var ul = subDropDownMenu.cloneNode();
-        var subCategories1 = category.subCategories;
-//        if (subCategories1 != null) {
-//
-//            var li = listItem.cloneNode();
-//            var link = menuLink.cloneNode();
-//            link.innerText =
-//        }
+        var subCategories = category.subCategories;
+        var li = listItem.cloneNode();
+        var link = menuLink.cloneNode();
+        link.innerHTML = category.name;
+        link.href = 'category?id=' + category.id;
+        li.appendChild(link);
+        mainMenu.appendChild(li);
+        if (subCategories.length !== 0) {
+            link.innerHTML = link.innerHTML + ' &raquo';
+            var subMenu = createCategorySubMenu(subCategories);
+            li.appendChild(subMenu);
+        }
     });
+}
+
+var createCategorySubMenu = function(subCategories) {
+    if (subCategories.length === 0) {
+        return document.createElement(null);
+    }
+    var subMenu = document.createElement('ul');
+    subMenu.classList.add("submenu", "dropdown-menu");
+    subCategories.forEach(function(category) {
+        var li = document.createElement("li");
+        var link = document.createElement("a");
+        link.classList.add("dropdown-item");
+        link.href = "/category?id=" + category.id;
+        link.innerHTML = category.name;
+        li.appendChild(link);
+        subMenu.appendChild(li);
+        var nextSubCategories = category.subCategories;
+        if (nextSubCategories != null) {
+            if(Array.isArray(nextSubCategories) & nextSubCategories.length > 0) {
+                link.innerHTML = link.innerHTML + ' &raquo';
+            }
+            li.appendChild(createCategorySubMenu(nextSubCategories));
+        }
+    });
+    return subMenu;
 }
