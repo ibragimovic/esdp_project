@@ -10,7 +10,7 @@ import java.util.List;
 @Builder
 public class ProductAddForm {
     @NotNull
-    @Size(min=10, message = "Length must be >= 4")
+    @Size(min=4, message = "Length must be >= 4")
 //    @Pattern(regexp = "^[^\\d\\s]+$", message = "Should contain only letters")
     private String name;
 

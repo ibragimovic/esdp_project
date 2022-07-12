@@ -3,8 +3,10 @@ package com.esdp.demo_esdp.service;
 import com.esdp.demo_esdp.dto.ImagesDTO;
 import com.esdp.demo_esdp.entity.Images;
 import com.esdp.demo_esdp.entity.Product;
+import com.esdp.demo_esdp.exception.ProductNotFoundException;
 import com.esdp.demo_esdp.exception.ResourceNotFoundException;
 import com.esdp.demo_esdp.repositories.ImagesRepository;
+import com.esdp.demo_esdp.repositories.ProductRepository;
 import com.esdp.demo_esdp.util.FileStorageImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -13,9 +15,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -26,45 +30,87 @@ import java.util.stream.Collectors;
 public class ImagesService {
     private final FileStorageImpl fileStorage;
     private final ImagesRepository imagesRepository;
+    private final ProductRepository productRepository;
 
     @Value("${upload.path}")
     private String uploadPath;
 
-    public void saveImagesFile(List<MultipartFile> files, Product product) {
+//    public void saveImagesFile(List<MultipartFile> files, Product product) {
+//        try {
+//            if (files != null) {
+//                File upload = new File(uploadPath);
+//                if (!upload.exists()) {
+//                    upload.mkdir();
+//                }
+//                for (int i = 0; i < files.size(); i++) {
+//                    String uuid = UUID.randomUUID().toString();
+//                    String resulFileName = uuid + "." + files.get(i).getOriginalFilename();
+//                    files.get(i).transferTo(new File(uploadPath + resulFileName));
+//                    imagesRepository.save(Images.builder()
+//                            .path(resulFileName)
+//                            .product(product)
+//                            .build());
+//                }
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    public void deleteImagesFile(Long productId) {
+//        var paths = imagesRepository.getProductImagePath(productId);
+//        paths.forEach(i -> {
+//            try {
+//                Files.delete(Paths.get(uploadPath + i));
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        });
+//        var imageProduct = imagesRepository.getImagesProduct(productId);
+//        if (!imageProduct.isEmpty()) {
+//            imageProduct.forEach(i -> imagesRepository.deleteById(i.getId()));
+//        }
+//    }
+
+    //this method saves MultipartFile to "uploads_" in the root directory and returns a string of saved image name
+    protected String saveImageFile(MultipartFile image) throws IOException {
+        String imageStorageName=fileStorage.save(image.getInputStream(),image.getOriginalFilename());
+        return imageStorageName;
+    }
+
+    //this method deletes an image by its name saved in "uploads_" folder
+    protected void deleteImageFile(String imageName) throws IOException {
         try {
-            if (files != null) {
-                File upload = new File(uploadPath);
-                if (!upload.exists()) {
-                    upload.mkdir();
-                }
-                for (int i = 0; i < files.size(); i++) {
-                    String uuid = UUID.randomUUID().toString();
-                    String resulFileName = uuid + "." + files.get(i).getOriginalFilename();
-                    files.get(i).transferTo(new File(uploadPath + resulFileName));
-                    imagesRepository.save(Images.builder()
-                            .path(resulFileName)
-                            .product(product)
-                            .build());
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+            fileStorage.delete(imageName);
+        }catch (IOException e){
+            throw new FileNotFoundException(String.format("cannot find image: %s",imageName));
         }
     }
 
-    public void deleteImagesFile(Long productId) {
-        var paths = imagesRepository.getProductImagePath(productId);
-        paths.forEach(i -> {
-            try {
-                Files.delete(Paths.get(uploadPath + i));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
-        var imageProduct = imagesRepository.getImagesProduct(productId);
-        if (!imageProduct.isEmpty()) {
-            imageProduct.forEach(i -> imagesRepository.deleteById(i.getId()));
+    public void saveNewImages(List<MultipartFile> files,Long productId) throws IOException, ProductNotFoundException {
+        List<Images> images=new ArrayList<>();
+        for(int i=0;i<files.size();i++){
+            images.add(Images.builder()
+                    .product(productRepository.findById(productId).orElseThrow(()->new ProductNotFoundException(String.format("product with id %s not found",productId))))
+                    .path(saveImageFile(files.get(i)))
+                    .build());
         }
+        imagesRepository.saveAll(images);
+    }
+
+    @SneakyThrows
+    public void deleteImagesById(Long imageId) {
+        Optional<Images> imageOpt=imagesRepository.findById(imageId);
+        if(imageOpt.isPresent()){
+            deleteImageFile(imageOpt.get().getPath());
+            imagesRepository.deleteById(imageOpt.get().getId());
+        }
+    }
+
+    public void deleteImagesByProductId(Long productId){
+        List<Images> images=imagesRepository.getImagesProduct(productId);
+        images.forEach(img-> deleteImagesById(img.getId()));
+
     }
 
     @SneakyThrows
@@ -94,15 +140,15 @@ public class ImagesService {
     }
 
 
-    public void deleteImageId(Long imageId) {
-        var image = imagesRepository.getImageId(imageId)
-                .orElseThrow(ResourceNotFoundException::new);
-        imagesRepository.delete(image);
-        try {
-            Files.delete(Paths.get(uploadPath + image.getPath()));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+//    public void deleteImageId(Long imageId) {
+//        var image = imagesRepository.getImageId(imageId)
+//                .orElseThrow(ResourceNotFoundException::new);
+//        imagesRepository.delete(image);
+//        try {
+//            Files.delete(Paths.get(uploadPath + image.getPath()));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
 }

@@ -16,14 +16,12 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import java.io.IOException;
 
 @Controller
 @RequiredArgsConstructor
@@ -35,8 +33,10 @@ public class ProductController {
     private final CategoryService categoryService;
 
 
+
+
     @GetMapping("/product/create")
-    public String createNewProductGET(Model model) {
+    public String createNewProductGET(Model model) throws ProductNotFoundException {
 
         model.addAttribute("localities", localitiesService.getLocalitiesDTOs());
         model.addAttribute("select_categories", categoryService.getEndCategory());
@@ -45,7 +45,7 @@ public class ProductController {
 
     @PostMapping("/product/create")
     public String createNewProductPOST(@ModelAttribute("newProductData") ProductAddForm newProduct,
-                                       Model model, Authentication authentication) {
+                                       Model model, Authentication authentication) throws IOException, ProductNotFoundException {
         User user = userService.getUserByEmail(userService.getEmailFromAuthentication(authentication));
         if (user.getTelNumber() == null || user.getTelNumber().isEmpty()) {
             return "phone";
@@ -119,6 +119,12 @@ public class ProductController {
     public String upProduct(@RequestParam(name = "id") Long productId) throws ProductNotFoundException {
         productService.upProduct(productId);
         return "redirect:/";
+    }
+
+    @GetMapping("/product/{id}")
+    public String seeProductDetails(Model model, @PathVariable Long id) throws ProductNotFoundException {
+        model.addAttribute("product", productService.getProductDetails(id));
+        return "product_details";
     }
 
 }

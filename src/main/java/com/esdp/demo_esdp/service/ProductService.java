@@ -2,6 +2,8 @@ package com.esdp.demo_esdp.service;
 
 import com.esdp.demo_esdp.dto.ProductAddForm;
 import com.esdp.demo_esdp.dto.ProductDTO;
+import com.esdp.demo_esdp.dto.ProductDetailsDto;
+import com.esdp.demo_esdp.dto.SimilarProductDto;
 import com.esdp.demo_esdp.entity.Category;
 import com.esdp.demo_esdp.entity.Favorites;
 import com.esdp.demo_esdp.entity.Product;
@@ -11,6 +13,7 @@ import com.esdp.demo_esdp.exception.ProductNotFoundException;
 import com.esdp.demo_esdp.exception.ResourceNotFoundException;
 import com.esdp.demo_esdp.exception.UserNotFoundException;
 import com.esdp.demo_esdp.repositories.CategoryRepository;
+import com.esdp.demo_esdp.repositories.FavoritesRepository;
 import com.esdp.demo_esdp.repositories.ProductRepository;
 import com.esdp.demo_esdp.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,10 +22,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.chrono.ChronoLocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,6 +40,7 @@ public class ProductService {
     private final ImagesService imagesService;
     private final FavoritesService favoritesService;
     private final UserRepository userRepository;
+    private final FavoritesRepository favoritesRepository;
 
     @Value("${upload.path}")
     private String uploadPath;
@@ -67,7 +75,7 @@ public class ProductService {
     }
 
 
-    public void addNewProduct(ProductAddForm productAddForm, User user) {
+    public void addNewProduct(ProductAddForm productAddForm, User user) throws IOException, ProductNotFoundException {
         Category category = categoryRepository.getCategory(productAddForm.getCategoryId())
                 .orElseThrow(ResourceNotFoundException::new);
 
@@ -84,7 +92,7 @@ public class ProductService {
                 .up(LocalDateTime.now())
                 .build();
         productRepository.save(product);
-        imagesService.saveImagesFile(productAddForm.getImages(), product);
+        imagesService.saveNewImages(productAddForm.getImages(), product.getId());
     }
 
 
@@ -92,7 +100,7 @@ public class ProductService {
         var user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
         if (user.getEmail().equals(productRepository.getPublicationUserEmail(productId))
                 || user.getRole().equals("Admin")) {
-            imagesService.deleteImagesFile(productId);
+            imagesService.deleteImagesByProductId(productId);
             favoritesService.deleteFavoritesByProductId(productId);
             productRepository.deleteById(productId);
         } else {
@@ -176,4 +184,67 @@ public class ProductService {
         return productRepository.getProductsCategory(id)
                 .stream().map(ProductDTO::from).collect(Collectors.toList());
     }
+
+    public ProductDetailsDto getProductDetails(Long id) throws ProductNotFoundException {
+        Product p=productRepository.findById(id).orElseThrow( ()->new ProductNotFoundException(String.format("product with id %s was not found",id)) );
+        return ProductDetailsDto.builder()
+                .name(p.getName())
+                .category(p.getCategory().getName())
+                .fullName(String.format("%s %s",p.getUser().getName(),p.getUser().getLastname()))
+                .phoneNumber(p.getUser().getTelNumber())
+                .description(p.getDescription())
+                .price(p.getPrice())
+                .localities(p.getLocalities())
+                .imagePaths(imagesService.getImagesPathsByProductId(p.getId()))
+//                .similarProducts(getSimilarProducts(p.getId()))
+                .build();
+
+    }
+
+    protected List<SimilarProductDto> getSimilarProducts(Long id) throws ProductNotFoundException {
+        Product product=productRepository.findById(id).orElseThrow(()->new ProductNotFoundException(String.format("product with id %s was not found",id)));
+        Category productCategory=product.getCategory();
+        List<Product> similarProducts= new ArrayList<>();
+        Category currentCategory=productCategory;
+
+        while(true){
+            similarProducts=productRepository.getSimilarProducts(currentCategory.getId(),id);
+            if(similarProducts.isEmpty()){
+                currentCategory=currentCategory.getParent();
+                if(currentCategory==null){
+                    return null;
+                }
+            }else{
+                break;
+            }
+        }
+
+        return getProductsWithMostLikes(similarProducts,3).stream()
+                .map(p->SimilarProductDto.builder()
+                        .id(p.getId())
+                        .name(p.getName())
+                        .category(p.getCategory().getName())
+                        .price(p.getPrice())
+                        .imagePaths(imagesService.getImagesPathsByProductId(p.getId()))
+                        .build()).collect(Collectors.toList());
+
+    }
+
+    private List<Product> getProductsWithMostLikes(List<Product> products, int productsQty){
+        List<Long> amountOfProductLikes=products.stream().map(p->favoritesRepository.getAmountOfLikes(p.getId())).collect(Collectors.toList());
+        Collections.sort(amountOfProductLikes,Collections.reverseOrder());
+
+        List<Long> mostLikes=new ArrayList<>();
+        for(int i=0;i<productsQty;i++){
+            mostLikes.add(amountOfProductLikes.get(i));
+        }
+
+        return products.stream()
+                .filter(p->mostLikes.contains(favoritesRepository.getAmountOfLikes(p.getId())))
+                .limit(productsQty).collect(Collectors.toList());
+
+    }
+
+
+
 }
