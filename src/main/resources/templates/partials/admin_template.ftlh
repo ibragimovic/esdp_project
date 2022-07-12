@@ -14,6 +14,7 @@
         <script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
         <script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js"></script>
         <script type="text/javascript" src="/webjars/popper.js/umd/popper.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="/webjars/bootstrap-icons/font/bootstrap-icons.css"/>
         <link rel="stylesheet" type="text/css" href="/css/admin_style.css"/>
         <link rel="stylesheet" type="text/css" href="/css/admin_category.css"/>
 
