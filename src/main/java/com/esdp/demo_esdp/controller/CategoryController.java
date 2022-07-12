@@ -29,10 +29,10 @@ public class CategoryController {
     public String getOneCategory(@RequestParam Long id, Model model, @PageableDefault(sort = "name", direction = Sort.Direction.ASC) Pageable page) throws CategoryNotFoundException {
         var childCategory = categoryService.getSubCategories(id);
         var category = categoryService.getOneCategory(id);
-        if (!childCategory.isEmpty()){
+        var products = categoryService.getProductByCategoryID(id,page);
             model.addAttribute("child_categories", childCategory);
             model.addAttribute("category",category.getName());
-        }
+            model.addAttribute("products",products.getContent());
         return "category";
     }
 
