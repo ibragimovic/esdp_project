@@ -11,6 +11,11 @@
 <#--                        <p style="color:red">Необходимо активировать пользователя через почту !</p>-->
                 </#if>
             </div>
+            <div>
+                <#if block?? >
+                    <p style="color:#ff0000">${block}</p>
+                </#if>
+            </div>
 
             <#if _csrf??>
                 <input type="hidden" name="${(_csrf.parameterName)!'csrf'}" value="${(_csrf.token)!'--no-token--'}"/>

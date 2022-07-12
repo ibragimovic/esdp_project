@@ -18,7 +18,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 import java.security.Principal;
-import java.util.Locale;
 
 @Validated
 @Controller
