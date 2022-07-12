@@ -70,33 +70,24 @@ public class UserService {
         if (!userRepository.existsById(form.getId())) {
             throw new UserNotFoundException();
         }
-
-
         userRepository.updateUserData(form.getName(), form.getLastName(), form.getEmail(), form.getTelNumber(), form.getLogin(), form.getId());
-
         var user = userRepository.findById(form.getId()).get();
-
         return UserResponseDTO.from(user);
     }
 
     public UserResponseDTO getByEmail(String email) {
         var user = userRepository.findByEmail(email)
                 .orElseThrow(UserNotFoundException::new);
-
         return UserResponseDTO.from(user);
     }
 
     public boolean activateUser(String code) {
         User user = userRepository.findByActivationCode(code);
-
         if (user == null) {
             return false;
         }
-
         user.setActivationCode(null);
-
         userRepository.updateUserData(user.getName(), user.getLastname(), user.getEmail(), user.getTelNumber(), user.getLogin(), user.getId());
-
         return true;
     }
 
@@ -132,11 +123,16 @@ public class UserService {
     public String getEmailFromAuthentication(Authentication authentication) {
         String email;
         if (authentication instanceof OAuth2AuthenticationToken) {
-            var attributes = ((DefaultOAuth2User)authentication.getPrincipal()).getAttributes();
+            var attributes = ((DefaultOAuth2User) authentication.getPrincipal()).getAttributes();
             email = attributes.get("email").toString();
-        }else {
+        } else {
             email = authentication.getName();
         }
         return email;
+    }
+
+    public boolean isUserEnabled (String email) throws UserNotFoundException {
+        var user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
+        return user.isEnabled();
     }
 }
