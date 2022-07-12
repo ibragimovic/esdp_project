@@ -6,15 +6,23 @@ import com.esdp.demo_esdp.exception.UserAlreadyRegisteredException;
 import com.esdp.demo_esdp.exception.UserNotFoundException;
 import com.esdp.demo_esdp.repositories.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
+import static org.springframework.security.web.context.HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY;
 
 @Service
 @AllArgsConstructor
@@ -131,8 +139,42 @@ public class UserService {
         return email;
     }
 
-    public boolean isUserEnabled (String email) throws UserNotFoundException {
+    public boolean isUserEnabled(String email) throws UserNotFoundException {
         var user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
         return user.isEnabled();
+    }
+
+
+    public void restorePassword(String email) throws UserNotFoundException {
+        var user = userRepository.findByEmail(email)
+                .orElseThrow(UserNotFoundException::new);
+        String message = String.format(
+                "Здравствуйте %s! \n" +
+                        "Пожалуйста, для смены пароля перейдите по следующей ссылке: http://localhost:8080/password-recovery/%s/%s",
+                user.getName() + " " + user.getLastname() , user.getEmail(), generateRandomLink(user)
+        );
+
+        mailSender.send(user.getEmail(), "Смена пароля", message);
+    }
+
+    private String generateRandomLink(User user) {
+        String uuid = UUID.randomUUID().toString();
+        userRepository.updateUserPassword(encoder.encode(uuid), user.getId());
+        return uuid;
+    }
+
+    public Boolean updatePassword(String email, String password) {
+        var user = userRepository.findByEmail(email)
+                .orElseThrow(UserNotFoundException::new);
+        if (!doPasswordsMatch(password, user.getPassword())) return false;
+        return true;
+    }
+
+    public void userNewPassword(String email, String password,String repeatPassword) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(UserNotFoundException::new);
+        if (password.equals(repeatPassword)){
+            userRepository.updateUserPassword(encoder.encode(password),user.getId());
+        }
     }
 }

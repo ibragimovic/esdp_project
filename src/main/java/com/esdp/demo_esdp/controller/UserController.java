@@ -17,6 +17,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.security.Principal;
 
 @Validated
@@ -98,6 +100,33 @@ public class UserController {
         attributes.addFlashAttribute("errorPassword", userService.updateUserPassword(principal.getName(),
                 updatePasswordDTO));
         return "redirect:/profile";
+    }
+
+
+    @GetMapping("/password-recovery")
+    public String getPasswordRecovery() {
+        return "password_recovery";
+    }
+
+    @PostMapping("/password-recovery")
+    public String getNewPair(@RequestParam String username, Model model) {
+        userService.restorePassword(username);
+        return "redirect:/";
+    }
+
+    @GetMapping("/password-recovery/{email}/{password}")
+    public String showFormNewPassword(@PathVariable String email, @PathVariable String password, RedirectAttributes attributes) {
+        if (userService.updatePassword(email, password)) {
+            attributes.addAttribute("email", email);
+            return "password_new";
+        }
+        return "redirect:/";
+    }
+
+    @PostMapping("/new-password")
+    public String userNewPassword(@NotBlank String email, @Size(min = 8) String password, @Size(min = 8) String repeatPassword) {
+        userService.userNewPassword(email, password, repeatPassword);
+        return "redirect:/";
     }
 
 
