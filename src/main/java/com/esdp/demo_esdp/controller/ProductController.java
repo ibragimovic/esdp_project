@@ -1,8 +1,8 @@
 package com.esdp.demo_esdp.controller;
 
-import com.esdp.demo_esdp.dto.ImageDTO;
 import com.esdp.demo_esdp.dto.ProductAddForm;
 import com.esdp.demo_esdp.entity.User;
+import com.esdp.demo_esdp.exception.ProductNotFoundException;
 import com.esdp.demo_esdp.service.CategoryService;
 import com.esdp.demo_esdp.service.ProductService;
 import com.esdp.demo_esdp.service.PropertiesService;
@@ -16,15 +16,14 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
-import java.security.Principal;
 
 @Controller
 @RequiredArgsConstructor
@@ -35,37 +34,36 @@ public class ProductController {
     private final LocalitiesService localitiesService;
     private final CategoryService categoryService;
 
-    @GetMapping("/product/add")
-    public String getAddPage(Model model) {
-        return "add-product";
+
+    @GetMapping("/product/create")
+    public String createNewProductGET(Model model) {
+
+        model.addAttribute("localities", localitiesService.getLocalitiesDTOs());
+        model.addAttribute("select_categories", categoryService.getEndCategory());
+        return "create_product";
     }
 
-    @PostMapping("/product/add")
-    public String addNewProduct(@Valid ProductAddForm productAddForm,
-                                @Valid ImageDTO imageDTO,
-                                BindingResult validationResult,
-                                Authentication authentication,
-                                RedirectAttributes attributes) {
-
-        if (validationResult.hasFieldErrors()) {
-            attributes.addFlashAttribute("errors", validationResult.getFieldErrors());
-            return "redirect:/product/add";
+    @PostMapping("/product/create")
+    public String createNewProductPOST(@ModelAttribute("newProductData") ProductAddForm newProduct,
+                                       Model model, Authentication authentication) {
+        User user = userService.getUserByEmail(userService.getEmailFromAuthentication(authentication));
+        if (user.getTelNumber() == null || user.getTelNumber().isEmpty()) {
+            return "phone";
         }
-        User user = (User) authentication.getPrincipal();
-        productService.addNewProduct(productAddForm, user);
-        return "redirect:/profile";
+        productService.addNewProduct(newProduct,user);
+        model.addAttribute("lastStep",true);
+        return "create_product";
     }
 
     @PostMapping("/product/delete")
     public String deleteProductById(@RequestParam("productId") Long productId,
-                                    Principal principal) {
-        return "redirect:/" + productService.deleteProductById(productId, principal.getName());
+                                    Authentication authentication) {
+        return "redirect:/" + productService.deleteProductById(productId, userService.getEmailFromAuthentication(authentication));
     }
 
     @GetMapping("/product/search-category")
     public String getProductCategory(@RequestParam("category") @NotBlank String category,
-                                     Model model,
-                                     Pageable pageable, HttpServletRequest uriBuilder) {
+                                     Model model, Pageable pageable, HttpServletRequest uriBuilder) {
         var products = productService.getProductCategory(category, pageable);
         if (products.isEmpty()) {
             return "error404";
@@ -117,26 +115,10 @@ public class ProductController {
 
     }
 
-    @GetMapping("/product/create")
-    public String createNewProductGET(Model model) {
-
-        model.addAttribute("localities", localitiesService.getLocalitiesDTOs());
-        model.addAttribute("select_categories", categoryService.getEndCategory());
-        return "create_product";
+    @PostMapping("/up/product")
+    public String upProduct(@RequestParam(name = "id") Long productId) throws ProductNotFoundException {
+        productService.upProduct(productId);
+        return "redirect:/";
     }
-
-    @PostMapping("/product/create")
-    public String createNewProductPOST(
-            @ModelAttribute("newProductData") ProductAddForm newProduct,
-            Model model, Authentication authentication
-    ){
-        User user=userService.getUserByEmail(authentication.getName());
-        productService.addNewProduct(newProduct,user);
-
-        model.addAttribute("lastStep",true);
-        return "create_product";
-    }
-
-
 
 }

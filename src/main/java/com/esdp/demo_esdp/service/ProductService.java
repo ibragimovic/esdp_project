@@ -19,7 +19,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.chrono.ChronoLocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -79,6 +81,7 @@ public class ProductService {
                 .dateAdd(LocalDateTime.now())
                 .localities(productAddForm.getLocality())
                 .endOfPayment(LocalDateTime.now().minusDays(30))
+                .up(LocalDateTime.now())
                 .build();
         productRepository.save(product);
         imagesService.saveImagesFile(productAddForm.getImages(), product);
@@ -141,13 +144,20 @@ public class ProductService {
     }
 
     public void addProductToTop(Long productId,Integer hour) throws ProductNotFoundException {
-        var product = productRepository.findById(productId).orElseThrow(()->new ProductNotFoundException("Не найден продукт с id",productId.toString()));
+        var product = productRepository.findById(productId).orElseThrow(()->new ProductNotFoundException("Не найден продукт с id "+ productId));
         if (product.getEndOfPayment().isAfter(LocalDateTime.now())){
-            product.setEndOfPayment(product.getEndOfPayment().plusHours(hour));
-            productRepository.save(product);
+            productRepository.updateProductEndOfPayment(product.getEndOfPayment().plusHours(hour),product.getId());
         }else if (product.getEndOfPayment().isBefore(LocalDateTime.now())) {
-            product.setEndOfPayment(LocalDateTime.now().plusHours(hour));
-            productRepository.save(product);
+            productRepository.updateProductEndOfPayment(LocalDateTime.now().plusHours(hour),product.getId());
+        }
+    }
+
+    public void upProduct(Long productId) throws ProductNotFoundException {
+        var product = productRepository.findById(productId).orElseThrow(()->new ProductNotFoundException("Не найден продукт с id " + productId));
+        if (product.getUp().getDayOfYear()!=LocalDateTime.now().getDayOfYear()) {
+            productRepository.updateProductUpToTop(LocalDateTime.now(), product.getId());
+        }else {
+            throw new ProductNotFoundException("Вы достигли максимального количества возможности делать UP!");
         }
     }
 

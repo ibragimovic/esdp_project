@@ -42,4 +42,10 @@ public interface UserRepository extends JpaRepository<User,Long> {
     @Modifying
     @Query(value = "update users  set enabled = :enabled where id = :id", nativeQuery = true)
     void updateEnabledUser(@Param("enabled") Boolean enabled, @Param("id") Long id);
+
+
+    @Transactional
+    @Modifying
+    @Query(value = "update users  set password = :password where id = :id",nativeQuery = true)
+    void updateUserPassword(@Param("password") String password, @Param("id") Long id);
 }

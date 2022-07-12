@@ -3,7 +3,7 @@
 <@main.renderWith title="404">
 
     <div class="container content_container" style="margin-top: 150px">
-        <h5 style="text-align: center">${resource} ${name}</h5>
+        <h5 style="text-align: center">${resource}</h5>
     </div>
 
 

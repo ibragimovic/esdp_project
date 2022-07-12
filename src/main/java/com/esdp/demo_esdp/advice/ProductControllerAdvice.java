@@ -19,7 +19,6 @@ public class ProductControllerAdvice {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public String productNotFound(ProductNotFoundException ex, Model model) {
         model.addAttribute("resource", ex.getResource());
-        model.addAttribute("name", ex.getName());
         return "not_found";
     }
 }

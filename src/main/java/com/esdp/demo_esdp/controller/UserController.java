@@ -1,5 +1,6 @@
 package com.esdp.demo_esdp.controller;
 
+import com.esdp.demo_esdp.dto.UpdatePasswordDTO;
 import com.esdp.demo_esdp.dto.UserRegisterForm;
 import com.esdp.demo_esdp.dto.UserUpdateForm;
 import com.esdp.demo_esdp.service.ProductService;
@@ -8,13 +9,17 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 import java.security.Principal;
 
+@Validated
 @Controller
 @RequestMapping("/")
 @AllArgsConstructor
@@ -26,7 +31,7 @@ public class UserController {
     @GetMapping("/profile")
     public String pageCustomerProfile(Model model, Principal principal) {
         String email;
-        if(principal instanceof OAuth2AuthenticationToken) {
+        if (principal instanceof OAuth2AuthenticationToken) {
             OAuth2AuthenticationToken oAuth2AuthenticationToken = (OAuth2AuthenticationToken) principal;
             email = oAuth2AuthenticationToken.getPrincipal().getAttribute("email");
         } else {
@@ -35,6 +40,7 @@ public class UserController {
 
         var user = userService.getByEmail(email);
         model.addAttribute("dto", user);
+        model.addAttribute("userPassword", new UpdatePasswordDTO());
         model.addAttribute("products", productService.getProductsUser(email));
         return "profile";
     }
@@ -44,12 +50,6 @@ public class UserController {
                                     BindingResult validationResult,
                                     RedirectAttributes attributes) {
         attributes.addFlashAttribute("dto", userRequestDto);
-
-        if (validationResult.hasFieldErrors()) {
-            attributes.addFlashAttribute("errors", validationResult.getFieldErrors());
-            return "redirect:/profile";
-        }
-
         userService.update(userRequestDto);
         return "redirect:/profile";
     }
@@ -79,15 +79,38 @@ public class UserController {
     }
 
     @GetMapping("/activate/{code}")
-    public String activate(Model model, @PathVariable String code){
+    public String activate(Model model, @PathVariable String code) {
         boolean isActivated = userService.activateUser(code);
 
-        if(isActivated){
+        if (isActivated) {
             model.addAttribute("message", "Пользователь успешно активирован");
-        }else {
+        } else {
             model.addAttribute("message", "Код активации не найден");
         }
 
         return "login";
+    }
+
+
+    @PostMapping("update-password")
+    public String updatePassword(Principal principal, @Valid UpdatePasswordDTO updatePasswordDTO,
+                                 RedirectAttributes attributes) {
+        attributes.addFlashAttribute("errorPassword", userService.updateUserPassword(principal.getName(),
+                updatePasswordDTO));
+        return "redirect:/profile";
+    }
+
+
+    @ExceptionHandler(BindException.class)
+    private String handlerBindEx(BindException exception, RedirectAttributes attributes) {
+        attributes.addFlashAttribute("errorsPassword", exception.getFieldErrors());
+        return "redirect:/profile";
+    }
+
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    private String handlerConstraintViolationException(ConstraintViolationException exception, RedirectAttributes attributes) {
+        attributes.addFlashAttribute("errors", exception.getMessage());
+        return "redirect:/profile";
     }
 }
