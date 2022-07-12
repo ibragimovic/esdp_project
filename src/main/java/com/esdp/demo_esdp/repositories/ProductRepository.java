@@ -83,4 +83,5 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query(value = "update products  set up_to_top = :date where id = :id", nativeQuery = true)
     void updateProductUpToTop(@Param("date") LocalDateTime date, @Param("id") Long id);
 
+    List<Product> findProductsByCategoryIdAndStatus(Long id, ProductStatus status);
 }
