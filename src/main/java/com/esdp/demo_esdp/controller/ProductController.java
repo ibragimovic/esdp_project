@@ -36,7 +36,11 @@ public class ProductController {
 
 
     @GetMapping("/product/create")
-    public String createNewProductGET(Model model) {
+    public String createNewProductGET(Model model, Authentication authentication) {
+        User user = userService.getUserByEmail(userService.getEmailFromAuthentication(authentication));
+        if (user.getTelNumber() == null || user.getTelNumber().isEmpty()) {
+            return "redirect:/phone";
+        }
 
         model.addAttribute("localities", localitiesService.getLocalitiesDTOs());
         model.addAttribute("select_categories", categoryService.getEndCategory());
@@ -47,9 +51,6 @@ public class ProductController {
     public String createNewProductPOST(@ModelAttribute("newProductData") ProductAddForm newProduct,
                                        Model model, Authentication authentication) {
         User user = userService.getUserByEmail(userService.getEmailFromAuthentication(authentication));
-        if (user.getTelNumber() == null || user.getTelNumber().isEmpty()) {
-            return "phone";
-        }
         productService.addNewProduct(newProduct,user);
         model.addAttribute("lastStep",true);
         return "create_product";
