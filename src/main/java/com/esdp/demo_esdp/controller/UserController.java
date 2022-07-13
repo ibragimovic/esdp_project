@@ -6,6 +6,7 @@ import com.esdp.demo_esdp.dto.UserUpdateForm;
 import com.esdp.demo_esdp.service.ProductService;
 import com.esdp.demo_esdp.service.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,6 +30,17 @@ public class UserController {
 
     private final UserService userService;
     private final ProductService productService;
+
+    @GetMapping("/phone")
+    public String saveUserPhoneNumber() {
+        return "phone";
+    }
+
+    @PostMapping ("/phone")
+    public String saveUserPhoneNumber (@RequestParam String phone, Authentication authentication) {
+        userService.userSaveTelephone(userService.getEmailFromAuthentication(authentication), phone);
+        return "redirect:/product/create";
+    }
 
     @GetMapping("/profile")
     public String pageCustomerProfile(Model model, Principal principal) {
