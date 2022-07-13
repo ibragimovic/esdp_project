@@ -52,6 +52,6 @@ public interface UserRepository extends JpaRepository<User,Long> {
 
     @Transactional
     @Modifying
-    @Query(value = "update users  set telNumber = :telephone where id = :id",nativeQuery = true)
+    @Query(value = "update users  set tel_number = :telephone where id = :id",nativeQuery = true)
     void saveUserTel(@Param("telephone") String telephone, @Param("id") Long id);
 }
