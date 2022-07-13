@@ -23,6 +23,6 @@ public interface FavoritesRepository extends JpaRepository<Favorites, Long> {
     @Query("select f from Favorites f where f.product.id = :id")
     List<Favorites> getFavoritesByProductId(@Param("id") Long id);
 
-    @Query("select count(f) from Favorites f where f.product.id = :id")
+    @Query("select count(f) as fav_count from Favorites f where f.product.id = :id order by fav_count asc")
     Long getAmountOfLikes(Long id);
 }

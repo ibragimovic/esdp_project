@@ -110,6 +110,9 @@ i {
     left: -25px;
 }
 
+.navbar-toggler{
+	font-size:2rem
+}
 
 @media(min-width: 992px){
 	.navbar-expand-custom {
@@ -130,6 +133,10 @@ i {
 	    display: flex!important;
 	    -ms-flex-preferred-size: auto;
 	    flex-basis: auto;
+	}
+
+	.logout-btn{
+		margin-left:50px
 	}
 }
 
@@ -163,5 +170,9 @@ i {
 	.hori-selector .right:before{
 		bottom: -25px;
 		left: -25px;
+	}
+
+	.logout-btn{
+		padding:1rem 0
 	}
 }

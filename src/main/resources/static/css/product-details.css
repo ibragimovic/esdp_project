@@ -14,14 +14,7 @@
     padding-top: 40px;
 }
 
-.category p {
-    background-color: #8ECAE6;
-    border-radius: 15px;
-    display: inline-block;
-    padding: 3px 10px;
-    font-family: 'Montserrat Alternates', sans-serif;
-    font-size: 20px;
-}
+
 
 .product-name p {
     position: relative;
@@ -37,18 +30,35 @@
     bottom: 0;
     width: 35%;
     left: 0;
-    border-top: 2px solid black;
+    border-top: 2px solid black !important;
+}
+
+.category p{
+    display: inline-block;
+    padding: 3px 10px;
+    font-family: 'Montserrat Alternates', sans-serif;
+    font-size: 20px;
+    margin-right:3rem
 }
 
 @media(min-width: 992px) {
     .product-name p {
         font-size: 2.2rem;
     }
+
+    .category p {
+        background-color: #8ECAE6;
+        border-radius: 15px;
+    }
 }
 
 @media(max-width: 991px) {
     .product-name p {
         font-size: 2rem;
+    }
+
+    .category p {
+        border-left:6px solid #8ECAE6;
     }
 }
 
@@ -112,7 +122,10 @@
     cursor: pointer;
     transition: 600ms ease;
     padding-bottom: 20px;
-    margin: 0 auto
+    margin: 0 auto;
+    display: block;
+    text-decoration: none;
+    color:black
 }
 
 .similar-products .product-card:hover {
@@ -142,22 +155,23 @@
 }
 
 .product-info .category-card {
-    background-color: #5DA9E9;
-    border-radius: 20px;
+    /*background-color: #5DA9E9;*/
+    /*border-radius: 20px;*/
     display: inline-block;
     padding: 0 15px;
-    color: white
+    /*color: white*/
+    border-left:4px solid #5DA9E9
 }
 
 .product-info .title-card {
-    font-size: 22px;
-    font-weight: bold;
+    font-size: 22px !important;
+    font-weight: bold !important;
     padding: 7px 0;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    display: -webkit-box ;
+    -webkit-line-clamp: 2 ;
+    -webkit-box-orient: vertical ;
+    overflow: hidden ;
+    text-overflow: ellipsis ;
 
 }
 

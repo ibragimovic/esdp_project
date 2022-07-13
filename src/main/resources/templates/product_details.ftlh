@@ -5,11 +5,12 @@ scripts=["/js/image-slider.js","/js/navbar.js"]
 styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css",
 "https://use.fontawesome.com/releases/v5.14.0/css/all.css",
 "/css/image-slider.css","/css/like-btn.css","/css/navbar.css", "/css/product-details.css"]>
+    <#assign security=JspTaglibs["http://www.springframework.org/security/tags"]/>
     <nav class="navbar navbar-expand-custom navbar-mainbg">
         <a class="navbar-brand navbar-logo" href="#">Arenda.kg</a>
         <button class="navbar-toggler" type="button" aria-controls="navbarSupportedContent" aria-expanded="false"
                 aria-label="Toggle navigation">
-            <i class="fas fa-bars text-white"></i>
+            <i class="bi bi-list text-white p-0 m-0"></i>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ml-auto">
@@ -17,25 +18,47 @@ styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons
                     <div class="left"></div>
                     <div class="right"></div>
                 </div>
-                <li class="nav-item">
-                    <a class="nav-link" href="javascript:void(0);"><i class="fas fa-tachometer-alt"></i>Dashboard</a>
-                </li>
+
                 <li class="nav-item active">
-                    <a class="nav-link" href="javascript:void(0);"><i class="far fa-address-book"></i>Address Book</a>
+                    <a class="nav-link" href="/"><i class="bi bi-layout-text-window-reverse"></i>Главная</a>
                 </li>
+
                 <li class="nav-item">
-                    <a class="nav-link" href="javascript:void(0);"><i class="far fa-clone"></i>Components</a>
+                    <a class="nav-link" href="/product/create"><i class="bi bi-newspaper"></i>Подать объявление</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="javascript:void(0);"><i class="far fa-calendar-alt"></i>Calendar</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="javascript:void(0);"><i class="far fa-chart-bar"></i>Charts</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="javascript:void(0);"><i class="far fa-copy"></i>Documents</a>
-                </li>
+
+                <@security.authorize access="! isAuthenticated()">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/register"><i class="bi bi-person-plus-fill"></i>Регистрация</a>
+                    </li>
+                </@security.authorize>
+
+                <@security.authorize access="! isAuthenticated()">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/login"><i class="bi bi-box-arrow-in-right"></i>Войти</a>
+                    </li>
+                </@security.authorize>
+                <@security.authorize access="isAuthenticated()">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/profile"><i class="bi bi-person-video2"></i>Профиль</a>
+                    </li>
+                </@security.authorize>
+                <@security.authorize access="isAuthenticated()">
+                    <div class="px-4 logout-btn d-flex align-items-center">
+                        <form action="/logout" method="post">
+                            <#if _csrf??>
+                                <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
+                                       value="${(_csrf.token)!'--no-token--'}"/>
+                            </#if>
+
+                            <button type="submit" class="btn btn-danger" id="logOut">
+                                <i class="bi bi-door-open-fill"></i> Выйти
+                            </button>
+                        </form>
+                    </div>
+                </@security.authorize>
             </ul>
+
         </div>
     </nav>
 
@@ -125,7 +148,7 @@ styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons
                         <p>${product.description}</p>
                     </div>
 
-                    <div class="contacts row row-cols-1 row-cols-md-3 mt-5 pt-4">
+                    <div class="contacts row row-cols-1 row-cols-md-2 row-cols-lg-4 mt-5 pt-4">
                         <div class="contacts-info text-center col">
                             <p class="contact-icon"><i class="bi bi-person-lines-fill"></i></p>
                             <p class="contact-title">Продавец</p>
@@ -140,6 +163,11 @@ styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons
                             <p class="contact-icon"><i class="bi bi-geo-alt-fill"></i></p>
                             <p class="contact-title">Локация</p>
                             <p class="contact-text mt-2">${product.localities}</p>
+                        </div>
+                        <div class="contacts-info text-center col">
+                            <p class="contact-icon text-danger"><i class="bi bi-heart-fill"></i></p>
+                            <p class="contact-title text-danger">Нравится</p>
+                            <p class="contact-text mt-2">${product.amountOfLikes}</p>
                         </div>
                     </div>
 
@@ -160,8 +188,8 @@ styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons
             <div class="container">
                 <p class="may-like-title">Вам также может понравиться</p>
                 <div class="d-flex cards-container justify-content-evenly">
-                    <#list product.similarProduct as p>
-                        <div class="product-card mb-5">
+                    <#list product.similarProducts as p>
+                        <a class="product-card mb-5" href="/product/${p.id}">
                             <div class="product-image">
                                 <div class="picture bg-info d-flex">
                                     <img src="/uploads/${p.imagePaths[0]}" alt="фотография объявления">
@@ -174,7 +202,7 @@ styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons
                                 </div>
                                 <div class="cost-card"><i class="bi bi-cash-coin "></i>${p.price} сом</div>
                             </div>
-                        </div>
+                        </a>
                     </#list>
 
                 </div>

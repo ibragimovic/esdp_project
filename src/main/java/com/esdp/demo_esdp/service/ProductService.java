@@ -196,7 +196,8 @@ public class ProductService {
                 .price(p.getPrice())
                 .localities(p.getLocalities())
                 .imagePaths(imagesService.getImagesPathsByProductId(p.getId()))
-//                .similarProducts(getSimilarProducts(p.getId()))
+                .similarProducts(getSimilarProducts(p.getId()))
+                .amountOfLikes(favoritesRepository.getAmountOfLikes(p.getId()))
                 .build();
 
     }
@@ -232,7 +233,10 @@ public class ProductService {
 
     private List<Product> getProductsWithMostLikes(List<Product> products, int productsQty){
         List<Long> amountOfProductLikes=products.stream().map(p->favoritesRepository.getAmountOfLikes(p.getId())).collect(Collectors.toList());
-        Collections.sort(amountOfProductLikes,Collections.reverseOrder());
+
+        if(productsQty>amountOfProductLikes.size()){
+            productsQty= amountOfProductLikes.size();
+        }
 
         List<Long> mostLikes=new ArrayList<>();
         for(int i=0;i<productsQty;i++){
