@@ -84,8 +84,7 @@ public class UserService {
     }
 
     public UserResponseDTO getByEmail(String email) {
-        var user = userRepository.findByEmail(email)
-                .orElseThrow(UserNotFoundException::new);
+        User user = getUserEmail(email);
         return UserResponseDTO.from(user);
     }
 
@@ -120,8 +119,7 @@ public class UserService {
 
 
     public Boolean updateUserPassword(String email, UpdatePasswordDTO updatePasswordDTO) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(UserNotFoundException::new);
+        User user = getUserEmail(email);
         if (!doPasswordsMatch(updatePasswordDTO.getOldPassword(), user.getPassword())) return false;
         if (!updatePasswordDTO.getNewPassword().equals(updatePasswordDTO.getRepeatingPassword())) return false;
         userRepository.updateUserPassword(encoder.encode(updatePasswordDTO.getNewPassword()), user.getId());
@@ -140,7 +138,7 @@ public class UserService {
     }
 
     public boolean isUserEnabled(String email) throws UserNotFoundException {
-        var user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
+        User user = getUserEmail(email);
         return user.isEnabled();
     }
 
@@ -151,7 +149,7 @@ public class UserService {
         String message = String.format(
                 "Здравствуйте %s! \n" +
                         "Пожалуйста, для смены пароля перейдите по следующей ссылке: http://localhost:8080/password-recovery/%s/%s",
-                user.getName() + " " + user.getLastname() , user.getEmail(), generateRandomLink(user)
+                user.getName() + " " + user.getLastname(), user.getEmail(), generateRandomLink(user)
         );
 
         mailSender.send(user.getEmail(), "Смена пароля", message);
@@ -164,17 +162,25 @@ public class UserService {
     }
 
     public Boolean updatePassword(String email, String password) {
-        var user = userRepository.findByEmail(email)
-                .orElseThrow(UserNotFoundException::new);
+        User user = getUserEmail(email);
         if (!doPasswordsMatch(password, user.getPassword())) return false;
         return true;
     }
 
-    public void userNewPassword(String email, String password,String repeatPassword) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(UserNotFoundException::new);
-        if (password.equals(repeatPassword)){
-            userRepository.updateUserPassword(encoder.encode(password),user.getId());
+    public void userNewPassword(String email, String password, String repeatPassword) {
+        User user = getUserEmail(email);
+        if (password.equals(repeatPassword)) {
+            userRepository.updateUserPassword(encoder.encode(password), user.getId());
         }
+    }
+
+    public void userSaveTelephone(String email, String telephone) {
+        User user = getUserEmail(email);
+        userRepository.saveUserTel(telephone, user.getId());
+    }
+
+    private User getUserEmail(String email) throws UserNotFoundException {
+        return userRepository.findByEmail(email)
+                .orElseThrow(UserNotFoundException::new);
     }
 }
