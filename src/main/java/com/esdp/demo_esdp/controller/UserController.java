@@ -19,6 +19,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.security.Principal;
 
@@ -37,7 +38,9 @@ public class UserController {
     }
 
     @PostMapping ("/phone")
-    public String saveUserPhoneNumber (@RequestParam String phone, Authentication authentication) {
+    public String saveUserPhoneNumber (@Size(min=13,max = 13,message = "Length must be = 13, format +996552902002")
+                                       @NotBlank @Pattern(regexp = "^(\\+)[0-9]+$", message = "Should contain only numbers")
+                                       @RequestParam String phone, Authentication authentication) {
         userService.userSaveTelephone(userService.getEmailFromAuthentication(authentication), phone);
         return "redirect:/product/create";
     }
