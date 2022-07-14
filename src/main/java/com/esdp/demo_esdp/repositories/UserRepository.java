@@ -35,6 +35,8 @@ public interface UserRepository extends JpaRepository<User,Long> {
 
     User findByActivationCode(String code);
 
+    List<User> findByActivationCodeNotNull();
+
     @Query("select u from User u where u.role <> :role ")
     List<User> getUsers(@Param("role") String role);
 
