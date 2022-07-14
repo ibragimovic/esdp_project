@@ -17,4 +17,5 @@ public class ProductDetailsDto {
     private List<String> imagePaths;
     private List<SimilarProductDto> similarProducts;
     private Long amountOfLikes;
+    private boolean liked;
 }

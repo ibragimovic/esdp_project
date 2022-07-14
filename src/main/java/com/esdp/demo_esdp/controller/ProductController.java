@@ -122,8 +122,9 @@ public class ProductController {
     }
 
     @GetMapping("/product/{id}")
-    public String seeProductDetails(Model model, @PathVariable Long id) throws ProductNotFoundException {
-        model.addAttribute("product", productService.getProductDetails(id));
+    public String seeProductDetails(Model model, @PathVariable Long id, Authentication authentication) throws ProductNotFoundException {
+
+        model.addAttribute("product", productService.getProductDetails(id,authentication));
         return "product_details";
     }
 

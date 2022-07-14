@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -185,9 +186,10 @@ public class ProductService {
                 .stream().map(ProductDTO::from).collect(Collectors.toList());
     }
 
-    public ProductDetailsDto getProductDetails(Long id) throws ProductNotFoundException {
+    public ProductDetailsDto getProductDetails(Long id, Authentication auth) throws ProductNotFoundException {
         Product p=productRepository.findById(id).orElseThrow( ()->new ProductNotFoundException(String.format("product with id %s was not found",id)) );
         return ProductDetailsDto.builder()
+                .id(p.getId())
                 .name(p.getName())
                 .category(p.getCategory().getName())
                 .fullName(String.format("%s %s",p.getUser().getName(),p.getUser().getLastname()))
@@ -198,7 +200,18 @@ public class ProductService {
                 .imagePaths(imagesService.getImagesPathsByProductId(p.getId()))
                 .similarProducts(getSimilarProducts(p.getId()))
                 .amountOfLikes(favoritesRepository.getAmountOfLikes(p.getId()))
+                .liked(isLiked(p,auth))
                 .build();
+
+    }
+
+    private boolean isLiked(Product product,Authentication auth){
+        if(auth==null){
+            return false;
+        }
+        User user=userRepository.findByEmail(auth.getName()).orElseThrow(UserNotFoundException::new);
+        Optional<Favorites> fav=favoritesRepository.findByUserAndProduct(user,product);
+        return fav.isPresent();
 
     }
 

@@ -1,7 +1,7 @@
 <#import "partials/main2.ftlh" as main />
 
 <@main.renderWith title="Arenda.kg"
-scripts=["/js/image-slider.js","/js/navbar.js"]
+scripts=["/js/image-slider.js","/js/navbar.js","/js/product_details.js"]
 styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css",
 "https://use.fontawesome.com/releases/v5.14.0/css/all.css",
 "/css/image-slider.css","/css/like-btn.css","/css/navbar.css", "/css/product-details.css"]>
@@ -89,8 +89,12 @@ styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons
                         <p>${product.category}</p>
                     </div>
                     <div class="like-btn position-absolute pt-3">
-                        <input type="checkbox" id="checkbox"/>
-                        <label for="checkbox">
+                        <@security.authorize access="isAuthenticated()">
+                            <input name="userEmail" value="<@security.authentication property="principal.username" />"  id="authUserEmail" hidden>
+                        </@security.authorize>
+                        <input name="productId" value="${product.id}" id="productId" hidden>
+                        <input type="checkbox" id="checkbox"  <#if product.liked?? && product.liked>checked</#if>/>
+                        <label for="checkbox" id="like_label">
                             <svg id="heart-svg" viewBox="467 392 58 57" xmlns="http://www.w3.org/2000/svg">
                                 <g id="Group" fill="none" fill-rule="evenodd" transform="translate(467 392)">
                                     <path
