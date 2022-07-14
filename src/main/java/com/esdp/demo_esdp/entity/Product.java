@@ -22,7 +22,7 @@ public class Product {
     private Long id;
 
     @NotBlank
-    @Size(min = 10)
+    @Size(min = 4)
     private String name;
 
     @NotNull
@@ -50,7 +50,7 @@ public class Product {
     @Enumerated(EnumType.STRING)
     private ProductStatus status = ProductStatus.MODERNIZATION;
 
-    @Past
+//    @Past
     @NotNull
     @Column(name = "data_add")
     private LocalDateTime dateAdd;

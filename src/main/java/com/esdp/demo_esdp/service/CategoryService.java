@@ -56,10 +56,13 @@ public class CategoryService {
 
 
     public List<CategoryDTO> getEndCategory() {
+//        List<Category> allCategories = categoryRepository.findAll();
+//        List<Long> catParentId = categoryRepository.getCatParentId();
+//        List<Category> endCategories = allCategories.stream().filter(c -> !catParentId.contains(c.getId())).collect(Collectors.toList());
+//        return endCategories.stream().map(c -> CategoryDTO.from(c)).collect(Collectors.toList());
+
         List<Category> allCategories = categoryRepository.findAll();
-        List<Long> catParentId = categoryRepository.getCatParentId();
-        List<Category> endCategories = allCategories.stream().filter(c -> !catParentId.contains(c.getId())).collect(Collectors.toList());
-        return endCategories.stream().map(c -> CategoryDTO.from(c)).collect(Collectors.toList());
+        return allCategories.stream().map(c -> CategoryDTO.from(c)).collect(Collectors.toList());
     }
 
     public CategoryDTO getOneCategory(Long categoryId) throws CategoryNotFoundException {

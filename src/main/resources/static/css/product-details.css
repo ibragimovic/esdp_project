@@ -1,0 +1,227 @@
+@import url('https://fonts.googleapis.com/css2?family=Lora:wght@700&family=Montserrat&family=Montserrat+Alternates&display=swap');
+
+.like-btn {
+    top: 0%;
+    right: 0%;
+    z-index: 2
+}
+
+.main-info-container {
+    width: 90%;
+    max-width: 96rem;
+    min-width: 16rem;
+    margin: 0 auto;
+    padding-top: 40px;
+}
+
+
+
+.product-name p {
+    position: relative;
+    padding: 10px 10px 10px 0;
+    font-family: 'Montserrat', sans-serif;
+    display: inline-block;
+}
+
+.product-name p::before {
+    content: '';
+    display: block;
+    position: absolute;
+    bottom: 0;
+    width: 35%;
+    left: 0;
+    border-top: 3px solid black !important;
+}
+
+.category p{
+    display: inline-block;
+    padding: 3px 10px;
+    font-family: 'Montserrat Alternates', sans-serif;
+    font-size: 20px;
+    margin-right:3rem
+}
+
+@media(min-width: 992px) {
+    .product-name p {
+        font-size: 2.2rem;
+    }
+
+    .category p {
+        background-color: #8ECAE6;
+        border-radius: 15px;
+    }
+}
+
+@media(max-width: 991px) {
+    .product-name p {
+        font-size: 2rem;
+    }
+
+    .category p {
+        border-left:6px solid #8ECAE6;
+    }
+}
+
+.price {
+    font-family: 'Montserrat Alternates', sans-serif;
+    font-size: 1.9rem;
+}
+
+.price i {
+    color: #FE6D74;
+}
+
+.description p {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.3rem;
+    text-align: justify;
+}
+
+.contacts-info p {
+    margin: 0
+}
+
+.contacts-info {
+    font-size: 1.3rem;
+    font-family: 'Montserrat', sans-serif;
+    margin-bottom: 3rem
+}
+
+.contact-title {
+    font-weight: 800;
+}
+
+.contact-title,
+.contact-icon {
+    color: #6fbfe4;
+}
+
+.contact-icon {
+    font-size: 2rem;
+}
+
+.like-btn svg {
+    width: 80px;
+}
+
+.similar-products {
+    background-color: #BCE6D8;
+    margin-top: -10px;
+    font-family: 'Montserrat', sans-serif;
+    padding-bottom: 15vh;
+}
+
+.similar-products .product-card {
+    width: 300px;
+    min-height: 350px;
+    background-color: white;
+    border-radius: 20px;
+    overflow: hidden;
+    border-bottom: 8px solid #5DA9E9;
+    text-align: left;
+    cursor: pointer;
+    transition: 600ms ease;
+    padding-bottom: 20px;
+    margin: 0 auto;
+    display: block;
+    text-decoration: none;
+    color:black
+}
+
+.similar-products .product-card:hover {
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+    transform: translateY(-2.1rem);
+}
+
+.product-card .product-image {
+    width: 100%;
+    height: 55%
+}
+
+.product-card .picture {
+    display: flex;
+    width: 100%;
+    height: 100%
+}
+
+.product-card .picture img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover
+}
+
+.product-info {
+    padding: 15px 30px 0;
+}
+
+.product-info .category-card {
+    /*background-color: #5DA9E9;*/
+    /*border-radius: 20px;*/
+    display: inline-block;
+    padding: 0 15px;
+    /*color: white*/
+    border-left:4px solid #5DA9E9
+}
+
+.product-info .title-card {
+    font-size: 22px !important;
+    font-weight: bold !important;
+    padding: 7px 0;
+    display: -webkit-box ;
+    -webkit-line-clamp: 2 ;
+    -webkit-box-orient: vertical ;
+    overflow: hidden ;
+    text-overflow: ellipsis ;
+
+}
+
+.product-info .cost-card {
+    font-size: 20px;
+}
+
+.product-info .cost-card i {
+    color: #9966CC;
+    font-size: 25px;
+}
+
+.similar-products .may-like-title {
+    text-transform: capitalize;
+    font-size: 2rem;
+    font-family: 'Montserrat Alternates', sans-serif;
+    position: relative;
+    display: inline-block;
+    padding-bottom:15px;
+    margin-bottom:50px;
+    margin-top:20px
+}
+
+.similar-products .may-like-title:before {
+    content: '';
+    display: block;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    margin-left: -10%;
+    width: 20%;
+    text-align: center;
+    border-bottom: 3px solid #9966CC;
+}
+
+@media(min-width:992px){
+    .cards-container{
+        flex-direction: row;
+    }
+}
+
+@media(max-width:991px){
+    .cards-container{
+        flex-direction: column;
+    }
+}
+
+.main-image-slider .carousel-container .item .picture img {
+    object-fit: contain;
+    width: 100%;
+    height: 100%;
+    
+}
