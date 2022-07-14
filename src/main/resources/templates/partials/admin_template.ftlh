@@ -159,6 +159,14 @@
                         <span>Профиль</span>
                     </a>
                 </li>
+                <li>
+                    <a href="/admin/resend">
+                        <svg>
+                            <use xlink:href="#icon-envelope"></use>
+                        </svg>
+                        <span>Отправить код активации на почту</span>
+                    </a>
+                </li>
 
 
                 <li>

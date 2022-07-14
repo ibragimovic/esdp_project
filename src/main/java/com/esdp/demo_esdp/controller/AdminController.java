@@ -43,6 +43,14 @@ public class AdminController {
         return "admin_users";
     }
 
+    @GetMapping("/resend")
+    public String resendActivationCode(Model model) {
+
+        model.addAttribute("users", userService.getInactiveUsers());
+        return "users_resend";
+    }
+
+
 
     @PostMapping("/user-blocking")
     public String deleteUserId(Long id) {

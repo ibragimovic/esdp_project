@@ -103,6 +103,28 @@ public class UserService {
                 .stream().map(UserResponseDTO::from).collect(Collectors.toList());
     }
 
+    public List<UserResponseDTO> getInactiveUsers() {
+          var usrs = userRepository.findByActivationCodeNotNull()
+                .stream().collect(Collectors.toList());
+
+          for (User u: usrs){
+              u.setActivationCode(UUID.randomUUID().toString());
+              userRepository.updateUserData(u.getName(), u.getLastname(), u.getEmail(), u.getTelNumber(), u.getLogin(), u.getId());
+
+              String message = String.format(
+                      "Здравствуйте %s! \n" +
+                              "Добро пожаловать на сайт Arenda.kg \n" +
+                              "Пожалуйста, для активации перейдите по следующей ссылке: http://localhost:8080/activate/%s",
+                      u.getName() + " " + u.getLastname(), u.getActivationCode()
+              );
+
+              mailSender.send(u.getEmail(), "Activation code", message);
+
+          }
+         return usrs.stream().map(UserResponseDTO::from).collect(Collectors.toList());
+    }
+
+
     public void blockingUser(Long id) {
         var user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
         userRepository.updateEnabledUser(!user.isEnabled(), user.getId());
