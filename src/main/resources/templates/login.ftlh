@@ -2,13 +2,18 @@
 
 <@main.renderWith title="Логин">
     <div>
-        <h2>Please sign in</h2>
+        <h2>Пожалуйста войдите!</h2>
         <form action="/login" method="post">
             <div>
                 <#if error!false >
                     <p style="color:#ff0000">Неверные имя пользователя или пароль !</p>
-<#--                    <else if activation_code!=null>-->
-<#--                        <p style="color:red">Необходимо активировать пользователя через почту !</p>-->
+                <#--                    <else if activation_code!=null>-->
+                <#--                        <p style="color:red">Необходимо активировать пользователя через почту !</p>-->
+                </#if>
+            </div>
+            <div>
+                <#if block?? >
+                    <p style="color:#ff0000">${block}</p>
                 </#if>
             </div>
 
@@ -21,25 +26,26 @@
             <div class="form-group">
                 <label for="email">Адрес почты</label>
                 <input type="email" name="username" class="form-control" id="email" placeholder="Ваш адрес почты"
-                    value="${(dto.email)!''}" autofocus>
-              </div>
-            <div>
-            <div class="form-group">
-                <label for="password">Пароль:</label>
-                <input type="password" class="form-control" name="password" id="password" placeholder="Пароль" value="">
-            </div>
+                       value="${(dto.email)!''}" autofocus>
             </div>
             <div>
-                <button type="submit" class="btn btn-primary">Войти</button>
+                <div class="form-group">
+                    <label for="password">Пароль:</label>
+                    <input type="password" class="form-control" name="password" id="password" placeholder="Пароль"
+                           value="">
+                </div>
+            </div>
+            <div>
+                <button type="submit" class="btn btn-primary" style="margin-right: 15px">Войти</button>
+                <a type="submit" class="btn btn-primary" style="margin-right: 15px" href="/password-recovery">Забыли
+                        пароль?</a>
+                <#if urls??>
+                    <#list urls?keys as key>
+                        <a text="${key}" href="${urls[key]}"><img src="/images/icons8-google-48.png"></a>
+                    </#list>
+                </#if>
             </div>
         </form>
 
-        <#if urls??>
-            <#list urls?keys as key>
-                <div>
-                    <button type="button" class="btn btn-light"> <a text="${key}" href="${urls[key]}">Login with Google</a></button>
-                </div>
-            </#list>
-        </#if>
     </div>
 </@main.renderWith>

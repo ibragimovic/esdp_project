@@ -6,6 +6,7 @@ import com.esdp.demo_esdp.dto.UserUpdateForm;
 import com.esdp.demo_esdp.service.ProductService;
 import com.esdp.demo_esdp.service.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,8 +18,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.security.Principal;
-import java.util.Locale;
 
 @Validated
 @Controller
@@ -28,6 +31,19 @@ public class UserController {
 
     private final UserService userService;
     private final ProductService productService;
+
+    @GetMapping("/phone")
+    public String saveUserPhoneNumber() {
+        return "phone";
+    }
+
+    @PostMapping ("/phone")
+    public String saveUserPhoneNumber (@Size(min=13,max = 13,message = "Length must be = 13, format +996552902002")
+                                       @NotBlank @Pattern(regexp = "^(\\+)[0-9]+$", message = "Should contain only numbers")
+                                       @RequestParam String phone, Authentication authentication) {
+        userService.userSaveTelephone(userService.getEmailFromAuthentication(authentication), phone);
+        return "redirect:/product/create";
+    }
 
     @GetMapping("/profile")
     public String pageCustomerProfile(Model model, Principal principal) {
@@ -99,6 +115,33 @@ public class UserController {
         attributes.addFlashAttribute("errorPassword", userService.updateUserPassword(principal.getName(),
                 updatePasswordDTO));
         return "redirect:/profile";
+    }
+
+
+    @GetMapping("/password-recovery")
+    public String getPasswordRecovery() {
+        return "password_recovery";
+    }
+
+    @PostMapping("/password-recovery")
+    public String getNewPair(@RequestParam String username, Model model) {
+        userService.restorePassword(username);
+        return "redirect:/";
+    }
+
+    @GetMapping("/password-recovery/{email}/{password}")
+    public String showFormNewPassword(@PathVariable String email, @PathVariable String password, RedirectAttributes attributes) {
+        if (userService.updatePassword(email, password)) {
+            attributes.addAttribute("email", email);
+            return "password_new";
+        }
+        return "redirect:/";
+    }
+
+    @PostMapping("/new-password")
+    public String userNewPassword(@NotBlank String email, @Size(min = 8) String password, @Size(min = 8) String repeatPassword) {
+        userService.userNewPassword(email, password, repeatPassword);
+        return "redirect:/";
     }
 
 

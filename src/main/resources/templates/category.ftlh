@@ -1,70 +1,69 @@
-<#-- импортируем основной шаблон-контейнер который содержит в себе разметку для основной структуры страницы -->
 <#import "partials/main.ftlh" as main />
 
-<#-- обрабатываем его, и передаём ему список скриптов, которые необходимо подключить-->
-<@main.renderWith scripts=["js/categories.js"]>
+<#-- <@main.renderWith scripts=["js/categories.js"]> -->
+<@main.renderWith>
     <div class="jumbotron jumbotron-fluid">
         <div class="container">
             <h1 class="display-4">Arenda.KG</h1>
             <p class="lead">Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...</p>
         </div>
     </div>
-    <form name="categoryForm" id="categoryForm" action="/category/">
-        Category 1: <select name="category1" id="category1">
-            <option value="" selected="selected">Select the main category</option>
-          </select>
-          <br><br>
-        Category 2: <select name="category2" id="category2">
-            <option value="" selected="selected">Select a subcategory</option>
-          </select>
-          <br><br>
-        Category 3: <select name="category3" id="category3">
-            <option value="" selected="selected">Select a subcategory</option>
-          </select>
-          <br><br>
-          <input type="submit" value="Submit">
-    </form>
-    <#if child_categories??>
-        <aside class="child_category">
-            <#list child_categories as category>
-            <div class="child_category_list">${category.name}</div>
-            </#list>
-        </aside>
-        <#else>
+    <#if category??>
+        <h2>Категория: ${category}</h2>
     </#if>
+    <#if child_categories?has_content>
+        <div class="dropdown">
+          <button class="btn btn-secondary dropdown-toggle" type="button"
+            id="categoryDropdownMenuButton" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">Выберите подкатегорию</button>
+          <div class="dropdown-menu" aria-labelledby="categoryDropdownMenuButton">
+            <#list child_categories as category>
+                <a class="dropdown-item" href="/category?id=${category.id}">${category.name}</a>
+            </#list>
+          </div>
+        </div>
+    </#if>
+<#if products?has_content>
 
-    <div class="d-flex justify-content-between flex-wrap">
-        <div class="card mb-2" style="width: 18rem;">
-            <img class="card-img-top" src="https://via.placeholder.com/120x80.png" alt="Card image cap">
-            <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                <a href="#" class="btn btn-primary">Go somewhere</a>
+    <div class="row">
+        <#list products as product>
+        <div class="col-sm-12 col-md-4 col-xl-3 mb-2">
+            <div class="card">
+                <img class="card-img-top" src="https://via.placeholder.com/120x80.png" alt="Card image cap">
+                <div class="card-body">
+
+                    <button class="btn btn-info" data-toggle="modal"
+                        data-target="#userInfoModal-${product.id}">
+                        <i class="bi bi-person-fill"></i> ${product.user.name}
+                    </button>
+                </div>
             </div>
         </div>
-        <div class="card mb-2" style="width: 18rem;">
-            <img class="card-img-top" src="https://via.placeholder.com/120x80.png" alt="Card image cap">
-            <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                <a href="#" class="btn btn-primary">Go somewhere</a>
+
+        <div class="modal fade" id="userInfoModal-${product.id}" tabindex="-1" role="dialog"
+          aria-labelledby="userInfoModal-${product.id}-Label" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="userInfoModal-${product.id}">Контакты</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <p><i class="bi bi-person-fill"></i>: ${product.user.name} ${product.user.lastname}</p>
+                <p><i class="bi bi-telephone-fill"></i>: ${product.user.email}</p>
+                <p><i class="bi bi-envelope"></i>: ${product.user.telNumber}</p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              </div>
             </div>
+          </div>
         </div>
-        <div class="card mb-2" style="width: 18rem;">
-            <img class="card-img-top" src="https://via.placeholder.com/120x80.png" alt="Card image cap">
-            <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                <a href="#" class="btn btn-primary">Go somewhere</a>
-            </div>
-        </div>
-        <div class="card mb-2" style="width: 18rem;">
-            <img class="card-img-top" src="https://via.placeholder.com/120x80.png" alt="Card image cap">
-            <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                <a href="#" class="btn btn-primary">Go somewhere</a>
-            </div>
-        </div>
-    </div>
+        </#list>
+     </div>
+<#else>
+    <h2>Нет публикаций в этой категории</h2>
+</#if>
 </@main.renderWith>

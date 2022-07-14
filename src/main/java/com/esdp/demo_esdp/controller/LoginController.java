@@ -20,7 +20,10 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -59,7 +62,8 @@ public class LoginController {
     private OAuth2AuthorizedClientService authorizedClientService;
 
     @GetMapping("/loginSuccess")
-    public String getLoginInfo(Model model, OAuth2AuthenticationToken authentication) {
+    public String getLoginInfo(Model model, OAuth2AuthenticationToken authentication,
+                               RedirectAttributes attributes, HttpServletRequest request) throws ServletException {
 
         OAuth2AuthorizedClient client = authorizedClientService.loadAuthorizedClient(authentication.getAuthorizedClientRegistrationId(), authentication.getName());
 
@@ -79,6 +83,7 @@ public class LoginController {
             ResponseEntity<Map> response = restTemplate.exchange(userInfoEndpointUri, HttpMethod.GET, entity, Map.class);
             Map userAttributes = response.getBody();
             String email = userAttributes.get("email").toString();
+
             if (!userService.isUserExistByEmail(email)) {
                 UserRegisterOAuth2Form oauth2User = new UserRegisterOAuth2Form();
                 oauth2User.setEmail(email);
@@ -86,6 +91,11 @@ public class LoginController {
                 oauth2User.setLogin(userAttributes.get("name").toString());
                 oauth2User.setLastName(userAttributes.get("family_name").toString());
                 userService.registerOAuth2User(oauth2User);
+            }
+            if (!userService.isUserEnabled(email)) {
+                request.logout();
+                attributes.addFlashAttribute("block", "На данный момент ваш аккаунт заблокирован");
+                return "redirect:/login";
             }
         }
 

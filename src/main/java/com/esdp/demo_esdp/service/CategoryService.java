@@ -12,6 +12,7 @@ import com.esdp.demo_esdp.repositories.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -163,6 +164,25 @@ public class CategoryService {
     public List<CategoryDTO> getCategories() {
         return categoryRepository.findAll()
                 .stream().map(CategoryDTO::from).collect(Collectors.toList());
+    }
+
+
+    public Page<ProductDTO> getProductByCategoryID(Long categoryId, Pageable pageable) {
+        var product = productRepository.findProductsByCategoryIdAndStatus(categoryId,ProductStatus.ACCEPTED);
+        var c2 = categoryRepository.findCategoriesByParentId(categoryId);
+        for (int i = 0; i < c2.size(); i++) {
+            var c3 = categoryRepository.findCategoriesByParentId(c2.get(i).getId());
+            product.addAll(productRepository.findProductsByCategoryIdAndStatus(c2.get(i).getId(),ProductStatus.ACCEPTED));
+            for (int j = 0; j < c3.size(); j++) {
+                product.addAll(productRepository.findProductsByCategoryIdAndStatus(c3.get(j).getId(),ProductStatus.ACCEPTED));
+            }
+        }
+
+        final int start = (int)pageable.getOffset();
+        final int end = Math.min((start + pageable.getPageSize()), product.size());
+        Page<Product> products = new PageImpl<>(product.subList(start,end),pageable,product.size());
+
+        return products.map(ProductDTO::from);
     }
 
 

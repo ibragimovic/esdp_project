@@ -48,4 +48,10 @@ public interface UserRepository extends JpaRepository<User,Long> {
     @Modifying
     @Query(value = "update users  set password = :password where id = :id",nativeQuery = true)
     void updateUserPassword(@Param("password") String password, @Param("id") Long id);
+
+
+    @Transactional
+    @Modifying
+    @Query(value = "update users  set tel_number = :telephone where id = :id",nativeQuery = true)
+    void saveUserTel(@Param("telephone") String telephone, @Param("id") Long id);
 }

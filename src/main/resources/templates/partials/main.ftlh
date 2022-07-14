@@ -16,8 +16,9 @@
         <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css" />
         <script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
         <script type="text/javascript" src="/webjars/popper.js/umd/popper.min.js"></script>
-        <script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js"></script>
-        <link rel="stylesheet" href="/webjars/font-awesome/css/all.css">
+        <script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script type="text/javascript" src="/js/app.js"></script>
+        <link rel="stylesheet" type="text/css" href="/webjars/bootstrap-icons/font/bootstrap-icons.css"/>
         <link rel="stylesheet" href="/css/main.css">
         <#list styles as styleSource>
             <link rel="stylesheet" href="${styleSource}">
@@ -25,79 +26,97 @@
         <script src="//code.jivosite.com/widget/ZK2dXhprrI" async></script>
     </head>
     <body>
-
-    <div class="container">
         <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
-            <a class="navbar-brand" href="/">
-                <img src="/images/logo.png" height="30"/>
-            </a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#topNavbar">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="topNavbar">
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/product/create">Подать объявление</a>
-                    </li>
-                    <@security.authorize access="! isAuthenticated()">
+            <div class="container">
+                <a class="navbar-brand" href="/">
+                    <img src="/images/logo.png" height="30"/>
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#topNavbar">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="topNavbar">
+                    <ul class="navbar-nav ml-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="/register">Регистрация</a>
+                            <a class="nav-link" href="/product/create">Подать объявление</a>
                         </li>
-                    </@security.authorize>
-                    <@security.authorize access="! isAuthenticated()">
-                        <li class="nav-item">
-                            <a class="nav-link" href="/login">Войти</a>
-                        </li>
-                    </@security.authorize>
-                    <@security.authorize access="isAuthenticated()">
-                        <li class="nav-item">
-                            <a class="nav-link" href="/profile">Профиль</a>
-                        </li>
-                    </@security.authorize>
-                </ul>
-                <@security.authorize access="isAuthenticated()">
-                    <form action="/logout" method="post">
-                        <#if _csrf??>
-                            <input type="hidden" name="${(_csrf.parameterName)!'csrf'}" value="${(_csrf.token)!'--no-token--'}"/>
-                        </#if>
-                        <button type="submit" class="btn btn-secondary" id="logOut">
-                            Выйти
-                        </button>
-                    </form>
-                </@security.authorize>
+                        <@security.authorize access="! isAuthenticated()">
+                            <li class="nav-item">
+                                <a class="nav-link" href="/register">Регистрация</a>
+                            </li>
+                        </@security.authorize>
+                        <@security.authorize access="! isAuthenticated()">
+                            <li class="nav-item">
+                                <a class="nav-link" href="/login">Войти</a>
+                            </li>
+                        </@security.authorize>
+                        <@security.authorize access="isAuthenticated()">
+                            <form action="/logout" method="post">
+                                <#if _csrf??>
+                                    <input type="hidden" name="${(_csrf.parameterName)!'csrf'}" value="${(_csrf.token)!'--no-token--'}"/>
+                                </#if>
+                                <input type="submit" value="Выйти" class="btn btn-secondary" id="logOut">
+                            </form>
+                        </@security.authorize>
+                    </ul>
+                </div>
             </div>
         </nav>
-        <#if categories??>
-            <#list categories as category>
-                <p class="category_list"><a href="/category?id=${category.id}">${category.name}</a></p>
-            </#list>
-        </#if>
+        <div class="categories-header">
+            <div class="container">
+                <#if categories??>
+                    <nav class="navbar navbar-expand-lg navbar-dark bg-secondary text-dark">
+                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#category_nav">
+                            <i class="bi bi-grid-3x3-gap"></i>
+                        </button>
+                        <div class="collapse navbar-collapse" id="category_nav">
+                            <ul class="navbar-nav">
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">Все категории</a>
+                                    <ul class="dropdown-menu" id="category_menu">
+                                    </ul>
+                                </li>
+                                <#list categories as category>
+                                    <li class="nav-item">
+                                        <a href="/category?id=${category.id}" class="nav-link category_item">
+                                            ${category.name}
+                                        </a>
+                                    </li>
+                                </#list>
+                            </ul>
 
+                        </div>
+                    </nav>
+                </#if>
+            </div>
+        </div>
         <div class="content">
-            <#nested>
+            <div class="container">
+                <#nested>
+            </div>
         </div>
         <div class="footer">
+            <div class="container">
+            </div>
         </div>
-    </div>
 
-    <#list scripts as scriptSource>
-        <script src="${scriptSource}"></script>
-    </#list>
+        <#list scripts as scriptSource>
+            <script src="${scriptSource}"></script>
+        </#list>
 
-    <script>
-        const inButton = document.getElementById("logOut");
-        if(inButton !== null) {
-            inButton.addEventListener("click", function () {
-                var isExit = confirm("Вы действительно хотите выйти из профиля?");
-                if (isExit){
-                    alert( "Вы вышли из профиля" );
-                }else {
-                    alert( "Вы остались в профиле" );
-                }
-            });
-        }
+        <script>
+            const inButton = document.getElementById("logOut");
+            if(inButton !== null) {
+                inButton.addEventListener("click", function () {
+                    var isExit = confirm("Вы действительно хотите выйти из профиля?");
+                    if (isExit){
+                        alert( "Вы вышли из профиля" );
+                    }else {
+                        alert( "Вы остались в профиле" );
+                    }
+                });
+            }
 
-    </script>
+        </script>
 
     </body>
     </html>
