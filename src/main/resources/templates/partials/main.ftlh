@@ -44,6 +44,11 @@
                                 <a class="nav-link" href="/register">Регистрация</a>
                             </li>
                         </@security.authorize>
+                             <@security.authorize access="isAuthenticated()">
+                            <li class="nav-item">
+                                <a class="nav-link" href="/profile">Профиль</a>
+                            </li>
+                        </@security.authorize>
                         <@security.authorize access="! isAuthenticated()">
                             <li class="nav-item">
                                 <a class="nav-link" href="/login">Войти</a>
