@@ -1,0 +1,81 @@
+.dropdown {
+    background-color: #4E94EC;
+    /* display: inline-block; */
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    max-width: 400px;
+    /* display: flex;
+    justify-content: space-between;
+    align-items: center; */
+    position: relative
+}
+
+.dropdown:after {
+    content: "";
+    background: url("/images/arrow-down.svg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    position: absolute;
+    height: 100%;
+    width: 32px;
+    right: 10px;
+    top: 5px;
+    z-index: 100;
+}
+
+.options-container {
+    position: relative;
+    z-index: 100;
+}
+
+.options {
+    width: 400px;
+    border-radius: 8px;
+
+    margin: 5px 0;
+    box-shadow: rgba(99, 99, 99, 0.2) 2px 2px 8px 2px;
+    overflow: hidden;
+    position: absolute;
+    z-index: 5;
+    background-color: white;
+}
+
+.cat-option {
+    margin: 0;
+    transition: 200ms ease;
+    padding: 12px 24px;
+    display: flex;
+    justify-content: space-between;
+    z-index: 5;
+    cursor: pointer;
+
+}
+
+.cat-option:hover {
+    background-color: #4E94EC;
+    color: white
+}
+
+.options-header {
+    text-align: center;
+    position: relative;
+    border-bottom: 1px solid #536872;
+    margin: 0;
+    padding: 12px 5px 12px 24px;
+}
+
+.options-header i {
+    position: absolute;
+    font-size: 30px;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    padding-left: 15px
+}
+
+.options-header i:hover {
+    cursor: pointer;
+    color: #4E94EC
+}
