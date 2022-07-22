@@ -10,6 +10,7 @@ import com.esdp.demo_esdp.repositories.ProductRepository;
 import com.esdp.demo_esdp.util.FileStorageImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,46 +36,52 @@ public class ImagesService {
     @Value("${upload.path}")
     private String uploadPath;
 
-//    public void saveImagesFile(List<MultipartFile> files, Product product) {
-//        try {
-//            if (files != null) {
-//                File upload = new File(uploadPath);
-//                if (!upload.exists()) {
-//                    upload.mkdir();
-//                }
-//                for (int i = 0; i < files.size(); i++) {
-//                    String uuid = UUID.randomUUID().toString();
-//                    String resulFileName = uuid + "." + files.get(i).getOriginalFilename();
+    public void saveImagesFile(List<MultipartFile> files, Product product) {
+        try {
+            if (files != null) {
+                File upload = new File(uploadPath);
+                if (!upload.exists()) {
+                    upload.mkdir();
+                }
+                for (int i = 0; i < files.size(); i++) {
+                    String uuid = UUID.randomUUID().toString();
+                    String resulFileName = uuid + "." + files.get(i).getOriginalFilename();
 //                    files.get(i).transferTo(new File(uploadPath + resulFileName));
-//                    imagesRepository.save(Images.builder()
-//                            .path(resulFileName)
-//                            .product(product)
-//                            .build());
-//                }
+//                    if (files.get(i).getSize() <= 10240) {
+                        Thumbnails.of(files.get(i).getInputStream())
+                                .scale(0.7f)
+                                .outputQuality(0.125f)
+                                .toFile(new File(uploadPath + resulFileName));
+                        imagesRepository.save(Images.builder()
+                                .path(resulFileName)
+                                .product(product)
+                                .build());
+                    }
+                }
 //            }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
-//
-//    public void deleteImagesFile(Long productId) {
-//        var paths = imagesRepository.getProductImagePath(productId);
-//        paths.forEach(i -> {
-//            try {
-//                Files.delete(Paths.get(uploadPath + i));
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        });
-//        var imageProduct = imagesRepository.getImagesProduct(productId);
-//        if (!imageProduct.isEmpty()) {
-//            imageProduct.forEach(i -> imagesRepository.deleteById(i.getId()));
-//        }
-//    }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteImagesFile(Long productId) {
+        var paths = imagesRepository.getProductImagePath(productId);
+        paths.forEach(i -> {
+            try {
+                Files.delete(Paths.get(uploadPath + i));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        var imageProduct = imagesRepository.getImagesProduct(productId);
+        if (!imageProduct.isEmpty()) {
+            imageProduct.forEach(i -> imagesRepository.deleteById(i.getId()));
+        }
+    }
 
     //this method saves MultipartFile to "uploads_" in the root directory and returns a string of saved image name
     protected String saveImageFile(MultipartFile image) throws IOException {
-        String imageStorageName=fileStorage.save(image.getInputStream(),image.getOriginalFilename());
+        String imageStorageName = fileStorage.save(image.getInputStream(), image.getOriginalFilename());
         return imageStorageName;
     }
 
@@ -82,16 +89,16 @@ public class ImagesService {
     protected void deleteImageFile(String imageName) throws IOException {
         try {
             fileStorage.delete(imageName);
-        }catch (IOException e){
-            throw new FileNotFoundException(String.format("cannot find image: %s",imageName));
+        } catch (IOException e) {
+            throw new FileNotFoundException(String.format("cannot find image: %s", imageName));
         }
     }
 
-    public void saveNewImages(List<MultipartFile> files,Long productId) throws IOException, ProductNotFoundException {
-        List<Images> images=new ArrayList<>();
-        for(int i=0;i<files.size();i++){
+    public void saveNewImages(List<MultipartFile> files, Long productId) throws IOException, ProductNotFoundException {
+        List<Images> images = new ArrayList<>();
+        for (int i = 0; i < files.size(); i++) {
             images.add(Images.builder()
-                    .product(productRepository.findById(productId).orElseThrow(()->new ProductNotFoundException(String.format("product with id %s not found",productId))))
+                    .product(productRepository.findById(productId).orElseThrow(() -> new ProductNotFoundException(String.format("product with id %s not found", productId))))
                     .path(saveImageFile(files.get(i)))
                     .build());
         }
@@ -100,16 +107,16 @@ public class ImagesService {
 
     @SneakyThrows
     public void deleteImagesById(Long imageId) {
-        Optional<Images> imageOpt=imagesRepository.findById(imageId);
-        if(imageOpt.isPresent()){
+        Optional<Images> imageOpt = imagesRepository.findById(imageId);
+        if (imageOpt.isPresent()) {
             deleteImageFile(imageOpt.get().getPath());
             imagesRepository.deleteById(imageOpt.get().getId());
         }
     }
 
-    public void deleteImagesByProductId(Long productId){
-        List<Images> images=imagesRepository.getImagesProduct(productId);
-        images.forEach(img-> deleteImagesById(img.getId()));
+    public void deleteImagesByProductId(Long productId) {
+        List<Images> images = imagesRepository.getImagesProduct(productId);
+        images.forEach(img -> deleteImagesById(img.getId()));
 
     }
 
