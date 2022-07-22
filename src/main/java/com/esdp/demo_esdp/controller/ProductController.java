@@ -50,8 +50,7 @@ public class ProductController {
                                        Model model, Authentication authentication) throws IOException, ProductNotFoundException {
         User user = userService.getUserByEmail(userService.getEmailFromAuthentication(authentication));
         productService.addNewProduct(newProduct,user);
-        model.addAttribute("lastStep",true);
-        return "create_product";
+        return "successfully_created";
     }
 
     @PostMapping("/product/delete")
