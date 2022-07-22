@@ -1,12 +1,11 @@
 package com.esdp.demo_esdp.service;
 
-import com.esdp.demo_esdp.dto.CategoryDTO;
-import com.esdp.demo_esdp.dto.HierarchicalCategoryDTO;
-import com.esdp.demo_esdp.dto.ProductDTO;
+import com.esdp.demo_esdp.dto.*;
 import com.esdp.demo_esdp.entity.Category;
 import com.esdp.demo_esdp.entity.Product;
 import com.esdp.demo_esdp.enums.ProductStatus;
 import com.esdp.demo_esdp.exception.CategoryNotFoundException;
+import com.esdp.demo_esdp.exception.ResourceNotFoundException;
 import com.esdp.demo_esdp.repositories.CategoryRepository;
 import com.esdp.demo_esdp.repositories.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +17,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.logging.Filter;
 import java.util.stream.Collectors;
 
 @Transactional
@@ -183,6 +185,62 @@ public class CategoryService {
         Page<Product> products = new PageImpl<>(product.subList(start,end),pageable,product.size());
 
         return products.map(ProductDTO::from);
+    }
+
+    public Map<Long,List<FilterCategoryDto>> getFilterCategories(){
+        Map<Long,List<FilterCategoryDto>> result=new HashMap<>();
+        List<Long> allParentIds=categoryRepository.getCatParentId();
+        result.put(0L, getFilterCategories(categoryRepository.getFirstCategories()));
+        for(Long a:allParentIds){
+            result.put(a,getFilterCategories(categoryRepository.getCategoriesByParentId(a),categoryRepository.getCategory(a).orElseThrow(ResourceNotFoundException::new)));
+        }
+
+        return result;
+    }
+
+    private boolean hasChildren(Long categoryId){
+        List<Long> allParentIds=categoryRepository.getCatParentId();
+        if(allParentIds.contains(categoryId)){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    private List<FilterCategoryDto> getFilterCategories(List<Category> cats,Category parentCat){
+        List<FilterCategoryDto> dtos=new ArrayList<>();
+        dtos.add(FilterCategoryDto.builder()
+                        .id(parentCat.getId())
+                        .name(String.format("Все в категории %s",parentCat.getName()))
+                        .hasChildren(false)
+                        .parent(getCatParentId(parentCat))
+                .build());
+        cats.forEach(c->dtos.add(getFilteredCategoryDto(c)));
+
+        return dtos;
+    }
+
+    private List<FilterCategoryDto> getFilterCategories(List<Category> cats){
+        return cats.stream().map(this::getFilteredCategoryDto).collect(Collectors.toList());
+    }
+
+    private FilterCategoryDto getFilteredCategoryDto(Category category){
+
+        return FilterCategoryDto.builder()
+                .id(category.getId())
+                .name(category.getName())
+                .hasChildren(hasChildren(category.getId()))
+                .parent(getCatParentId(category))
+                .build();
+    }
+
+    private Long getCatParentId(Category category){
+        Category catParent=category.getParent();
+        if(catParent==null){
+            return 0L;
+        }else{
+            return catParent.getId();
+        }
     }
 
 
