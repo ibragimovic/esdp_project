@@ -128,7 +128,7 @@ public class ProductService {
         var user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
         if (user.getEmail().equals(productRepository.getPublicationUserEmail(productId))
                 || user.getRole().equals("Admin")) {
-            imagesService.deleteImagesByProductId(productId);
+            imagesService.deleteImagesFile(productId);
             favoritesService.deleteFavoritesByProductId(productId);
             productRepository.deleteById(productId);
         } else {
