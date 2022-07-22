@@ -6,11 +6,13 @@ import com.esdp.demo_esdp.service.FavoritesService;
 import com.esdp.demo_esdp.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
+import java.security.Principal;
 import java.util.List;
 
 @Controller
@@ -21,9 +23,16 @@ public class FavoritesPageController {
     static final String FAVORITES_ID = "_favorites_";
 
     @GetMapping("/favorites")
-    public String favoritesGet(Model model,Authentication authentication) throws ProductNotFoundException {
-        var user = userService.getEmailFromAuthentication(authentication);
-        var userFavorites = favoritesService.getFavoritesUser(user);
+    public String favoritesGet(Model model, Principal principal) throws ProductNotFoundException {
+        String email;
+        if (principal instanceof OAuth2AuthenticationToken) {
+            OAuth2AuthenticationToken oAuth2AuthenticationToken = (OAuth2AuthenticationToken) principal;
+            email = oAuth2AuthenticationToken.getPrincipal().getAttribute("email");
+        } else {
+            email = principal.getName();
+        }
+        var user = userService.getByEmail(email);
+        var userFavorites = favoritesService.getFavoritesUser(user.getEmail());
         if (!userFavorites.isEmpty()) {
             model.addAttribute("favoritesList", userFavorites);
         }

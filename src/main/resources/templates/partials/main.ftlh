@@ -40,6 +40,11 @@
                 </button>
                 <div class="collapse navbar-collapse" id="topNavbar">
                     <ul class="navbar-nav ml-auto">
+                        <@security.authorize access="isAuthenticated()">
+                            <li class="nav-item">
+                                <a class="nav-link" href="/favorites"><i style="color:rebeccapurple" class="bi bi-heart-fill h3"></i></a>
+                            </li>
+                        </@security.authorize>
                         <li class="nav-item">
                             <a class="nav-link" href="/product/create">Подать объявление</a>
                         </li>
