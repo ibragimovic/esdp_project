@@ -529,3 +529,15 @@ input::-webkit-inner-spin-button {
 .filterSubmit:hover{
     background-color:#00bf86 ;
 }
+
+.not-found-image {
+    margin-top: 70px;
+    width: 100%;
+    min-height: 30vh;
+    text-align: center;
+}
+
+.not-found-image img {
+    object-fit: contain;
+    width: 70%;
+}

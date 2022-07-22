@@ -205,31 +205,39 @@ styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons
             </div>
         </form>
 
-        <div class="products pt-5">
-            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
-                <#list products as product>
-                    <div class="col">
-                        <a class="product-card-container" href="/product/${product.id}">
-                            <div class="product-card mb-5">
-                                <div class="product-image">
-                                    <div class="picture bg-info d-flex">
-                                        <img src="/uploads/${product.imagePaths[0]}"
-                                             alt="фотография объявления">
+        <#if products?? && (products?size>0) >
+            <div class="products pt-5">
+                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+                    <#list products as product>
+                        <div class="col">
+                            <a class="product-card-container" href="/product/${product.id}">
+                                <div class="product-card mb-5">
+                                    <div class="product-image">
+                                        <div class="picture bg-info d-flex">
+                                            <img src="/uploads/${product.imagePaths[0]}"
+                                                 alt="фотография объявления">
+                                        </div>
+                                    </div>
+                                    <div class="product-info">
+                                        <div class="category-card">${product.category}</div>
+                                        <div class="title-card">
+                                            ${product.name}
+                                        </div>
+                                        <div class="cost-card"><i class="bi bi-cash-coin "></i>${product.price} сом
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="product-info">
-                                    <div class="category-card">${product.category}</div>
-                                    <div class="title-card">
-                                        ${product.name}
-                                    </div>
-                                    <div class="cost-card"><i class="bi bi-cash-coin "></i>${product.price} сом</div>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                </#list>
+                            </a>
+                        </div>
+                    </#list>
+                </div>
             </div>
-        </div>
+        <#else>
+            <div class="not-found-image">
+                <img src="/images/not_found.svg" alt="not found">
+                <p class="fs-3 mt-3">Объявления не найдены</p>
+            </div>
+        </#if>
 
     </div>
 
