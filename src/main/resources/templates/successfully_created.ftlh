@@ -1,7 +1,7 @@
 <#import "partials/main.ftlh" as main />
 
 
-    <#assign scripts_js = ["/js/create_product.js","/js/dropdown_script.js"]>
+<#assign scripts_js = ["/js/create_product.js","/js/dropdown_script.js","/js/showLastStep.js"]>
 
 
 <@main.renderWith title="Arenda.kg" scripts=scripts_js styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css","https://use.fontawesome.com/releases/v5.14.0/css/all.css","/css/create_product.css","/css/dropdown_style.css","/css/error_message.css"]>
@@ -12,7 +12,8 @@
                 <div class="card">
                     <h2 id="heading">новое объявление</h2>
                     <p>Заполните все поля, чтобы перейти к следующему шагу</p>
-                    <form id="newProductForm" method="POST" action="/product/create" enctype="multipart/form-data" modelAttribute="newProductData">
+                    <form id="newProductForm" method="POST" action="/product/create" enctype="multipart/form-data"
+                          modelAttribute="newProductData">
                         <!-- progressbar -->
                         <ul id="progressbar">
                             <li class="active" id="account"><strong>Изображения</strong></li>
@@ -23,9 +24,11 @@
                         <div class="progress">
                             <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
                                  aria-valuemin="0" aria-valuemax="100"></div>
-                        </div> <br> <!-- fieldsets -->
+                        </div>
+                        <br> <!-- fieldsets -->
                         <div class="alert alert-danger fs-5 text-left" role="alert" id="alertBox">
-                            <i class="bi bi-exclamation-circle-fill fs-4 text-left"></i> Заполните все поля, чтобы перейти к
+                            <i class="bi bi-exclamation-circle-fill fs-4 text-left"></i> Заполните все поля, чтобы
+                            перейти к
                             следующему шагу!
                         </div>
 
@@ -42,24 +45,26 @@
                                 </div>
                                 <label class="fieldlabels">Название товара?</label>
                                 <div class="input-group mb-3">
-                                    <input type="text" name="name" placeholder="Наименование" minlength="4" required="required" autocomplete="off" class="input valid" />
+                                    <input type="text" name="name" placeholder="Наименование" minlength="4"
+                                           required="required" autocomplete="off" class="input valid"/>
                                     <div class="error-message">* Название должно содержать 4 или более символов.</div>
                                 </div>
 
                                 <div class="row justify-content-center">
-                                <div class="upload-container col-10">
-                                    <input type="file" id="file-input" accept="image/png, image/jpeg"
-                                           onchange="preview()" multiple class="input" name="images">
+                                    <div class="upload-container col-10">
+                                        <input type="file" id="file-input" accept="image/png, image/jpeg"
+                                               onchange="preview()" multiple class="input" name="images">
 
-                                    <label for="file-input" class="upload-image-label">
-                                        <i class="bi bi-upload"></i> &nbsp; Выберите фотографии
-                                    </label>
-                                    <p id="num-of-files">Файлы не выбраны</p>
-                                    <div id="images"></div>
-                                </div>
+                                        <label for="file-input" class="upload-image-label">
+                                            <i class="bi bi-upload"></i> &nbsp; Выберите фотографии
+                                        </label>
+                                        <p id="num-of-files">Файлы не выбраны</p>
+                                        <div id="images"></div>
+                                    </div>
                                 </div>
 
-                            </div> <input type="button" class="next action-button" value="Далее" />
+                            </div>
+                            <input type="button" class="next action-button" value="Далее"/>
                         </fieldset>
 
                         <fieldset>
@@ -74,14 +79,14 @@
                                 </div>
 
 
-
                                 <label class="fieldlabels mt-3">Выберите категорию:</label>
                                 <div class="select-box">
                                     <div class="options-container">
                                         <#if select_categories??>
                                             <#list select_categories as cat>
                                                 <div class="option">
-                                                    <input type="radio" class="radio radio-input" id="category_${cat.id}"
+                                                    <input type="radio" class="radio radio-input"
+                                                           id="category_${cat.id}"
                                                            name="categoryId" value="${cat.id}"/>
                                                     <label for="category_${cat.id}">${cat.name}</label>
                                                 </div>
@@ -112,7 +117,7 @@
 
                             <input type="button" class="next action-button" value="Далее"/>
                             <input type="button" class="previous action-button-previous"
-                                   value="Назад" />
+                                   value="Назад"/>
 
                         </fieldset>
                         <fieldset>
@@ -131,7 +136,8 @@
                                 <div class="row">
                                     <div class="input-group mb-5 col-6 row">
                                         <input type="number" min="1" name="price" placeholder="В день (сом)"
-                                               class="input valid col-12" id="dayRent" onkeyup="calcWeekRent()" required="required"/>
+                                               class="input valid col-12" id="dayRent" onkeyup="calcWeekRent()"
+                                               required="required"/>
                                         <div class="error-message col-12">* Цена аренды должна быть больше 1</div>
                                     </div>
 
@@ -162,18 +168,19 @@
                                     </div>
 
                                     <div class="search-box">
-                                        <input type="text" placeholder="Start Typing..." />
+                                        <input type="text" placeholder="Start Typing..."/>
                                     </div>
                                 </div>
 
 
                             </div>
 
-                            <input type="hidden" name="${(_csrf.parameterName)!'csrf'}" value="${(_csrf.token)!'--no-token--'}"/>
+                            <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
+                                   value="${(_csrf.token)!'--no-token--'}"/>
 
-                            <input type="submit" class="next action-button" value="Submit" />
+                            <input type="submit" class="next action-button" value="Submit"/>
                             <input type="button" class="previous action-button-previous"
-                                   value="Назад" />
+                                   value="Назад"/>
                         </fieldset>
                         <fieldset id="lastFs">
                             <div class="form-card">
@@ -184,15 +191,18 @@
                                     <div class="col-5">
                                         <h2 class="steps">Шаг 4 - 4</h2>
                                     </div>
-                                </div> <br><br>
+                                </div>
+                                <br><br>
                                 <h2 class="purple-text text-center"><strong>SUCCESS !</strong></h2> <br>
                                 <div class="row justify-content-center">
-                                    <div class="col-3"> <img src="/images/done.png" class="fit-image">
+                                    <div class="col-3"><img src="/images/done.png" class="fit-image">
                                     </div>
-                                </div> <br><br>
+                                </div>
+                                <br><br>
                                 <div class="row justify-content-center">
                                     <div class="col-7 text-center">
-                                        <h5 class="purple-text text-center" style="text-transform: capitalize">Вы успешно создали новое объявление!</h5>
+                                        <h5 class="purple-text text-center" style="text-transform: capitalize">Вы
+                                            успешно создали новое объявление!</h5>
                                     </div>
                                 </div>
                             </div>
@@ -203,5 +213,11 @@
         </div>
     </div>
 
+
+    <script>
+        var timer = setTimeout(function() {
+            window.location='/'
+        }, 5000);
+    </script>
 
 </@main.renderWith>
