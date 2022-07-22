@@ -75,6 +75,16 @@ public class LocalitiesService {
         return localitiesRepository.findAllChildren().stream().map(LocalitiesDTO::from).collect(Collectors.toList());
     }
 
+    public List<LocalitiesDTO> getFilterLocalities(){
+        List<LocalitiesDTO> result=getLocalitiesDTOs();
+        result.add(0,LocalitiesDTO.builder()
+                        .id(0L)
+                        .name("Все локации")
+                .build());
+
+        return result;
+    }
+
     //this method will be modified
     public List<String> getLocalitiesNames(Long userId, Long productId){
         return localitiesRepository.findAll().stream().map(Localities::getName).collect(Collectors.toList());

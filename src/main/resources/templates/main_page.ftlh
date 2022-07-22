@@ -6,7 +6,7 @@ styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons
 "/css/navbar.css", "/css/nested_dropdown.css","/css/main_page.css","/css/dropdown_style.css"]>
     <#assign security=JspTaglibs["http://www.springframework.org/security/tags"]/>
     <nav class="navbar navbar-expand-custom navbar-mainbg">
-        <a class="navbar-brand navbar-logo" href="#">Arenda.kg</a>
+        <a class="navbar-brand navbar-logo" href="/main">Arenda.kg</a>
         <button class="navbar-toggler" type="button" aria-controls="navbarSupportedContent" aria-expanded="false"
                 aria-label="Toggle navigation">
             <i class="bi bi-list text-white p-0 m-0"></i>
@@ -19,7 +19,7 @@ styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons
                 </div>
 
                 <li class="nav-item active">
-                    <a class="nav-link" href="/"><i class="bi bi-layout-text-window-reverse"></i>Главная</a>
+                    <a class="nav-link" href="/main"><i class="bi bi-layout-text-window-reverse"></i>Главная</a>
                 </li>
 
                 <li class="nav-item">
@@ -66,11 +66,11 @@ styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons
              aria-hidden="true">
             <div class="modal-dialog modal-fullscreen">
                 <div class="modal-content">
-                    <div class="mx-md-5 d-flex flex-row justify-content-between filter-modal-header align-items-center">
+                    <div class="mx-md-5 filter-modal-header text-center">
                         <button type="button" class="btn-close fs-4" data-bs-dismiss="modal"
                                 aria-label="Close"></button>
                         <p class="filter-title"><span>Filter</span></p>
-                        <p class="reset-btn fill">Reset</p>
+<#--                        <p class="reset-btn fill">Reset</p>-->
                     </div>
                     <div class="modal-body">
                         <div class="container filter-modal-container">
@@ -84,7 +84,7 @@ styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons
                                     <input name="categoryId" hidden id="chosenCategory">
 
                                     <div class="dropdown" id="dropdownElem">
-                                        <span id="chosenCat">Choose Category</span>
+                                        <span id="chosenCat">Выберите категорию</span>
                                     </div>
                                     <div class="options-cat-container">
 
@@ -132,7 +132,7 @@ styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons
                                             <#list localities as local>
                                                 <div class="option">
                                                     <input type="radio" class="radio radio-input" id="local_${local.id}"
-                                                           name="locality" value="${local.name}"/>
+                                                           name="locality" value="<#if local.id!=0>${local.name}</#if>"/>
                                                     <label for="local_${local.id}">${local.name}</label>
                                                 </div>
                                             </#list>
@@ -176,6 +176,13 @@ styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons
                                     <span class="value">Сначала дороже</span>
                                 </label>
                             </div>
+
+                            <input type="hidden" name="${(_csrf.parameterName)!'csrf'}" value="${(_csrf.token)!'--no-token--'}"/>
+
+                            <div class="d-flex justify-content-center align-items-center mt-5">
+                                <button type="submit" class="filterSubmit">Submit <i class="bi bi-check-lg p-0 m-0"></i></button>
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -200,7 +207,7 @@ styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons
 
         <div class="products pt-5">
             <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
-                <#list products.getContent() as product>
+                <#list products as product>
                     <div class="col">
                         <a class="product-card-container" href="/product/${product.id}">
                             <div class="product-card mb-5">
@@ -227,9 +234,9 @@ styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons
     </div>
 
 
-    <div class="load-more">
-        <a class="bttn">Load more</a>
-    </div>
+<#--    <div class="load-more">-->
+<#--        <a class="bttn">Load more</a>-->
+<#--    </div>-->
 
 
     </div>
