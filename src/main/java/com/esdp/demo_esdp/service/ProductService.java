@@ -93,7 +93,7 @@ public class ProductService {
                 .up(LocalDateTime.now())
                 .build();
         productRepository.save(product);
-        imagesService.saveNewImages(productAddForm.getImages(), product.getId());
+        imagesService.saveImagesFile(productAddForm.getImages(), product);
     }
 
 
