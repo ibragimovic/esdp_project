@@ -20,6 +20,9 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query("select p from Product p where lower(p.name) like  %:name% and p.status = :status ")
     Page<Product> getProductName(@Param("name") String name, @Param("status") ProductStatus status, Pageable pageable);
 
+    @Query("select p from Product p where lower(p.name) like  %:name% and p.status = :status order by p.dateAdd desc")
+    Page<Product> getProductNameOrdered(@Param("name") String name, @Param("status") ProductStatus status, Pageable pageable);
+
     @Query("select p from Product p where lower(p.category.name) like %:category% and p.status = :status")
     Page<Product> getProductCategory(@Param("category") String category, @Param("status") ProductStatus status, Pageable pageable);
 
@@ -29,7 +32,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query("select p from Product p where p.user.email = :email and p.status = :status")
     List<Product> getProductUser(@Param("email") String email, @Param("status") ProductStatus status);
 
-    @Query("select p from Product p where p.status = :status order by p.dateAdd")
+    @Query("select p from Product p where p.status = :status order by p.dateAdd desc")
     Page<Product> getProducts(@Param("status") ProductStatus status, Pageable pageable);
 
     @Query("select p.user.email from Product p where p.id = :id ")

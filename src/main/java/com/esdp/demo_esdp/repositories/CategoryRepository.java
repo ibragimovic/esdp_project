@@ -22,8 +22,14 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     @Query("select c from Category c where c.id = :id ")
     Optional<Category> getCategory(@Param("id") Long id);
 
-    @Query("select distinct cat.parent.id from Category cat where cat.parent.id is not null")
+    @Query("select c from Category c where c.parent.id is null ")
+    List<Category> getFirstCategories();
+
+    @Query("select distinct cat.parent.id from Category cat where cat.parent.id is not null order by cat.parent.id asc")
     List<Long> getCatParentId();
+
+    @Query("select  cat from Category cat where cat.parent.id = :id")
+    List<Category> getCategoriesByParentId(Long id);
 
     Optional<Category> findCategoryByName(String name);
 

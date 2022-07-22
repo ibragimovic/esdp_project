@@ -4,7 +4,7 @@
 scripts=["/js/navbar.js","/js/dropdown_script.js","/js/nested_dropdown.js","/js/main_page.js"]
 styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css",
 "/css/navbar.css", "/css/nested_dropdown.css","/css/main_page.css","/css/dropdown_style.css"]>
-<#assign security=JspTaglibs["http://www.springframework.org/security/tags"]/>
+    <#assign security=JspTaglibs["http://www.springframework.org/security/tags"]/>
     <nav class="navbar navbar-expand-custom navbar-mainbg">
         <a class="navbar-brand navbar-logo" href="#">Arenda.kg</a>
         <button class="navbar-toggler" type="button" aria-controls="navbarSupportedContent" aria-expanded="false"
@@ -61,215 +61,146 @@ styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons
     </nav>
 
     <!-- filter modal -->
-    <div class="modal fade filter-modal" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog modal-fullscreen">
-            <div class="modal-content">
-                <div class="mx-md-5 d-flex flex-row justify-content-between filter-modal-header align-items-center">
-                    <button type="button" class="btn-close fs-4" data-bs-dismiss="modal" aria-label="Close"></button>
-                    <p class="filter-title"><span>Filter</span></p>
-                    <p class="reset-btn fill">Reset</p>
-                </div>
-                <div class="modal-body">
-                    <div class="container filter-modal-container">
-                        <div class="filter-search-box mb-5">
-                            <i class="bi bi-search"></i>
-                            <input type="text" placeholder="Поиск">
-                        </div>
-                        <div class="filter-category mb-5">
-                            <p class="filter-main-title"><span>Категория</span></p>
-                            <div class="dropdown-container">
-                                <input name="categoryId" hidden id="chosenCategory">
+    <form method="post" action="/product/filter" modelAttribute="filterProducts">
+        <div class="modal fade filter-modal" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog modal-fullscreen">
+                <div class="modal-content">
+                    <div class="mx-md-5 d-flex flex-row justify-content-between filter-modal-header align-items-center">
+                        <button type="button" class="btn-close fs-4" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                        <p class="filter-title"><span>Filter</span></p>
+                        <p class="reset-btn fill">Reset</p>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container filter-modal-container">
+                            <div class="filter-search-box mb-5">
+                                <i class="bi bi-search"></i>
+                                <input type="text" placeholder="Поиск" name="search">
+                            </div>
+                            <div class="filter-category mb-5">
+                                <p class="filter-main-title"><span>Категория</span></p>
+                                <div class="dropdown-container">
+                                    <input name="categoryId" hidden id="chosenCategory">
 
-                                <div class="dropdown" id="dropdownElem">
-                                    <span id="chosenCat">Choose Category</span>
+                                    <div class="dropdown" id="dropdownElem">
+                                        <span id="chosenCat">Choose Category</span>
+                                    </div>
+                                    <div class="options-cat-container">
+
+                                        <#list filteredCategories as num,catList>
+                                            <div class="options" id="options${num}">
+                                                <#if num==0>
+                                                    <p class="cat-option lastOption" id="noCategory">
+                                                        <input value="" hidden>
+                                                        <span>Все категории</span>
+                                                    </p>
+                                                <#else>
+                                                    <input value="${catList[0].parent}" hidden>
+                                                    <p class="options-header"><i
+                                                                class="bi bi-arrow-left-short goBack"></i><span>${catList[0].name?substring(15)}</span>
+                                                    </p>
+                                                </#if>
+
+                                                <#list catList as cat>
+                                                    <#if cat.hasChildren>
+                                                        <p class="cat-option nestedOption">
+                                                            <input value="${cat.id}" hidden>
+                                                            <span>${cat.name}</span><i class="bi bi-arrow-right"></i>
+                                                        </p>
+                                                    <#else>
+                                                        <p class="cat-option lastOption">
+                                                            <input value="${cat.id}" name="categoryId" hidden>
+                                                            <span>${cat.name}</span>
+                                                        </p>
+                                                    </#if>
+                                                </#list>
+
+                                            </div>
+                                        </#list>
+
+                                    </div>
                                 </div>
-                                <div class="options-cat-container">
-                                    <div class="options" id="options0">
-                                        <p class="cat-option lastOption" id="noCategory">
-                                            <input value="" hidden>
-                                            <span>No category</span>
-                                        </p>
-                                        <p class="cat-option nestedOption">
-                                            <input value="1" hidden>
-                                            <span>Cat 1</span><i class="bi bi-arrow-right"></i>
-                                        </p>
-                                        <p class="cat-option nestedOption">
-                                            <input disabled="disabled" value="2" hidden>
-                                            <span>Cat 2</span><i class="bi bi-arrow-right"></i>
-                                        </p>
-                                        <p class="cat-option nestedOption">
-                                            <input disabled="disabled" value="3" hidden>
-                                            <span>Cat 3</span><i class="bi bi-arrow-right"></i>
-                                        </p>
+
+
+                            </div>
+                            <div class="filter-location mb-5">
+                                <p class="filter-main-title"><span>Местоположение</span></p>
+                                <div class="select-box">
+                                    <div class="options-container">
+                                        <#if localities??>
+                                            <#list localities as local>
+                                                <div class="option">
+                                                    <input type="radio" class="radio radio-input" id="local_${local.id}"
+                                                           name="locality" value="${local.name}"/>
+                                                    <label for="local_${local.id}">${local.name}</label>
+                                                </div>
+                                            </#list>
+                                        </#if>
                                     </div>
 
-                                    <div class="options" id="options1">
-                                        <input value="0" hidden>
-                                        <p class="options-header"><i class="bi bi-arrow-left-short goBack"></i><span>Cat
-                                                1</span></p>
-                                        <p class="cat-option lastOption">
-                                            <input value="1" name="categoryId" hidden>
-                                            <span>Cat 1.1</span>
-                                        </p>
-                                        <p class="cat-option lastOption">
-                                            Cat 1.2
-                                        </p>
-                                        <p class="cat-option lastOption">
-                                            Cat 1.3
-                                        </p>
+                                    <div class="selected">
+                                        Выберите локацию
                                     </div>
 
-                                    <div class="options" id="options2">
-                                        <input value="0" hidden>
-                                        <p class="options-header"><i class="bi bi-arrow-left-short goBack"></i><span>Cat
-                                                2</span></p>
-                                        <p class="cat-option">
-                                            Cat 2.1
-                                        </p>
-                                        <p class="cat-option">
-                                            Cat 2.2
-                                        </p>
-                                        <p class="cat-option">
-                                            Cat 2.3
-                                        </p>
+                                    <div class="search-box">
+                                        <input type="text" placeholder="Start Typing..."/>
                                     </div>
-
-                                    <div class="options" id="options3">
-                                        <input value="0" hidden>
-                                        <p class="options-header"><i class="bi bi-arrow-left-short goBack"></i><span>Cat
-                                                3</span></p>
-                                        <p class="cat-option">
-                                            Cat 3.1
-                                        </p>
-                                        <p class="cat-option">
-                                            Cat 3.2
-                                        </p>
-                                        <p class="cat-option">
-                                            Cat 3.3
-                                        </p>
-                                    </div>
-
                                 </div>
                             </div>
-
-
-                        </div>
-                        <div class="filter-location mb-5">
-                            <p class="filter-main-title"><span>Местоположение</span></p>
-                            <div class="select-box">
-                                <div class="options-container">
-                                    <div class="option">
-                                        <input type="radio" class="radio radio-input" id="category_"
-                                               name="categoryId" value="" />
-                                        <label for="category_">place</label>
-                                    </div>
-                                    <div class="option">
-                                        <input type="radio" class="radio radio-input" id="category_"
-                                               name="categoryId" value="" />
-                                        <label for="category_">place1</label>
-                                    </div>
-                                    <div class="option">
-                                        <input type="radio" class="radio radio-input" id="category_"
-                                               name="categoryId" value="" />
-                                        <label for="category_">place2</label>
-                                    </div>
-                                </div>
-
-                                <div class="selected">
-                                    Выберите локацию
-                                </div>
-
-                                <div class="search-box">
-                                    <input type="text" placeholder="Start Typing..." />
-                                </div>
+                            <div class="filter-price mb-4">
+                                <p class="filter-main-title"><span>Цена</span></p>
+                                <input type="number" placeholder="От" min="1" name="priceFrom">
+                                <input type="number" placeholder="До" min="1" name="priceTo">
                             </div>
-                        </div>
-                        <div class="filter-price mb-4">
-                            <p class="filter-main-title"><span>Цена</span></p>
-                            <input type="number" placeholder="От" min="1">
-                            <input type="number" placeholder="До" min="1">
-                        </div>
-                        <div class="filter-sort">
-                            <p class="filter-main-title"><span>Сортировать</span></p>
-                            <label>
-                                <input type="radio" name="sort" value="popular" checked>
-                                <span class="design"></span>
-                                <span class="value">Популярные</span>
-                            </label>
-                            <label>
-                                <input type="radio" name="sort" value="new">
-                                <span class="design"></span>
-                                <span class="value">Сначала новые</span>
-                            </label>
-                            <label>
-                                <input type="radio" name="sort" value="cheap">
-                                <span class="design"></span>
-                                <span class="value">Сначала дешевле</span>
-                            </label>
-                            <label>
-                                <input type="radio" name="sort" value="expensive">
-                                <span class="design"></span>
-                                <span class="value">Сначала дороже</span>
-                            </label>
+                            <div class="filter-sort">
+                                <p class="filter-main-title"><span>Сортировать</span></p>
+                                <label>
+                                    <input type="radio" name="sort" value="popular" checked>
+                                    <span class="design"></span>
+                                    <span class="value">Популярные</span>
+                                </label>
+                                <label>
+                                    <input type="radio" name="sort" value="new">
+                                    <span class="design"></span>
+                                    <span class="value">Сначала новые</span>
+                                </label>
+                                <label>
+                                    <input type="radio" name="sort" value="cheap">
+                                    <span class="design"></span>
+                                    <span class="value">Сначала дешевле</span>
+                                </label>
+                                <label>
+                                    <input type="radio" name="sort" value="expensive">
+                                    <span class="design"></span>
+                                    <span class="value">Сначала дороже</span>
+                                </label>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </form>
 
     <!-- main page -->
     <div class="container pt-4">
-        <div class="main-panel d-flex">
-            <input type="text" class="flex-grow-1 search-input" placeholder="Найти...">
-            <button type="button" class="btn bi bi-search btn-info text-white rounded-circle"></button>
-            <a class="filter shadow-none" data-bs-toggle="modal" data-bs-target="#filterModal"><span>Filter</span></a>
-        </div>
+        <form method="post" action="/product/search">
+            <div class="main-panel d-flex">
+                <#if goBack??>
+                    <a class="btn btn-info bi bi-arrow-left rounded-circle text-white fs-5 me-2" href="/main"></a>
+                </#if>
+                <input type="text" class="flex-grow-1 search-input" placeholder="Найти..." name="productSearch">
+                <input type="hidden" name="${(_csrf.parameterName)!'csrf'}" value="${(_csrf.token)!'--no-token--'}"/>
+                <button type="submit" class="btn bi bi-search btn-info text-white rounded-circle fs-5 me-2"></button>
+                <a class="filter shadow-none" data-bs-toggle="modal"
+                   data-bs-target="#filterModal"><span>Filter</span></a>
+            </div>
+        </form>
 
         <div class="products pt-5">
             <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
-
-
-                <div class="col">
-                    <a class="product-card-container" href="#">
-                        <div class="product-card mb-5">
-                            <div class="product-image">
-                                <div class="picture bg-info d-flex">
-                                    <img src="https://addons-media.operacdn.com/media/CACHE/images/themes/05/144705/1.0-rev1/images/0993404e-79e0-4052-923d-89236e7c102f/e4f4077f6d1f715a07786ff7692a8d1d.jpg"
-                                         alt="фотография объявления">
-                                </div>
-                            </div>
-                            <div class="product-info">
-                                <div class="category-card">Sport</div>
-                                <div class="title-card">
-                                    Lorem, ipsum. Lorem ipsum dolor sit amet
-                                </div>
-                                <div class="cost-card"><i class="bi bi-cash-coin "></i>30сом</div>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                <div class="col">
-                    <a class="product-card-container" href="#">
-                        <div class="product-card mb-5">
-                            <div class="product-image">
-                                <div class="picture bg-info d-flex">
-                                    <img src="https://addons-media.operacdn.com/media/CACHE/images/themes/05/144705/1.0-rev1/images/0993404e-79e0-4052-923d-89236e7c102f/e4f4077f6d1f715a07786ff7692a8d1d.jpg"
-                                         alt="фотография объявления">
-                                </div>
-                            </div>
-                            <div class="product-info">
-                                <div class="category-card">Sport</div>
-                                <div class="title-card">
-                                    Lorem, ipsum. Lorem ipsum dolor sit amet f
-                                </div>
-                                <div class="cost-card"><i class="bi bi-cash-coin "></i>30сом</div>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                <#list products as product>
+                <#list products.getContent() as product>
                     <div class="col">
                         <a class="product-card-container" href="/product/${product.id}">
                             <div class="product-card mb-5">
@@ -282,7 +213,7 @@ styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons
                                 <div class="product-info">
                                     <div class="category-card">${product.category}</div>
                                     <div class="title-card">
-                                       ${product.name}
+                                        ${product.name}
                                     </div>
                                     <div class="cost-card"><i class="bi bi-cash-coin "></i>${product.price} сом</div>
                                 </div>
@@ -328,7 +259,8 @@ styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons
                             <p class="footer-title text-center"><span>Q&A</span></p>
                             <ul>
                                 <li data-bs-toggle="modal" data-bs-target="#footerModal1">Как подать объявление об
-                                    аренде?</li>
+                                    аренде?
+                                </li>
                                 <li data-bs-toggle="modal" data-bs-target="#footerModal2">Как взять товар в аренду?</li>
                                 <li data-bs-toggle="modal" data-bs-target="#footerModal3">Почему вам стоит выбрать нас?
                                 </li>

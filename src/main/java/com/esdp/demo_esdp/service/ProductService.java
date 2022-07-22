@@ -52,6 +52,17 @@ public class ProductService {
                 .map(ProductDTO::from);
     }
 
+    public Page<SimilarProductDto> getProductNameOrdered(String name, Pageable pageable) {
+        return productRepository.getProductName(name.toLowerCase(), ProductStatus.ACCEPTED, pageable)
+                .map(p->SimilarProductDto.builder()
+                        .id(p.getId())
+                        .category(p.getCategory().getName())
+                        .name(p.getName())
+                        .price(p.getPrice())
+                        .imagePaths(imagesService.getImagesPathsByProductId(p.getId()))
+                        .build());
+    }
+
     public Page<ProductDTO> getProductCategory(String category, Pageable pageable) {
         return productRepository.getProductName(category.toLowerCase(), ProductStatus.ACCEPTED, pageable)
                 .map(ProductDTO::from);
@@ -65,6 +76,18 @@ public class ProductService {
     public Page<ProductDTO> getProducts(Pageable pageable) {
         return productRepository.getProducts(ProductStatus.ACCEPTED, pageable)
                 .map(ProductDTO::from);
+    }
+
+    public Page<SimilarProductDto> getMainPageProducts(Pageable pageable){
+        Page<Product> pr=productRepository.getProducts(ProductStatus.ACCEPTED,pageable);
+        return productRepository.getProducts(ProductStatus.ACCEPTED,pageable)
+                .map(p->SimilarProductDto.builder()
+                        .id(p.getId())
+                        .category(p.getCategory().getName())
+                        .name(p.getName())
+                        .price(p.getPrice())
+                        .imagePaths(imagesService.getImagesPathsByProductId(p.getId()))
+                        .build());
     }
 
     public ProductDTO getProduct(Long id) throws ResourceNotFoundException {
