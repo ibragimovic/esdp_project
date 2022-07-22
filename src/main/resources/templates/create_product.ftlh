@@ -1,10 +1,8 @@
 <#import "partials/main.ftlh" as main />
 
-<#if lastStep??>
-    <#assign scripts_js = ["/js/create_product.js","/js/dropdown_script.js","/js/showLastStep.js"]>
-<#else>
+
     <#assign scripts_js = ["/js/create_product.js","/js/dropdown_script.js"]>
-</#if>
+
 
 <@main.renderWith title="Arenda.kg" scripts=scripts_js styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css","https://use.fontawesome.com/releases/v5.14.0/css/all.css","/css/create_product.css","/css/dropdown_style.css","/css/error_message.css"]>
     <div class="container-fluid">
@@ -204,5 +202,6 @@
             </div>
         </div>
     </div>
+
 
 </@main.renderWith>
