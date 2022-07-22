@@ -46,19 +46,17 @@ public class ImagesService {
                 for (int i = 0; i < files.size(); i++) {
                     String uuid = UUID.randomUUID().toString();
                     String resulFileName = uuid + "." + files.get(i).getOriginalFilename();
-//                    files.get(i).transferTo(new File(uploadPath + resulFileName));
-//                    if (files.get(i).getSize() <= 10240) {
-                        Thumbnails.of(files.get(i).getInputStream())
-                                .scale(0.7f)
-                                .outputQuality(0.125f)
-                                .toFile(new File(uploadPath + resulFileName));
-                        imagesRepository.save(Images.builder()
-                                .path(resulFileName)
-                                .product(product)
-                                .build());
-                    }
+                    Thumbnails.of(files.get(i).getInputStream())
+                            .scale(0.7f)
+                            .outputQuality(0.125f)
+                            .toFile(new File(uploadPath + resulFileName));
+                    imagesRepository.save(Images.builder()
+                            .path(resulFileName)
+                            .product(product)
+                            .build());
                 }
-//            }
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -147,15 +145,16 @@ public class ImagesService {
     }
 
 
-//    public void deleteImageId(Long imageId) {
-//        var image = imagesRepository.getImageId(imageId)
-//                .orElseThrow(ResourceNotFoundException::new);
-//        imagesRepository.delete(image);
-//        try {
-//            Files.delete(Paths.get(uploadPath + image.getPath()));
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
+    public void deleteImageId(Long imageId) {
+        var image = imagesRepository.getImageId(imageId)
+                .orElseThrow(ResourceNotFoundException::new);
+
+        try {
+            Files.delete(Paths.get(uploadPath + image.getPath()));
+            imagesRepository.delete(image);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 }
