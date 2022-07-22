@@ -1,5 +1,6 @@
 package com.esdp.demo_esdp.repositories;
 
+import com.esdp.demo_esdp.dto.FilterProductDto;
 import com.esdp.demo_esdp.entity.Product;
 import com.esdp.demo_esdp.enums.ProductStatus;
 import org.springframework.data.domain.Page;
@@ -20,6 +21,12 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query("select p from Product p where lower(p.name) like  %:name% and p.status = :status ")
     Page<Product> getProductName(@Param("name") String name, @Param("status") ProductStatus status, Pageable pageable);
 
+    @Query("select p from Product p where (lower(p.name) like  %:name% or lower(p.description) like %:name%) and p.status = :status order by p.dateAdd desc")
+    List<Product> getProductListByName(@Param("name") String name, @Param("status") ProductStatus status);
+
+    @Query("select p from Product p where lower(p.name) like  %:name% and p.status = :status order by p.dateAdd desc")
+    Page<Product> getProductNameOrdered(@Param("name") String name, @Param("status") ProductStatus status, Pageable pageable);
+
     @Query("select p from Product p where lower(p.category.name) like %:category% and p.status = :status")
     Page<Product> getProductCategory(@Param("category") String category, @Param("status") ProductStatus status, Pageable pageable);
 
@@ -29,8 +36,11 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query("select p from Product p where p.user.email = :email and p.status = :status")
     List<Product> getProductUser(@Param("email") String email, @Param("status") ProductStatus status);
 
-    @Query("select p from Product p where p.status = :status order by p.dateAdd")
+    @Query("select p from Product p where p.status = :status order by p.dateAdd desc")
     Page<Product> getProducts(@Param("status") ProductStatus status, Pageable pageable);
+
+    @Query("select p from Product p where p.status = :status order by p.dateAdd desc")
+    List<Product> getProductsList(@Param("status") ProductStatus status);
 
     @Query("select p.user.email from Product p where p.id = :id ")
     String getPublicationUserEmail(@Param("id") Long id);
@@ -88,7 +98,16 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query("select p from Product p where p.category.id = :catId and not (p.id= :productId)")
     List<Product> getSimilarProducts(Long catId, Long productId);
 
-    @Query("select p from Product p where p.category.id = :catId")
-    List<Product> getSimilarProducts(Long catId);
+    @Query("select p from Product p where " +
+            "(p.name like %:search% or p.description like %:search%) " +
+            "and p.price>= :priceFrom  and p.price<=:priceTo " +
+            "and p.localities like %:locality%  ")
+    List<Product> getFilteredProducts(String search,Integer priceFrom,Integer priceTo, String locality);
+
+    @Query("select p from Product p where " +
+            "(p.name like %:search% or p.description like %:search%) " +
+            "and p.price>= :priceFrom  and p.price<=:priceTo " +
+            "and p.localities like %:locality%  and p.category.id = :categoryId")
+    List<Product> getFilteredProducts(String search,Integer priceFrom,Integer priceTo, String locality, Long categoryId);
 
 }
