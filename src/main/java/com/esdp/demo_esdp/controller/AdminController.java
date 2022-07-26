@@ -51,7 +51,6 @@ public class AdminController {
     }
 
 
-
     @PostMapping("/user-blocking")
     public String deleteUserId(Long id) {
         userService.blockingUser(id);
@@ -76,11 +75,12 @@ public class AdminController {
     @GetMapping("/product/search-name")
     public String getProductName(@RequestParam @NotBlank String name, Model model, Pageable pageable) {
         var products = productService.getProductName(name, pageable);
+        model.addAttribute("users", userService.getUsers());
+        model.addAttribute("categories", categoryService.getCategories());
         if (products.isEmpty()) {
-            return "error404";
+            model.addAttribute("empty", "Ничего не найдено!");
+            return "admin";
         } else {
-            model.addAttribute("users", userService.getUsers());
-            model.addAttribute("categories", categoryService.getCategories());
             model.addAttribute("products", products);
             return "admin";
         }
@@ -90,11 +90,12 @@ public class AdminController {
     @GetMapping("/products/search-user")
     public String getProductUser(String userEmail, Model model, Pageable pageable) {
         var products = productService.getProductsUser(userEmail);
+        model.addAttribute("users", userService.getUsers());
+        model.addAttribute("categories", categoryService.getCategories());
         if (products.isEmpty()) {
-            return "error404";
+            model.addAttribute("empty", "Ничего не найдено!");
+            return "admin";
         } else {
-            model.addAttribute("users", userService.getUsers());
-            model.addAttribute("categories", categoryService.getCategories());
             model.addAttribute("products", products);
             return "admin";
         }
@@ -104,11 +105,12 @@ public class AdminController {
     @GetMapping("/products/search-status")
     public String getProductsStatus(String status, Model model) {
         var products = productService.getProductsStatus(status);
+        model.addAttribute("users", userService.getUsers());
+        model.addAttribute("categories", categoryService.getCategories());
         if (products.isEmpty()) {
-            return "error404";
+            model.addAttribute("empty", "Ничего не найдено!");
+            return "admin";
         } else {
-            model.addAttribute("users", userService.getUsers());
-            model.addAttribute("categories", categoryService.getCategories());
             model.addAttribute("products", products);
             return "admin";
         }
@@ -118,17 +120,16 @@ public class AdminController {
     @GetMapping("/products/search-category")
     public String getProductUser(Long categoryId, Model model) {
         var products = productService.getProductsCategory(categoryId);
+        model.addAttribute("users", userService.getUsers());
+        model.addAttribute("categories", categoryService.getCategories());
         if (products.isEmpty()) {
-            return "error404";
+            model.addAttribute("empty", "Ничего не найдено!");
+            return "admin";
         } else {
-            model.addAttribute("users", userService.getUsers());
-            model.addAttribute("categories", categoryService.getCategories());
             model.addAttribute("products", products);
             return "admin";
         }
     }
-
-
 
 
     @GetMapping("/category")
@@ -158,8 +159,8 @@ public class AdminController {
     }
 
     @PostMapping("/change/parent/category")
-    public String changeParentByCategory(@RequestParam(name = "category_id") Long category_id,@RequestParam(name = "parent_id") Long parent_id) throws CategoryNotFoundException {
-        categoryService.changeSubcategory(category_id,parent_id);
+    public String changeParentByCategory(@RequestParam(name = "category_id") Long category_id, @RequestParam(name = "parent_id") Long parent_id) throws CategoryNotFoundException {
+        categoryService.changeSubcategory(category_id, parent_id);
         return "redirect:/admin/category";
     }
 
