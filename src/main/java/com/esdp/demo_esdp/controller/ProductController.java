@@ -1,5 +1,6 @@
 package com.esdp.demo_esdp.controller;
 
+import com.esdp.demo_esdp.dto.FilterProductDto;
 import com.esdp.demo_esdp.dto.ProductAddForm;
 import com.esdp.demo_esdp.entity.User;
 import com.esdp.demo_esdp.exception.ProductNotFoundException;
@@ -59,56 +60,30 @@ public class ProductController {
         return "redirect:/" + productService.deleteProductById(productId, userService.getEmailFromAuthentication(authentication));
     }
 
-    @GetMapping("/product/search-category")
-    public String getProductCategory(@RequestParam("category") @NotBlank String category,
-                                     Model model, Pageable pageable, HttpServletRequest uriBuilder) {
-        var products = productService.getProductCategory(category, pageable);
-        if (products.isEmpty()) {
-            return "error404";
-        } else {
-            var uri = uriBuilder.getRequestURI();
-            propertiesService.fillPaginationDataModel(products, propertiesService.getDefaultPageSize(), model, uri);
-            return "index";
-        }
+    @PostMapping("/product/search")
+    public String getProductsSearch(Model model, @RequestParam String productSearch) {
+        model.addAttribute("products",productService.getMainProductsListByName(productSearch));
+        model.addAttribute("goBack",true);
+        model.addAttribute("localities", localitiesService.getFilterLocalities());
+        model.addAttribute("filteredCategories",categoryService.getFilterCategories());
+        return "index";
     }
 
-    @GetMapping("/product/search-name")
-    public String getProductName(@RequestParam("name") @NotBlank String name, Model model,
-                                 Pageable pageable, HttpServletRequest uriBuilder) {
-        var products = productService.getProductName(name, pageable);
-        if (products.isEmpty()) {
-            return "error404";
-        } else {
-            var uri = uriBuilder.getRequestURI();
-            propertiesService.fillPaginationDataModel(products, propertiesService.getDefaultPageSize(), model, uri);
-            return "index";
-        }
+    @PostMapping("/product/filter")
+    public String getProductsFilter(Model model, @ModelAttribute("filterProduct") FilterProductDto filters) {
+        model.addAttribute("goBack",true);
+        model.addAttribute("localities", localitiesService.getFilterLocalities());
+        model.addAttribute("filteredCategories",categoryService.getFilterCategories());
+        model.addAttribute("products",productService.handleFilter(filters));
+        return "index";
     }
-
-    @GetMapping("/product/search-price")
-    public String getProductPrice(@RequestParam("from") @NonNull @Min(1) Integer from,
-                                  @RequestParam("before") @NonNull @Min(1) Integer before,
-                                  Model model,
-                                  Pageable pageable, HttpServletRequest uriBuilder) {
-        var products = productService.getProductPrice(from, before, pageable);
-        if (products.isEmpty()) {
-            return "error404";
-        } else {
-            var uri = uriBuilder.getRequestURI();
-            propertiesService.fillPaginationDataModel(products, propertiesService.getDefaultPageSize(), model, uri);
-            return "index";
-        }
-    }
-
 
     @GetMapping("/")
     public String getTopProducts(Model model,@PageableDefault(sort = "endOfPayment", direction = Sort.Direction.DESC)Pageable page){
-        var topProducts = productService.getTopProduct(page);
-        var products = productService.getProductsToMainPage(page);
-        var category = categoryService.getCategory();
-        model.addAttribute("categories", category);
-        model.addAttribute("top_products",topProducts.getContent());
-        model.addAttribute("products",products.getContent());
+        model.addAttribute("filteredCategories",categoryService.getFilterCategories());
+        model.addAttribute("products",productService.getMainProductsList());
+        model.addAttribute("localities", localitiesService.getFilterLocalities());
+        model.addAttribute("categories", categoryService.getCategory());
         return "index";
 
     }
