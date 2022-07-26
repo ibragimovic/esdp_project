@@ -1,4 +1,4 @@
-<#import "partials/main2.ftlh" as main />
+<#import "partials/main.ftlh" as main />
 
 <@main.renderWith title="Arenda.kg"
 scripts=["/js/navbar.js","/js/dropdown_script.js","/js/nested_dropdown.js","/js/main_page.js"]

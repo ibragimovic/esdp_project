@@ -1,10 +1,11 @@
 <#import "partials/main.ftlh" as main />
 
+    <#assign scripts_js = ["/js/create_product.js","/js/dropdown_script.js","/js/navbar.js","/js/dropdown_script.js","/js/nested_dropdown.js","/js/main_page.js"]>
 
-    <#assign scripts_js = ["/js/create_product.js","/js/dropdown_script.js"]>
 
+<@main.renderWith title="Arenda.kg"
+scripts=scripts_js styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css","https://use.fontawesome.com/releases/v5.14.0/css/all.css","/css/create_product.css","/css/dropdown_style.css","/css/error_message.css","/css/navbar.css", "/css/nested_dropdown.css","/css/main_page.css","/css/dropdown_style.css"]>
 
-<@main.renderWith title="Arenda.kg" scripts=scripts_js styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css","https://use.fontawesome.com/releases/v5.14.0/css/all.css","/css/create_product.css","/css/dropdown_style.css","/css/error_message.css"]>
     <div class="container-fluid">
         <div class="row justify-content-center">
             <div class="col-10 text-center pt-5">
