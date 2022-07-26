@@ -14,15 +14,12 @@
         <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon/favicon-16x16.png">
         <link rel="manifest" href="/images/favicon/site.webmanifest">
         <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css" />
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
         <script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
         <script type="text/javascript" src="/webjars/popper.js/umd/popper.min.js"></script>
-        <script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.bundle.min.js"></script>
-        <script type="text/javascript" src="/js/app.js"></script>
-        <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
-                crossorigin="anonymous"></script>
-        <link rel="stylesheet" type="text/css" href="/webjars/bootstrap-icons/font/bootstrap-icons.css"/>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+        <#--        <script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js"></script>-->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+              integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+        <link rel="stylesheet" href="/webjars/font-awesome/css/all.css">
         <link rel="stylesheet" href="/css/main.css">
         <#list styles as styleSource>
             <link rel="stylesheet" href="${styleSource}">
@@ -30,107 +27,90 @@
         <script src="//code.jivosite.com/widget/ZK2dXhprrI" async></script>
     </head>
     <body>
-        <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
-            <div class="container">
-                <a class="navbar-brand" href="/">
-                    <img src="/images/logo.png" height="30"/>
-                </a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#topNavbar">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="topNavbar">
-                    <ul class="navbar-nav ml-auto">
-                        <@security.authorize access="isAuthenticated()">
-                            <li class="nav-item">
-                                <a class="nav-link" href="/favorites"><i style="color:rebeccapurple" class="bi bi-heart-fill h3"></i></a>
-                            </li>
-                        </@security.authorize>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/product/create">Подать объявление</a>
-                        </li>
-                        <@security.authorize access="! isAuthenticated()">
-                            <li class="nav-item">
-                                <a class="nav-link" href="/register">Регистрация</a>
-                            </li>
-                        </@security.authorize>
-                             <@security.authorize access="isAuthenticated()">
-                            <li class="nav-item">
-                                <a class="nav-link" href="/profile">Профиль</a>
-                            </li>
-                        </@security.authorize>
-                        <@security.authorize access="! isAuthenticated()">
-                            <li class="nav-item">
-                                <a class="nav-link" href="/login">Войти</a>
-                            </li>
-                        </@security.authorize>
-                        <@security.authorize access="isAuthenticated()">
-                            <form action="/logout" method="post">
-                                <#if _csrf??>
-                                    <input type="hidden" name="${(_csrf.parameterName)!'csrf'}" value="${(_csrf.token)!'--no-token--'}"/>
-                                </#if>
-                                <input type="submit" value="Выйти" class="btn btn-secondary" id="logOut">
-                            </form>
-                        </@security.authorize>
-                    </ul>
+    <nav class="navbar navbar-expand-custom navbar-mainbg">
+        <a class="navbar-brand navbar-logo" href="/">Arenda.kg</a>
+        <button class="navbar-toggler" type="button" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+            <i class="bi bi-list text-white p-0 m-0"></i>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto">
+                <div class="hori-selector">
+                    <div class="left"></div>
+                    <div class="right"></div>
                 </div>
-            </div>
-        </nav>
-        <div class="categories-header">
-            <div class="container">
-                <#if categories??>
-                    <nav class="navbar navbar-expand-lg navbar-dark bg-secondary text-dark">
-                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#category_nav">
-                            <i class="bi bi-grid-3x3-gap"></i>
-                        </button>
-                        <div class="collapse navbar-collapse" id="category_nav">
-                            <ul class="navbar-nav">
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">Все категории</a>
-                                    <ul class="dropdown-menu" id="category_menu">
-                                    </ul>
-                                </li>
-                                <#list categories as category>
-                                    <li class="nav-item">
-                                        <a href="/category?id=${category.id}" class="nav-link category_item">
-                                            ${category.name}
-                                        </a>
-                                    </li>
-                                </#list>
-                            </ul>
 
-                        </div>
-                    </nav>
-                </#if>
-            </div>
+                <li class="nav-item active">
+                    <a class="nav-link" href="/"><i class="bi bi-layout-text-window-reverse"></i>Главная</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/product/create"><i class="bi bi-newspaper"></i>Подать объявление</a>
+                </li>
+
+                <@security.authorize access="! isAuthenticated()">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/register"><i class="bi bi-person-plus-fill"></i>Регистрация</a>
+                    </li>
+                </@security.authorize>
+
+                <@security.authorize access="! isAuthenticated()">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/login"><i class="bi bi-box-arrow-in-right"></i>Войти</a>
+                    </li>
+                </@security.authorize>
+                <@security.authorize access="isAuthenticated()">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/profile"><i class="bi bi-person-video2"></i>Профиль</a>
+                    </li>
+                </@security.authorize>
+                <@security.authorize access="isAuthenticated()">
+                    <div class="px-4 logout-btn d-flex align-items-center">
+                        <form action="/logout" method="post">
+                            <#if _csrf??>
+                                <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
+                                       value="${(_csrf.token)!'--no-token--'}"/>
+                            </#if>
+
+                            <button type="submit" class="btn btn-danger" id="logOut">
+                                <i class="bi bi-door-open-fill"></i> Выйти
+                            </button>
+                        </form>
+                    </div>
+                </@security.authorize>
+            </ul>
         </div>
-        <div class="content">
-            <div class="container">
-                <#nested>
-            </div>
+    </nav>
+
+    <div class="content">
+        <div class="container">
+            <#nested>
         </div>
-        <div class="footer">
-            <div class="container">
-            </div>
-        </div>
+    </div>
 
-        <#list scripts as scriptSource>
-            <script src="${scriptSource}"></script>
-        </#list>
 
-        <script>
-            const inButton = document.getElementById("logOut");
-            if(inButton !== null) {
-                inButton.addEventListener("click", function () {
-                    var isExit = confirm("Вы действительно хотите выйти из профиля?");
-                    if (isExit){
-                        alert( "Вы вышли из профиля" );
-                    }else {
-                        alert( "Вы остались в профиле" );
-                    }
-                });
-            }
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous">
+    </script>
+    <#list scripts as scriptSource>
+        <script src="${scriptSource}"></script>
+    </#list>
 
-        </script>
+    <script>
+        const inButton = document.getElementById("logOut");
+        if(inButton !== null) {
+            inButton.addEventListener("click", function () {
+                var isExit = confirm("Вы действительно хотите выйти из профиля?");
+                if (isExit){
+                    alert( "Вы вышли из профиля" );
+                }else {
+                    alert( "Вы остались в профиле" );
+                }
+            });
+        }
+    </script>
+
 
     </body>
     </html>
