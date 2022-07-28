@@ -342,6 +342,10 @@ public class ProductService {
             filter.setPriceTo(Integer.MAX_VALUE);
         }
 
+        if(filter.getSort()==null){
+            filter.setSort("popular");
+        }
+
         return filter;
     }
 
