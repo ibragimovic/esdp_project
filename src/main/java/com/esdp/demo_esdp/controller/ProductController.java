@@ -3,6 +3,7 @@ package com.esdp.demo_esdp.controller;
 import com.esdp.demo_esdp.dto.FilterProductDto;
 import com.esdp.demo_esdp.dto.ProductAddForm;
 import com.esdp.demo_esdp.entity.User;
+import com.esdp.demo_esdp.exception.CategoryNotFoundException;
 import com.esdp.demo_esdp.exception.ProductNotFoundException;
 import com.esdp.demo_esdp.service.CategoryService;
 import com.esdp.demo_esdp.service.ProductService;
@@ -60,33 +61,53 @@ public class ProductController {
         return "redirect:/" + productService.deleteProductById(productId, userService.getEmailFromAuthentication(authentication));
     }
 
-    @PostMapping("/product/search")
+    //main page start
+
+    @PostMapping("/search")
     public String getProductsSearch(Model model, @RequestParam String productSearch) {
         model.addAttribute("products",productService.getMainProductsListByName(productSearch));
         model.addAttribute("goBack",true);
-        model.addAttribute("localities", localitiesService.getFilterLocalities());
-        model.addAttribute("filteredCategories",categoryService.getFilterCategories());
+        model.addAttribute("search",true);
         return "index";
     }
 
-    @PostMapping("/product/filter")
-    public String getProductsFilter(Model model, @ModelAttribute("filterProduct") FilterProductDto filters) {
+    @GetMapping("/search")
+    public String redirectSearch(){
+        return "redirect:/";
+    }
+
+    @PostMapping("/category/{id}")
+    public String getProductsFilter(Model model, @ModelAttribute("filterProduct") FilterProductDto filters) throws CategoryNotFoundException {
         model.addAttribute("goBack",true);
         model.addAttribute("localities", localitiesService.getFilterLocalities());
         model.addAttribute("filteredCategories",categoryService.getFilterCategories());
         model.addAttribute("products",productService.handleFilter(filters));
+        model.addAttribute("thisCategory",categoryService.getOneCategory(filters.getCategoryId()));
         return "index";
     }
 
     @GetMapping("/")
-    public String getTopProducts(Model model,@PageableDefault(sort = "endOfPayment", direction = Sort.Direction.DESC)Pageable page){
+    public String getTopProducts(Model model,@RequestParam(required = false, defaultValue = "") String search,
+                                 @PageableDefault(sort = "endOfPayment", direction = Sort.Direction.DESC)Pageable page){
         model.addAttribute("filteredCategories",categoryService.getFilterCategories());
-        model.addAttribute("products",productService.getMainProductsList());
-        model.addAttribute("localities", localitiesService.getFilterLocalities());
-        model.addAttribute("categories", categoryService.getCategory());
+        model.addAttribute("products",productService.getMainProductsListByName(search));
         return "index";
 
     }
+
+    @GetMapping("/category/{id}")
+    public String getCategoryProducts(Model model, @PathVariable("id") Long catId) throws CategoryNotFoundException {
+        FilterProductDto f=new FilterProductDto();
+        f.setCategoryId(catId);
+        model.addAttribute("goBack",true);
+        model.addAttribute("products",productService.handleFilter(f));
+        model.addAttribute("localities", localitiesService.getFilterLocalities());
+        model.addAttribute("thisCategory",categoryService.getOneCategory(catId));
+        return "index";
+
+    }
+
+    //main page finish
 
     @PostMapping("/up/product")
     public String upProduct(@RequestParam(name = "id") Long productId) throws ProductNotFoundException {
