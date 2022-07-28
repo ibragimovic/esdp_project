@@ -16,7 +16,7 @@
         <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css" />
         <script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
         <script type="text/javascript" src="/webjars/popper.js/umd/popper.min.js"></script>
-<#--                <script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js"></script>-->
+                <script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js"></script>
 <#--        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"-->
 <#--              integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">-->
         <link rel="stylesheet" href="/webjars/font-awesome/css/all.css">
@@ -82,11 +82,7 @@
         </div>
     </nav>
 
-    <div class="content">
-        <div class="container">
-            <#nested>
-        </div>
-    </div>
+    <#nested>
 
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>

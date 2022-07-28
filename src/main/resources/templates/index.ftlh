@@ -1,4 +1,4 @@
-<#import "partials/main.ftlh" as main />
+<#import "partials/main3.ftlh" as main />
 
 <@main.renderWith title="Arenda.kg"
 scripts=["/js/navbar.js","/js/dropdown_script.js","/js/nested_dropdown.js","/js/main_page.js"]
@@ -210,7 +210,7 @@ styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons
             <div class="footer-info row row-cols-1 row-cols-md-2 ">
                 <div class="col">
                     <div class="info-container contact-us text-center">
-                        <div class="d-inline-block text-left">
+                        <div class="d-inline-block text-start">
                             <p class="footer-title text-center"><span>Contact Us</span></p>
                             <p><i class="bi bi-telephone-plus-fill"></i> +99612345679</p>
                             <p><i class="bi bi-envelope"></i> hello.world@gmail.com</p>
@@ -220,7 +220,7 @@ styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons
                 </div>
                 <div class="col">
                     <div class="info-container qa text-center">
-                        <div class="d-inline-block text-left">
+                        <div class="d-inline-block text-start">
                             <p class="footer-title text-center"><span>Q&A</span></p>
                             <ul>
                                 <li data-bs-toggle="modal" data-bs-target="#footerModal1">Как подать объявление об
