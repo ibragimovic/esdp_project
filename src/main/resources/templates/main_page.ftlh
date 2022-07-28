@@ -7,148 +7,154 @@ styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons
     <#assign security=JspTaglibs["http://www.springframework.org/security/tags"]/>
 
 
-    <!-- filter modal -->
-    <form method="post" action="/product/filter" modelAttribute="filterProducts">
-        <div class="modal fade filter-modal" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel"
-             aria-hidden="true">
-            <div class="modal-dialog modal-fullscreen">
-                <div class="modal-content">
-                    <div class="mx-md-5 filter-modal-header text-center">
-                        <button type="button" class="btn-close fs-4" data-bs-dismiss="modal"
-                                aria-label="Close"></button>
-                        <p class="filter-title"><span>Filter</span></p>
-<#--                        <p class="reset-btn fill">Reset</p>-->
-                    </div>
-                    <div class="modal-body">
-                        <div class="container filter-modal-container">
-                            <div class="filter-search-box mb-5">
-                                <i class="bi bi-search"></i>
-                                <input type="text" placeholder="Поиск" name="search">
-                            </div>
-                            <div class="filter-category mb-5">
-                                <p class="filter-main-title"><span>Категория</span></p>
-                                <div class="dropdown-container">
-                                    <input name="categoryId" hidden id="chosenCategory">
+    <#if thisCategory??>
+        <!-- filter modal -->
+        <form method="post" action="/product/filter" modelAttribute="filterProducts">
+            <div class="modal fade filter-modal" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog modal-fullscreen">
+                    <div class="modal-content">
+                        <div class="mx-md-5 filter-modal-header text-center">
+                            <button type="button" class="btn-close fs-4" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            <p class="filter-title"><span>Filter</span></p>
+                            <#--                        <p class="reset-btn fill">Reset</p>-->
+                        </div>
+                        <div class="modal-body">
+                            <div class="container filter-modal-container">
+                                <div class="filter-search-box mb-5">
+                                    <i class="bi bi-search"></i>
+                                    <input type="text" placeholder="Поиск" name="search">
+                                </div>
 
-                                    <div class="dropdown" id="dropdownElem">
-                                        <span id="chosenCat">Выберите категорию</span>
-                                    </div>
-                                    <div class="options-cat-container">
+                                <input name="categoryId" hidden id="chosenCategory" value="${thisCategory.id}">
 
-                                        <#list filteredCategories as num,catList>
-                                            <div class="options" id="options${num}">
-                                                <#if num==0>
-                                                    <p class="cat-option lastOption" id="noCategory">
-                                                        <input value="" hidden>
-                                                        <span>Все категории</span>
-                                                    </p>
-                                                <#else>
-                                                    <input value="${catList[0].parent}" hidden>
-                                                    <p class="options-header"><i
-                                                                class="bi bi-arrow-left-short goBack"></i><span>${catList[0].name?substring(15)}</span>
-                                                    </p>
-                                                </#if>
-
-                                                <#list catList as cat>
-                                                    <#if cat.hasChildren>
-                                                        <p class="cat-option nestedOption">
-                                                            <input value="${cat.id}" hidden>
-                                                            <span>${cat.name}</span><i class="bi bi-arrow-right"></i>
-                                                        </p>
-                                                    <#else>
-                                                        <p class="cat-option lastOption">
-                                                            <input value="${cat.id}" name="categoryId" hidden>
-                                                            <span>${cat.name}</span>
-                                                        </p>
-                                                    </#if>
+                                <div class="filter-location mb-5">
+                                    <p class="filter-main-title"><span>Местоположение</span></p>
+                                    <div class="select-box">
+                                        <div class="options-container">
+                                            <#if localities??>
+                                                <#list localities as local>
+                                                    <div class="option">
+                                                        <input type="radio" class="radio radio-input"
+                                                               id="local_${local.id}"
+                                                               name="locality"
+                                                               value="<#if local.id!=0>${local.name}</#if>"/>
+                                                        <label for="local_${local.id}">${local.name}</label>
+                                                    </div>
                                                 </#list>
+                                            </#if>
+                                        </div>
 
-                                            </div>
-                                        </#list>
+                                        <div class="selected">
+                                            Выберите локацию
+                                        </div>
 
+                                        <div class="search-box">
+                                            <input type="text" placeholder="Start Typing..."/>
+                                        </div>
                                     </div>
                                 </div>
-
-
-                            </div>
-                            <div class="filter-location mb-5">
-                                <p class="filter-main-title"><span>Местоположение</span></p>
-                                <div class="select-box">
-                                    <div class="options-container">
-                                        <#if localities??>
-                                            <#list localities as local>
-                                                <div class="option">
-                                                    <input type="radio" class="radio radio-input" id="local_${local.id}"
-                                                           name="locality" value="<#if local.id!=0>${local.name}</#if>"/>
-                                                    <label for="local_${local.id}">${local.name}</label>
-                                                </div>
-                                            </#list>
-                                        </#if>
-                                    </div>
-
-                                    <div class="selected">
-                                        Выберите локацию
-                                    </div>
-
-                                    <div class="search-box">
-                                        <input type="text" placeholder="Start Typing..."/>
-                                    </div>
+                                <div class="filter-price mb-4">
+                                    <p class="filter-main-title"><span>Цена</span></p>
+                                    <input type="number" placeholder="От" min="1" name="priceFrom">
+                                    <input type="number" placeholder="До" min="1" name="priceTo">
                                 </div>
-                            </div>
-                            <div class="filter-price mb-4">
-                                <p class="filter-main-title"><span>Цена</span></p>
-                                <input type="number" placeholder="От" min="1" name="priceFrom">
-                                <input type="number" placeholder="До" min="1" name="priceTo">
-                            </div>
-                            <div class="filter-sort">
-                                <p class="filter-main-title"><span>Сортировать</span></p>
-                                <label>
-                                    <input type="radio" name="sort" value="popular" checked>
-                                    <span class="design"></span>
-                                    <span class="value">Популярные</span>
-                                </label>
-                                <label>
-                                    <input type="radio" name="sort" value="new">
-                                    <span class="design"></span>
-                                    <span class="value">Сначала новые</span>
-                                </label>
-                                <label>
-                                    <input type="radio" name="sort" value="cheap">
-                                    <span class="design"></span>
-                                    <span class="value">Сначала дешевле</span>
-                                </label>
-                                <label>
-                                    <input type="radio" name="sort" value="expensive">
-                                    <span class="design"></span>
-                                    <span class="value">Сначала дороже</span>
-                                </label>
-                            </div>
+                                <div class="filter-sort">
+                                    <p class="filter-main-title"><span>Сортировать</span></p>
+                                    <label>
+                                        <input type="radio" name="sort" value="popular" checked>
+                                        <span class="design"></span>
+                                        <span class="value">Популярные</span>
+                                    </label>
+                                    <label>
+                                        <input type="radio" name="sort" value="new">
+                                        <span class="design"></span>
+                                        <span class="value">Сначала новые</span>
+                                    </label>
+                                    <label>
+                                        <input type="radio" name="sort" value="cheap">
+                                        <span class="design"></span>
+                                        <span class="value">Сначала дешевле</span>
+                                    </label>
+                                    <label>
+                                        <input type="radio" name="sort" value="expensive">
+                                        <span class="design"></span>
+                                        <span class="value">Сначала дороже</span>
+                                    </label>
+                                </div>
 
-                            <input type="hidden" name="${(_csrf.parameterName)!'csrf'}" value="${(_csrf.token)!'--no-token--'}"/>
+                                <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
+                                       value="${(_csrf.token)!'--no-token--'}"/>
 
-                            <div class="d-flex justify-content-center align-items-center mt-5">
-                                <button type="submit" class="filterSubmit">Submit <i class="bi bi-check-lg p-0 m-0"></i></button>
+                                <div class="d-flex justify-content-center align-items-center mt-5">
+                                    <button type="submit" class="filterSubmit">Submit <i
+                                                class="bi bi-check-lg p-0 m-0"></i>
+                                    </button>
+                                </div>
+
                             </div>
-
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </form>
+        </form>
+    </#if>
 
     <!-- main page -->
     <div class="container pt-4">
         <form method="post" action="/product/search">
             <div class="main-panel d-flex">
                 <#if goBack??>
-                    <a class="btn btn-info bi bi-arrow-left rounded-circle text-white fs-5 me-2" href="/main"></a>
+                    <a class="btn btn-info bi bi-arrow-left rounded-circle text-white fs-5 me-2" href="/"></a>
                 </#if>
-                <input type="text" class="flex-grow-1 search-input" placeholder="Найти..." name="productSearch">
-                <input type="hidden" name="${(_csrf.parameterName)!'csrf'}" value="${(_csrf.token)!'--no-token--'}"/>
-                <button type="submit" class="btn bi bi-search btn-info text-white rounded-circle fs-5 me-2"></button>
-                <a class="filter shadow-none" data-bs-toggle="modal"
-                   data-bs-target="#filterModal"><span>Filter</span></a>
+                <#if thisCategory??>
+                    <p class="my-auto fs-5 flex-fill">${thisCategory.name}</p>
+                    <a class="filter shadow-none" data-bs-toggle="modal"
+                       data-bs-target="#filterModal"><span>Filter</span></a>
+
+                <#else>
+                    <div class="dropdown-container">
+                        <input name="categoryId" hidden id="chosenCategory">
+
+                        <div class="dropdown" id="dropdownElem">
+                            <span id="chosenCat"><i class="bi bi-caret-down-fill mx-auto"></i></span>
+                        </div>
+                        <div class="options-cat-container">
+
+                            <#list filteredCategories as num,catList>
+                                <div class="options" id="options${num}">
+                                    <input value="${catList[0].parent}" hidden>
+                                    <p class="options-header"><i
+                                                class="bi bi-arrow-left-short goBack"></i><span>${catList[0].name?substring(15)}</span>
+                                    </p>
+
+                                    <#list catList as cat>
+                                        <#if cat.hasChildren>
+                                            <p class="cat-option nestedOption">
+                                                <input value="${cat.id}" hidden>
+                                                <span>${cat.name}</span><i class="bi bi-arrow-right"></i>
+                                            </p>
+                                        <#else>
+                                            <p class="cat-option lastOption">
+                                                <input value="${cat.id}" name="categoryId" hidden>
+                                                <span>${cat.name}</span>
+                                            </p>
+                                        </#if>
+                                    </#list>
+
+                                </div>
+                            </#list>
+
+                        </div>
+                    </div>
+                    <input type="text" class="flex-grow-1 search-input" placeholder="Найти..." name="productSearch">
+                    <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
+                           value="${(_csrf.token)!'--no-token--'}"/>
+                    <button type="submit"
+                            class="btn bi bi-search btn-info text-white rounded-circle fs-5 me-2"></button>
+                </#if>
+
             </div>
         </form>
 

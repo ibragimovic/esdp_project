@@ -541,3 +541,20 @@ input::-webkit-inner-spin-button {
     object-fit: contain;
     width: 70%;
 }
+
+.category-name{
+    font-size: 22px;
+    text-align: center;
+    color:#1560BD
+}
+
+#chosenCat img {
+    background-size: contain;
+    background-repeat: no-repeat;
+    position: absolute;
+    height: 100%;
+    width: 32px;
+    right: 10px;
+    top: 5px;
+    z-index: 100;
+}

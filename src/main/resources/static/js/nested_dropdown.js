@@ -5,7 +5,6 @@ $(document).ready(function () {
     $(".options-cat-container").hide()
     $(".options").hide()
     $("#options0").show()
-    $("#noCategory").hide()
 
     $(".dropdown").click(function () {
         $(".options-cat-container").toggle();
@@ -30,13 +29,12 @@ $(document).ready(function () {
 
     $(".lastOption").click(function () {
         let catId = this.getElementsByTagName("input")[0].value
-        let catName = this.getElementsByTagName("span")[0].innerText
 
-        dropdown.getElementsByTagName("span")[0].innerText = catName
         chosenCatId.value = catId
         $(".options-cat-container").toggle()
         $(".options").hide()
         $("#options0").show()
-        $("#noCategory").show()
+
+        window.open("/category/"+catId , "_self");
     })
 });
