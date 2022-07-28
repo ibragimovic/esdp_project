@@ -29,7 +29,7 @@ p {
 }
 
 #newProductForm fieldset {
-    background: #F8FAFB;
+    background: #FFFFFF;
     border: 0 none;
     border-radius: 0.5rem;
     box-sizing: border-box;
@@ -114,7 +114,7 @@ p {
     z-index: 0;
     border: none;
     position: relative;
-    background-color:#F8FAFB !important;
+    background-color:#FFFFFF !important;
 }
 
 .fs-title {
