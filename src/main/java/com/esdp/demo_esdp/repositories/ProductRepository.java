@@ -61,17 +61,17 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     void updateProductCategory(@Param("category") Long category, @Param("id") Long id);
 
     @Query("select p from Product p where p.user.email = :email")
-    List<Product> getProductsUser(@Param("email") String email);
+    Page<Product> getProductsUser(@Param("email") String email,Pageable pageable);
 
 
     @Query("select p from Product p where p.status = :status")
-    List<Product> getProductsStatus(@Param("status") ProductStatus status);
+    Page<Product> getProductsStatus(@Param("status") ProductStatus status,Pageable pageable);
 
     @Query("select p from Product p where p.category.id = :id")
-    List<Product> getProductsCategory(@Param("id") Long id);
+    Page<Product> getProductsCategory(@Param("id") Long id,Pageable pageable);
 
     @Query("select p from Product p where lower(p.name) like  %:name%")
-    List<Product> getProductsName(@Param("name") String name);
+    Page<Product> getProductsName(@Param("name") String name,Pageable pageable);
 
     @Query("select p from Product p where p.endOfPayment>=current_timestamp and p.status = :status")
     Page<Product> findTopProduct(@Param("status") ProductStatus status,Pageable pageable);

@@ -2,6 +2,8 @@ package com.esdp.demo_esdp.repositories;
 
 
 import com.esdp.demo_esdp.entity.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -13,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface UserRepository extends JpaRepository<User,Long> {
+public interface UserRepository extends JpaRepository<User, Long> {
 
     boolean existsByEmail(String email);
 
@@ -40,6 +42,9 @@ public interface UserRepository extends JpaRepository<User,Long> {
     @Query("select u from User u where u.role <> :role ")
     List<User> getUsers(@Param("role") String role);
 
+    @Query("select u from User u where u.role <> :role ")
+    Page<User> getUsers(@Param("role") String role,Pageable pageable);
+
     @Transactional
     @Modifying
     @Query(value = "update users  set enabled = :enabled where id = :id", nativeQuery = true)
@@ -48,12 +53,36 @@ public interface UserRepository extends JpaRepository<User,Long> {
 
     @Transactional
     @Modifying
-    @Query(value = "update users  set password = :password where id = :id",nativeQuery = true)
+    @Query(value = "update users  set password = :password where id = :id", nativeQuery = true)
     void updateUserPassword(@Param("password") String password, @Param("id") Long id);
 
 
     @Transactional
     @Modifying
-    @Query(value = "update users  set tel_number = :telephone where id = :id",nativeQuery = true)
+    @Query(value = "update users  set tel_number = :telephone where id = :id", nativeQuery = true)
     void saveUserTel(@Param("telephone") String telephone, @Param("id") Long id);
+
+
+    @Query("select p from User p where lower(p.name) like  %:name% ")
+    Page<User> getUserName(@Param("name") String name, Pageable pageable);
+
+
+    @Query("select u from User u where lower(u.email) like  %:name% ")
+    Page<User> getUserEmail(@Param("name") String name, Pageable pageable);
+
+
+    @Query("select u from User u where lower(u.login) like  %:name% ")
+    Page<User> getUserLogin(@Param("name") String name, Pageable pageable);
+
+
+    @Query("select u from User u where lower(u.lastname) like  %:name% ")
+    Page<User> getUserLastName(@Param("name") String name, Pageable pageable);
+
+
+    @Query("select u from User u where lower(u.telNumber) like  %:name% ")
+    Page<User> getUserTel(@Param("name") String name, Pageable pageable);
+
+
+    @Query("select u from User u where lower(u.enabled) like  %:enabled% ")
+    Page<User> getUserStatus(@Param("enabled") String name, Pageable pageable);
 }

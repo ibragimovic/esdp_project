@@ -6,6 +6,8 @@ import com.esdp.demo_esdp.exception.UserAlreadyRegisteredException;
 import com.esdp.demo_esdp.exception.UserNotFoundException;
 import com.esdp.demo_esdp.repositories.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -103,25 +105,30 @@ public class UserService {
                 .stream().map(UserResponseDTO::from).collect(Collectors.toList());
     }
 
+    public Page<UserResponseDTO> getUsers(Pageable pageable) {
+        return userRepository.getUsers("Admin",pageable)
+                .map(UserResponseDTO::from);
+    }
+
     public List<UserResponseDTO> getInactiveUsers() {
-          var usrs = userRepository.findByActivationCodeNotNull()
+        var usrs = userRepository.findByActivationCodeNotNull()
                 .stream().collect(Collectors.toList());
 
-          for (User u: usrs){
-              u.setActivationCode(UUID.randomUUID().toString());
-              userRepository.updateUserData(u.getName(), u.getLastname(), u.getEmail(), u.getTelNumber(), u.getLogin(), u.getId());
+        for (User u : usrs) {
+            u.setActivationCode(UUID.randomUUID().toString());
+            userRepository.updateUserData(u.getName(), u.getLastname(), u.getEmail(), u.getTelNumber(), u.getLogin(), u.getId());
 
-              String message = String.format(
-                      "Здравствуйте %s! \n" +
-                              "Добро пожаловать на сайт Arenda.kg \n" +
-                              "Пожалуйста, для активации перейдите по следующей ссылке: http://localhost:8080/activate/%s",
-                      u.getName() + " " + u.getLastname(), u.getActivationCode()
-              );
+            String message = String.format(
+                    "Здравствуйте %s! \n" +
+                            "Добро пожаловать на сайт Arenda.kg \n" +
+                            "Пожалуйста, для активации перейдите по следующей ссылке: http://localhost:8080/activate/%s",
+                    u.getName() + " " + u.getLastname(), u.getActivationCode()
+            );
 
-              mailSender.send(u.getEmail(), "Activation code", message);
+            mailSender.send(u.getEmail(), "Activation code", message);
 
-          }
-         return usrs.stream().map(UserResponseDTO::from).collect(Collectors.toList());
+        }
+        return usrs.stream().map(UserResponseDTO::from).collect(Collectors.toList());
     }
 
 
@@ -205,4 +212,38 @@ public class UserService {
         return userRepository.findByEmail(email)
                 .orElseThrow(UserNotFoundException::new);
     }
+
+
+    public Page<UserResponseDTO> getUserName(String name, Pageable pageable) {
+        return userRepository.getUserName(name.toLowerCase(), pageable)
+                .map(UserResponseDTO::from);
+    }
+
+    public Page<UserResponseDTO> getUsersEmail(String name, Pageable pageable) {
+        return userRepository.getUserEmail(name.toLowerCase(), pageable)
+                .map(UserResponseDTO::from);
+    }
+
+    public Page<UserResponseDTO> getUserLogin(String name, Pageable pageable) {
+        return userRepository.getUserLogin(name.toLowerCase(), pageable)
+                .map(UserResponseDTO::from);
+    }
+
+    public Page<UserResponseDTO> getUserLastName(String name, Pageable pageable) {
+        return userRepository.getUserLastName(name.toLowerCase(), pageable)
+                .map(UserResponseDTO::from);
+    }
+
+
+    public Page<UserResponseDTO> getUserTel(String name, Pageable pageable) {
+        return userRepository.getUserTel(name.toLowerCase(), pageable)
+                .map(UserResponseDTO::from);
+    }
+
+
+    public Page<UserResponseDTO> getUserStatus(String name, Pageable pageable) {
+        return userRepository.getUserStatus(name.toLowerCase(), pageable)
+                .map(UserResponseDTO::from);
+    }
+
 }
