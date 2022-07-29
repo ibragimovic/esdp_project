@@ -40,8 +40,7 @@ public class ProductService {
 
 
     public Page<ProductDTO> getProductName(String name, Pageable pageable) {
-        return productRepository.getProductName(name.toLowerCase(), ProductStatus.ACCEPTED, pageable)
-                .map(ProductDTO::from);
+        return builderProductDTO(productRepository.getProductName(name.toLowerCase(), ProductStatus.ACCEPTED, pageable));
     }
 
     public Page<SimilarProductDto> getProductNameOrdered(String name, Pageable pageable) {
@@ -149,8 +148,7 @@ public class ProductService {
     }
 
     public Page<ProductDTO> getProductsAll(Pageable pageable) {
-        return productRepository.findAll(pageable)
-                .map(ProductDTO::from);
+        return builderProductDTO(productRepository.findAll(pageable));
     }
 
 
@@ -160,26 +158,22 @@ public class ProductService {
 
 
     public Page<ProductDTO> getProductsUser(String email, Pageable pageable) {
-        return productRepository.getProductsUser(email, pageable)
-                .map(ProductDTO::from);
+        return builderProductDTO(productRepository.getProductsUser(email, pageable));
     }
 
     public Page<ProductDTO> getProductsStatus(String status, Pageable pageable) {
         if (status.equals(ProductStatus.ACCEPTED.name())) {
-            return productRepository.getProductsStatus(ProductStatus.ACCEPTED, pageable)
-                    .map(ProductDTO::from);
+            return builderProductDTO(productRepository.getProductsStatus(ProductStatus.ACCEPTED, pageable));
         } else if (status.equals(ProductStatus.MODERNIZATION.name())) {
-            return productRepository.getProductsStatus(ProductStatus.MODERNIZATION, pageable)
-                    .map(ProductDTO::from);
+            return builderProductDTO(productRepository.getProductsStatus(ProductStatus.MODERNIZATION, pageable));
         } else if (status.equals(ProductStatus.DECLINED.name())) {
-            return productRepository.getProductsStatus(ProductStatus.DECLINED, pageable)
-                    .map(ProductDTO::from);
+            return builderProductDTO(productRepository.getProductsStatus(ProductStatus.DECLINED, pageable));
         }
         throw new ResourceNotFoundException();
     }
 
-    public List<ProductDTO> getProductsName(String name) {
-        return builderProductDTO(productRepository.getProductsName(name.toLowerCase()));
+    public Page<ProductDTO> getProductsName(String name,Pageable pageable) {
+        return builderProductDTO(productRepository.getProductsName(name.toLowerCase(),pageable));
     }
 
     public void addProductToTop(Long productId, Integer hour) throws ProductNotFoundException {
@@ -207,13 +201,11 @@ public class ProductService {
     }
 
     public Page<ProductDTO> getProductsToMainPage(Pageable pageable) {
-        return productRepository.getProductsToMainPage(ProductStatus.ACCEPTED, pageable)
-                .map(ProductDTO::from);
+        return builderProductDTO(productRepository.getProductsToMainPage(ProductStatus.ACCEPTED, pageable));
     }
 
     public Page<ProductDTO> getProductsCategory(Long id, Pageable pageable) {
-        return productRepository.getProductsCategory(id, pageable)
-                .map(ProductDTO::from);
+        return builderProductDTO(productRepository.getProductsCategory(id, pageable));
     }
 
     public ProductDetailsDto getProductDetails(Long id, Authentication auth) throws ProductNotFoundException {
@@ -395,17 +387,16 @@ public class ProductService {
                 .build();
     }
 
-    private List<ProductDTO> builderProductDTO(List<Product> products) {
+    private Page<ProductDTO> builderProductDTO(Page<Product> products) {
         return products
-                .stream()
                 .map(p -> ProductDTO.builder()
                         .id(p.getId())
                         .category(p.getCategory())
                         .name(p.getName())
                         .user(p.getUser())
-                        .price(p.getPrice())
                         .status(p.getStatus().name())
+                        .price(p.getPrice())
                         .imagePaths(imagesService.getImagesPathsByProductId(p.getId()))
-                        .build()).collect(Collectors.toList());
+                        .build());
     }
 }
