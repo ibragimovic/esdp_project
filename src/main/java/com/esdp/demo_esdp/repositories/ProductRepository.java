@@ -71,7 +71,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     Page<Product> getProductsCategory(@Param("id") Long id,Pageable pageable);
 
     @Query("select p from Product p where lower(p.name) like  %:name%")
-    List<Product> getProductsName(@Param("name") String name);
+    Page<Product> getProductsName(@Param("name") String name,Pageable pageable);
 
     @Query("select p from Product p where p.endOfPayment>=current_timestamp and p.status = :status")
     Page<Product> findTopProduct(@Param("status") ProductStatus status,Pageable pageable);
