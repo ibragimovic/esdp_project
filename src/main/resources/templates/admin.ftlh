@@ -3,7 +3,7 @@
 
 <#-- обрабатываем его, и передаём ему список скриптов, которые необходимо подключить-->
 <@admin.renderWith>
-    <div style="margin-bottom: 50px; margin-left: 60px">
+    <div style="margin-left: 60px">
         <h3 style="display: inline-block; margin-right: 15px">Найти все совпадения по:</h3>
         <select name="type" id="type" style="display: inline-block">
             <option value="name">названию</option>
@@ -12,7 +12,7 @@
             <option value="status">статусу</option>
         </select>
 
-        <div style="margin-bottom: 50px; text-align: right; display: inline-block">
+        <div style="text-align: right; display: inline-block">
             <div id="name" class="name">
                 <form method="get" action="/admin/product/search-name">
                     <#if _csrf??>
@@ -29,13 +29,13 @@
                         <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
                                value="${(_csrf.token)!'--no-token--'}"/>
                     </#if>
-                    <select name="userEmail" id="userEmail" style="margin-bottom: 50px; margin-right: 25px;">
+                    <select name="userEmail" id="userEmail" style="margin-right: 25px;">
                         <#list users as user>
                             <option value="${user.email}">${user.email}</option>
                         </#list>
                     </select>
                     <button class="btn btn-outline-success" type="submit"
-                            style="margin-top: -25px; margin-right: -70px">
+                            style=" margin-right: -70px">
                         Поиск
                     </button>
                 </form>
@@ -46,13 +46,13 @@
                         <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
                                value="${(_csrf.token)!'--no-token--'}"/>
                     </#if>
-                    <select name="categoryId" id="categoryId" style="margin-bottom: 50px; margin-right: 25px;">
+                    <select name="categoryId" id="categoryId" style=" margin-right: 25px;">
                         <#list categories as category>
                             <option value="${category.id}">${category.name}</option>
                         </#list>
                     </select>
                     <button class="btn btn-outline-success" type="submit"
-                            style="margin-top: -25px; margin-right: -70px">
+                            style=" margin-right: -70px">
                         Поиск
                     </button>
                 </form>
@@ -63,13 +63,13 @@
                         <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
                                value="${(_csrf.token)!'--no-token--'}"/>
                     </#if>
-                    <select name="status" id="status" style="margin-bottom: 50px; margin-right: 25px;">
+                    <select name="status" id="status" style="margin-right: 25px;">
                         <option value="ACCEPTED">ACCEPTED</option>
                         <option value="DECLINED">DECLINED</option>
                         <option value="MODERNIZATION">MODERNIZATION</option>
                     </select>
                     <button class="btn btn-outline-success" type="submit"
-                            style="margin-top: -25px; margin-right: -70px">
+                            style=" margin-right: -70px">
                         Поиск
                     </button>
                 </form>
@@ -79,7 +79,7 @@
     <#if empty??>
         <h1 style="text-align: center">${empty}</h1>
     <#else>
-        <div class="flex flex-wrap" id="itemList">
+        <div class="flex flex-wrap" id="itemList" style="margin-top: 50px">
             <#list products as product>
                 <div class="flex flex-column box flex-v-center">
                     <div class="img flex flex-column flex-v-center box-128">
