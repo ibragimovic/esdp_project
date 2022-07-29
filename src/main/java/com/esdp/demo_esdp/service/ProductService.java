@@ -148,8 +148,9 @@ public class ProductService {
         );
     }
 
-    public List<ProductDTO> getProductsAll() {
-        return builderProductDTO(productRepository.findAll());
+    public Page<ProductDTO> getProductsAll(Pageable pageable) {
+        return productRepository.findAll(pageable)
+                .map(ProductDTO::from);
     }
 
 
@@ -158,17 +159,21 @@ public class ProductService {
     }
 
 
-    public List<ProductDTO> getProductsUser(String email) {
-        return builderProductDTO(productRepository.getProductsUser(email));
+    public Page<ProductDTO> getProductsUser(String email, Pageable pageable) {
+        return productRepository.getProductsUser(email, pageable)
+                .map(ProductDTO::from);
     }
 
-    public List<ProductDTO> getProductsStatus(String status) {
+    public Page<ProductDTO> getProductsStatus(String status, Pageable pageable) {
         if (status.equals(ProductStatus.ACCEPTED.name())) {
-            return builderProductDTO(productRepository.getProductsStatus(ProductStatus.ACCEPTED));
+            return productRepository.getProductsStatus(ProductStatus.ACCEPTED, pageable)
+                    .map(ProductDTO::from);
         } else if (status.equals(ProductStatus.MODERNIZATION.name())) {
-            return builderProductDTO(productRepository.getProductsStatus(ProductStatus.MODERNIZATION));
+            return productRepository.getProductsStatus(ProductStatus.MODERNIZATION, pageable)
+                    .map(ProductDTO::from);
         } else if (status.equals(ProductStatus.DECLINED.name())) {
-            return builderProductDTO(productRepository.getProductsStatus(ProductStatus.DECLINED));
+            return productRepository.getProductsStatus(ProductStatus.DECLINED, pageable)
+                    .map(ProductDTO::from);
         }
         throw new ResourceNotFoundException();
     }
@@ -206,8 +211,9 @@ public class ProductService {
                 .map(ProductDTO::from);
     }
 
-    public List<ProductDTO> getProductsCategory(Long id) {
-        return builderProductDTO(productRepository.getProductsCategory(id));
+    public Page<ProductDTO> getProductsCategory(Long id, Pageable pageable) {
+        return productRepository.getProductsCategory(id, pageable)
+                .map(ProductDTO::from);
     }
 
     public ProductDetailsDto getProductDetails(Long id, Authentication auth) throws ProductNotFoundException {
@@ -342,7 +348,7 @@ public class ProductService {
             filter.setPriceTo(Integer.MAX_VALUE);
         }
 
-        if(filter.getSort()==null){
+        if (filter.getSort() == null) {
             filter.setSort("popular");
         }
 
@@ -390,21 +396,6 @@ public class ProductService {
     }
 
     private List<ProductDTO> builderProductDTO(List<Product> products) {
-        return products
-                .stream()
-                .map(p -> ProductDTO.builder()
-                        .id(p.getId())
-                        .category(p.getCategory())
-                        .name(p.getName())
-                        .user(p.getUser())
-                        .price(p.getPrice())
-                        .status(p.getStatus().name())
-                        .imagePaths(imagesService.getImagesPathsByProductId(p.getId()))
-                        .build()).collect(Collectors.toList());
-    }
-
-
-    private List<ProductDTO> builderProductDTO(Page<Product> products) {
         return products
                 .stream()
                 .map(p -> ProductDTO.builder()
