@@ -4,8 +4,10 @@ import com.esdp.demo_esdp.dto.UpdatePasswordDTO;
 import com.esdp.demo_esdp.dto.UserRegisterForm;
 import com.esdp.demo_esdp.dto.UserUpdateForm;
 import com.esdp.demo_esdp.service.ProductService;
+import com.esdp.demo_esdp.service.PropertiesService;
 import com.esdp.demo_esdp.service.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Controller;
@@ -16,6 +18,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
@@ -31,22 +34,24 @@ public class UserController {
 
     private final UserService userService;
     private final ProductService productService;
+    private final PropertiesService propertiesService;
+
 
     @GetMapping("/phone")
     public String saveUserPhoneNumber() {
         return "phone";
     }
 
-    @PostMapping ("/phone")
-    public String saveUserPhoneNumber (@Size(min=13,max = 13,message = "Length must be = 13, format +996552902002")
-                                       @NotBlank @Pattern(regexp = "^(\\+)[0-9]+$", message = "Should contain only numbers")
-                                       @RequestParam String phone, Authentication authentication) {
+    @PostMapping("/phone")
+    public String saveUserPhoneNumber(@Size(min = 13, max = 13, message = "Length must be = 13, format +996552902002")
+                                      @NotBlank @Pattern(regexp = "^(\\+)[0-9]+$", message = "Should contain only numbers")
+                                      @RequestParam String phone, Authentication authentication) {
         userService.userSaveTelephone(userService.getEmailFromAuthentication(authentication), phone);
         return "redirect:/product/create";
     }
 
     @GetMapping("/profile")
-    public String pageCustomerProfile(Model model, Principal principal) {
+    public String pageCustomerProfile(Model model, Principal principal, Pageable pageable, HttpServletRequest uriBuilder) {
         String email;
         if (principal instanceof OAuth2AuthenticationToken) {
             OAuth2AuthenticationToken oAuth2AuthenticationToken = (OAuth2AuthenticationToken) principal;
@@ -58,7 +63,9 @@ public class UserController {
         var user = userService.getByEmail(email);
         model.addAttribute("dto", user);
         model.addAttribute("userPassword", new UpdatePasswordDTO());
-        model.addAttribute("products", productService.getProductsUser(email));
+        var uri = uriBuilder.getRequestURI();
+        propertiesService.fillPaginationDataModel(productService.getProductsUser(email, pageable),
+                "products", propertiesService.getDefaultPageSize(), model, uri);
         return "profile";
     }
 

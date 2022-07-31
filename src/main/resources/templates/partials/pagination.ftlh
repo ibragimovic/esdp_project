@@ -1,24 +1,16 @@
+<#import "/spring.ftl" as spring>
 <div>
-        <nav aria-label="...">
-                <ul class="pagination">
-                <#if hasPrev>
-                        <li class="page-item">
-                                <span class="page-link"><a id="loadPrev" href="${prevPageLink!}">Previous</a></span>
-                        </li>
-                <#else>
-                        <li class="page-item disabled">
-                                <span class="page-link" id="loadPrev">Previous</span>
-                        </li>
-                </#if>
-                <#if hasNext>
-                        <li class="page-item">
-                                <a class="page-link" id="loadNext" href="${nextPageLink!}" data-default-page-size="${defaultPageSize!5}">Next</a>
-                        </li>
-                <#else>
-                        <li class="page-item disabled">
-                                <span class="page-link" id="loadPrev">Next</span>
-                        </li>
-                </#if>
-                </ul>
-        </nav>
+    <#if hasPrev>
+        <a id="loadPrev" href="${prevPageLink!''}"
+           style="padding-left: 30px">Прерыдущая страница </a>
+    <#else>
+        <span id="loadPrev" style="padding-left: 30px">Прерыдущая страница</span>
+    </#if>
+
+    <#if hasNext>
+        <a id="loadNext" href="${nextPageLink!''}" data-default-page-size="${defaultPageSize!5}"
+           style="padding-left: 30px">Следующая страница </a>
+    <#else>
+        <span style="padding-left: 30px">Следующая страница</span>
+    </#if>
 </div>
