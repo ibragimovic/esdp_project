@@ -88,11 +88,13 @@ public class ProductController {
 
     @GetMapping("/")
     public String getTopProducts(Model model,@RequestParam(required = false, defaultValue = "") String search,
-                                 @PageableDefault(sort = "endOfPayment", direction = Sort.Direction.DESC)Pageable page){
+                                 @PageableDefault(sort = "endOfPayment", direction = Sort.Direction.DESC)Pageable page,
+                                 HttpServletRequest httpServletRequest){
         model.addAttribute("filteredCategories",categoryService.getFilterCategories());
-        model.addAttribute("products",productService.getMainProductsListByName(search));
+        var products = productService.getProducts(page);
+        var uri = httpServletRequest.getRequestURI();
+        propertiesService.fillPaginationDataModel(products, "products", propertiesService.getDefaultPageSize(), model, uri);
         return "index";
-
     }
 
     @GetMapping("/category/{id}")
