@@ -141,7 +141,7 @@ styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons
                         <a class="product-card mb-5" href="/product/${p.id}">
                             <div class="product-image">
                                 <div class="picture bg-info d-flex">
-                                    <img src="/uploads/${p.imagePaths[0]}" alt="фотография объявления">
+                                    <img src="/uploads/${p.imagePaths[0]!''}" alt="фотография объявления">
                                 </div>
                             </div>
                             <div class="product-info">

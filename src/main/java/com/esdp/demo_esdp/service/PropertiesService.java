@@ -16,7 +16,7 @@ public class PropertiesService {
     }
 
 
-    public <T> void fillPaginationDataModel(Page<T> list,String name, int pageSize, Model model, String baseUri) {
+    public <T> void fillPaginationDataModel(Page<T> list, String name, int pageSize, Model model, String baseUri) {
         if (list.hasNext()) {
             model.addAttribute("nextPageLink", constructPageUri(baseUri, list.nextPageable().getPageNumber(), list.nextPageable().getPageSize()));
         }

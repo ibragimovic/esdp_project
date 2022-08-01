@@ -83,7 +83,7 @@
             <#list products as product>
                 <div class="flex flex-column box flex-v-center">
                     <div class="img flex flex-column flex-v-center box-128">
-                        <img src="/uploads/${product.imagePaths[0]}"
+                        <img src="/uploads/${product.imagePaths[0]!''}"
                              alt="фотография объявления" height="200">
                     </div>
                     <div class="product">
