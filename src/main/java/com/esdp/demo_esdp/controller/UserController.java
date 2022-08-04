@@ -9,7 +9,6 @@ import com.esdp.demo_esdp.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindException;
@@ -46,32 +45,27 @@ public class UserController {
     public String saveUserPhoneNumber(@Size(min = 13, max = 13, message = "Length must be = 13, format +996552902002")
                                       @NotBlank @Pattern(regexp = "^(\\+)[0-9]+$", message = "Should contain only numbers")
                                       @RequestParam String phone, Authentication authentication) {
-        userService.userSaveTelephone(userService.getEmailFromAuthentication(authentication), phone);
+        String email = userService.getEmailFromAuthentication(authentication);
+        userService.userSaveTelephone(email, phone);
         return "redirect:/product/create";
     }
 
     @GetMapping("/profile")
-    public String pageCustomerProfile(Model model, Principal principal, Pageable pageable, HttpServletRequest uriBuilder) {
-        String email;
-        if (principal instanceof OAuth2AuthenticationToken) {
-            OAuth2AuthenticationToken oAuth2AuthenticationToken = (OAuth2AuthenticationToken) principal;
-            email = oAuth2AuthenticationToken.getPrincipal().getAttribute("email");
-        } else {
-            email = principal.getName();
-        }
-
+    public String pageCustomerProfile(Model model, Authentication authentication,
+                                      Pageable pageable, HttpServletRequest uriBuilder) {
+        String email = userService.getEmailFromAuthentication(authentication);
         var user = userService.getByEmail(email);
         model.addAttribute("dto", user);
         model.addAttribute("userPassword", new UpdatePasswordDTO());
         var uri = uriBuilder.getRequestURI();
-        propertiesService.fillPaginationDataModel(productService.getProductsUser(email, pageable),
-                "products", propertiesService.getDefaultPageSize(), model, uri);
+        var products = productService.getProductsUser(email, pageable);
+        propertiesService.fillPaginationDataModel(products, "products",
+                propertiesService.getDefaultPageSize(), model, uri);
         return "profile";
     }
 
     @PostMapping("/profile")
     public String updateUserProfile(@Valid UserUpdateForm userRequestDto,
-                                    BindingResult validationResult,
                                     RedirectAttributes attributes) {
         attributes.addFlashAttribute("dto", userRequestDto);
         userService.update(userRequestDto);
@@ -83,7 +77,6 @@ public class UserController {
         if (!model.containsAttribute("dto")) {
             model.addAttribute("dto", new UserRegisterForm());
         }
-
         return "register";
     }
 
@@ -131,7 +124,7 @@ public class UserController {
     }
 
     @PostMapping("/password-recovery")
-    public String getNewPair(@RequestParam String username, Model model) {
+    public String getNewPair(@RequestParam String username) {
         userService.restorePassword(username);
         return "redirect:/";
     }
