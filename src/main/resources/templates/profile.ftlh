@@ -101,7 +101,7 @@ styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons
                                                 ${product.name}
                                             </a></h3>
                                         <h5>Цена: ${product.price} сом</h5>
-                                        <h5>Категория: ${product.category.name}</h5>
+                                        <h5>Категория: ${product.category}</h5>
                                     </div>
                                 </div>
                                 <form action="/up/product" method="post">
