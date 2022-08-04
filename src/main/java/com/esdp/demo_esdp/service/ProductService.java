@@ -295,13 +295,13 @@ public class ProductService {
 
             }
             case "expensive": {
-                products = productRepository.getExpensiveProducts(ProductStatus.ACCEPTED, filters.getSearch(),
-                        filters.getPriceFrom(), filters.getPriceTo(), filters.getLocality(), categoryId, pageable);
+                products = productRepository.getExpensiveProducts(ProductStatus.ACCEPTED, filters.getSearch().toLowerCase(),
+                        filters.getPriceFrom(), filters.getPriceTo(), filters.getLocality().toLowerCase(), categoryId, pageable);
                 break;
             }
             case "new": {
-                products = productRepository.getNewProducts(ProductStatus.ACCEPTED, filters.getSearch(),
-                        filters.getPriceFrom(), filters.getPriceTo(), filters.getLocality(), categoryId, pageable);
+                products = productRepository.getNewProducts(ProductStatus.ACCEPTED, filters.getSearch().toLowerCase(),
+                        filters.getPriceFrom(), filters.getPriceTo(), filters.getLocality().toLowerCase(), categoryId, pageable);
                 break;
             }
             default: {
