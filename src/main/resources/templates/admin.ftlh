@@ -151,6 +151,8 @@
         </div>
     </#if>
 
+    <#include "partials/pagination.ftlh">
+
     <script>
         $(document).ready(
             function () {
