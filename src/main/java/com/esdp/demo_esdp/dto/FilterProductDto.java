@@ -15,5 +15,5 @@ public class FilterProductDto {
     private String search;
     private Integer priceFrom;
     private Integer priceTo;
-    private String sort;
+    private String sortProduct;
 }
