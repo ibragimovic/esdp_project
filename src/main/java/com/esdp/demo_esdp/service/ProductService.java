@@ -22,7 +22,10 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -44,13 +47,12 @@ public class ProductService {
     }
 
     public Page<SimilarProductDto> getProductNameOrdered(String name, Pageable pageable) {
-        return productRepository.getProductName(name.toLowerCase(), ProductStatus.ACCEPTED, pageable)
-                .map(this::getSimilarProductDto);
+        return builderSimilarProductDto(productRepository.getProductName(name.toLowerCase(), ProductStatus.ACCEPTED, pageable));
     }
 
-    public List<SimilarProductDto> getMainProductsListByName(String name) {
-        return productRepository.getProductListByName(name.toLowerCase(), ProductStatus.ACCEPTED).stream()
-                .map(this::getSimilarProductDto).collect(Collectors.toList());
+    public Page<SimilarProductDto> getMainProductsListByName(String name, Pageable pageable) {
+        var products = productRepository.getProductListByName(name.toLowerCase(), ProductStatus.ACCEPTED, pageable);
+        return builderSimilarProductDto(products);
     }
 
     public Page<ProductDTO> getProductCategory(String category, Pageable pageable) {
@@ -63,15 +65,8 @@ public class ProductService {
                 .map(ProductDTO::from);
     }
 
-    public Page<ProductDTO> getProducts(Pageable pageable) {
-        return productRepository.getProducts(ProductStatus.ACCEPTED, pageable)
-                .map(p -> ProductDTO.builder()
-                        .id(p.getId())
-                        .category(p.getCategory())
-                        .name(p.getName())
-                        .price(p.getPrice())
-                        .imagePaths(imagesService.getImagesPathsByProductId(p.getId()))
-                        .build());
+    public Page<SimilarProductDto> getProducts(Pageable pageable) {
+        return builderSimilarProductDto(productRepository.getProducts(ProductStatus.ACCEPTED, pageable));
     }
 
     public Page<SimilarProductDto> getMainPageProducts(Pageable pageable) {
@@ -127,7 +122,7 @@ public class ProductService {
     }
 
 
-    public String deleteProductById(Long productId, String email) {
+    public String deleteProductById(Long productId, String email) throws ResourceNotFoundException {
         var user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
         if (user.getEmail().equals(productRepository.getPublicationUserEmail(productId))
                 || user.getRole().equals("Admin")) {
@@ -172,8 +167,8 @@ public class ProductService {
         throw new ResourceNotFoundException();
     }
 
-    public Page<ProductDTO> getProductsName(String name,Pageable pageable) {
-        return builderProductDTO(productRepository.getProductsName(name.toLowerCase(),pageable));
+    public Page<ProductDTO> getProductsName(String name, Pageable pageable) {
+        return builderProductDTO(productRepository.getProductsName(name.toLowerCase(), pageable));
     }
 
     public void addProductToTop(Long productId, Integer hour) throws ProductNotFoundException {
@@ -194,15 +189,15 @@ public class ProductService {
         }
     }
 
-    public Page<ProductDTO> getTopProduct(Pageable pageable) {
-        var products = productRepository.findTopProduct(ProductStatus.ACCEPTED, pageable);
-        return products.map(ProductDTO::from);
+//    public Page<ProductDTO> getTopProduct(Pageable pageable) {
+//        var products = productRepository.findTopProduct(ProductStatus.ACCEPTED, pageable);
+//        return products.map(ProductDTO::from);
+//
+//    }
 
-    }
-
-    public Page<ProductDTO> getProductsToMainPage(Pageable pageable) {
-        return builderProductDTO(productRepository.getProductsToMainPage(ProductStatus.ACCEPTED, pageable));
-    }
+//    public Page<ProductDTO> getProductsToMainPage(Pageable pageable) {
+//        return builderProductDTO(productRepository.getProductsToMainPage(ProductStatus.ACCEPTED, pageable));
+//    }
 
     public Page<ProductDTO> getProductsCategory(Long id, Pageable pageable) {
         return builderProductDTO(productRepository.getProductsCategory(id, pageable));
@@ -284,49 +279,42 @@ public class ProductService {
 
     }
 
-    public List<SimilarProductDto> handleFilter(FilterProductDto filters) {
+    public Page<SimilarProductDto> handleFilter(FilterProductDto filters, Long categoryId, Pageable pageable) {
         filters = formatFilter(filters);
-        List<Product> filteredProducts = new ArrayList<>();
+        Page<Product> products;
 
-        if (filters.getCategoryId() == null) {
-            filteredProducts = productRepository.getFilteredProducts(filters.getSearch(), filters.getPriceFrom(), filters.getPriceTo(), filters.getLocality());
-        } else {
-            filteredProducts = productRepository.getFilteredProducts(filters.getSearch(), filters.getPriceFrom(), filters.getPriceTo(), filters.getLocality(), filters.getCategoryId());
+        switch (filters.getSortProduct()) {
+            case "popular": {
+                products = productRepository.getFamousProducts(ProductStatus.ACCEPTED, filters.getSearch().toLowerCase(),
+                        filters.getPriceFrom(), filters.getPriceTo(), filters.getLocality().toLowerCase(), categoryId, pageable);
+                break;
+            }
+            case "cheap": {
+                return builderSimilarProductDto(productRepository.getCheapProducts(ProductStatus.ACCEPTED, filters.getSearch().toLowerCase(),
+                        filters.getPriceFrom(), filters.getPriceTo(), filters.getLocality().toLowerCase(), categoryId, pageable));
+
+            }
+            case "expensive": {
+                products = productRepository.getExpensiveProducts(ProductStatus.ACCEPTED, filters.getSearch(),
+                        filters.getPriceFrom(), filters.getPriceTo(), filters.getLocality(), categoryId, pageable);
+                break;
+            }
+            case "new": {
+                products = productRepository.getNewProducts(ProductStatus.ACCEPTED, filters.getSearch(),
+                        filters.getPriceFrom(), filters.getPriceTo(), filters.getLocality(), categoryId, pageable);
+                break;
+            }
+            default: {
+                products = productRepository.getProducts(ProductStatus.ACCEPTED, pageable);
+                break;
+            }
         }
-
-        String filterSort = filters.getSort();
-
-        switch (filterSort) {
-            case "popular":
-                filteredProducts = sortPopular(filteredProducts);
-                break;
-            case "cheap":
-                filteredProducts = sortCheap(filteredProducts);
-                break;
-            case "expensive":
-                filteredProducts = sortExpensive(filteredProducts);
-                break;
-            case "new":
-                filteredProducts = sortNew(filteredProducts);
-                break;
-        }
-
-        return filteredProducts.stream().map(this::getSimilarProductDto).collect(Collectors.toList());
-    }
-
-    private SimilarProductDto getSimilarProductDto(Product product) {
-        return SimilarProductDto.builder()
-                .id(product.getId())
-                .category(product.getCategory().getName())
-                .name(product.getName())
-                .price(product.getPrice())
-                .imagePaths(imagesService.getImagesPathsByProductId(product.getId()))
-                .build();
+        return builderSimilarProductDto(products);
     }
 
     private FilterProductDto formatFilter(FilterProductDto filter) {
         if (filter.getLocality() == null) {
-            filter.setLocality("");
+            filter.setLocality("Бишкек");
         }
         if (filter.getSearch() == null) {
             filter.setSearch("");
@@ -340,61 +328,33 @@ public class ProductService {
             filter.setPriceTo(Integer.MAX_VALUE);
         }
 
-        if (filter.getSort() == null) {
-            filter.setSort("popular");
+        if (filter.getSortProduct() == null) {
+            filter.setSortProduct("popular");
         }
 
         return filter;
-    }
-
-    private List<Product> sortPopular(List<Product> unsorted) {
-        List<Product> sortedList = unsorted.stream()
-                .sorted(Comparator.comparing(p -> favoritesRepository.getAmountOfLikes(p.getId())))
-                .collect(Collectors.toList());
-        Collections.reverse(sortedList);
-
-        return sortedList;
-    }
-
-    private List<Product> sortCheap(List<Product> unsorted) {
-        return unsorted.stream().sorted(Comparator.comparing(Product::getPrice))
-                .collect(Collectors.toList());
-    }
-
-    private List<Product> sortExpensive(List<Product> unsorted) {
-        List<Product> sortedList = sortCheap(unsorted);
-        Collections.reverse(sortedList);
-        return sortedList;
-    }
-
-    private List<Product> sortNew(List<Product> unsorted) {
-        List<Product> sortedList = unsorted.stream()
-                .sorted(Comparator.comparing(Product::getDateAdd))
-                .collect(Collectors.toList());
-        Collections.reverse(sortedList);
-
-        return sortedList;
-    }
-
-
-    private ProductDTO builderProductDTO(Product p) {
-        return ProductDTO.builder()
-                .id(p.getId())
-                .category(p.getCategory())
-                .name(p.getName())
-                .price(p.getPrice())
-                .imagePaths(imagesService.getImagesPathsByProductId(p.getId()))
-                .build();
     }
 
     private Page<ProductDTO> builderProductDTO(Page<Product> products) {
         return products
                 .map(p -> ProductDTO.builder()
                         .id(p.getId())
-                        .category(p.getCategory())
+                        .category(p.getCategory().getName())
                         .name(p.getName())
                         .user(p.getUser())
                         .status(p.getStatus().name())
+                        .price(p.getPrice())
+                        .imagePaths(imagesService.getImagesPathsByProductId(p.getId()))
+                        .build());
+    }
+
+
+    private Page<SimilarProductDto> builderSimilarProductDto(Page<Product> products) {
+        return products
+                .map(p -> SimilarProductDto.builder()
+                        .id(p.getId())
+                        .category(p.getCategory().getName())
+                        .name(p.getName())
                         .price(p.getPrice())
                         .imagePaths(imagesService.getImagesPathsByProductId(p.getId()))
                         .build());
