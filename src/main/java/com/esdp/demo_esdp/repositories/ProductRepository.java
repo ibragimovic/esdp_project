@@ -85,9 +85,10 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "(p.price between :priceFrom  and :priceTo) and " +
             "lower(p.localities) like %:locality% " +
             "order by p.price asc ")
-    List<Product> getCheapProducts(@Param("status") ProductStatus status, @Param("search")String search,
-                                   @Param("priceFrom")Integer priceFrom, @Param("priceTo")Integer priceTo,
-                                   @Param("locality")String locality, @Param("categoryId")Long categoryId);
+    Page<Product> getCheapProducts(@Param("status") ProductStatus status, @Param("search") String search,
+                                   @Param("priceFrom") Integer priceFrom, @Param("priceTo") Integer priceTo,
+                                   @Param("locality") String locality, @Param("categoryId") Long categoryId,
+                                   Pageable pageable);
 
     @Query("select p from Product p " +
             "where upper(p.status) = :status and p.category.id = :categoryId and " +
@@ -95,9 +96,10 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "(p.price between :priceFrom  and :priceTo) and " +
             "lower(p.localities) like %:locality% " +
             "order by p.price desc ")
-    List<Product> getExpensiveProducts(@Param("status") ProductStatus status, @Param("search")String search,
-                                       @Param("priceFrom")Integer priceFrom, @Param("priceTo")Integer priceTo,
-                                       @Param("locality")String locality, @Param("categoryId")Long categoryId);
+    Page<Product> getExpensiveProducts(@Param("status") ProductStatus status, @Param("search") String search,
+                                       @Param("priceFrom") Integer priceFrom, @Param("priceTo") Integer priceTo,
+                                       @Param("locality") String locality, @Param("categoryId") Long categoryId,
+                                       Pageable pageable);
 
 
     @Query("select p from Product p " +
@@ -106,18 +108,22 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "(p.price between :priceFrom  and :priceTo) and " +
             "lower(p.localities) like %:locality% " +
             "order by p.dateAdd desc ")
-    List<Product> getNewProducts(@Param("status") ProductStatus status, @Param("search")String search,
-                                 @Param("priceFrom")Integer priceFrom, @Param("priceTo")Integer priceTo,
-                                 @Param("locality")String locality, @Param("categoryId")Long categoryId);
+    Page<Product> getNewProducts(@Param("status") ProductStatus status, @Param("search") String search,
+                                 @Param("priceFrom") Integer priceFrom, @Param("priceTo") Integer priceTo,
+                                 @Param("locality") String locality, @Param("categoryId") Long categoryId,
+                                 Pageable pageable);
 
-    @Query(value = "select p.* from products p " +
-            "left join favorites f on p.id = f.product_id " +
-            "where p.status = :status and p.category_id = :categoryId and " +
-            "(p.name like %:search% or p.description like %:search%) and " +
-            "(p.price between :priceFrom  and :priceTo) and " +
-            "p.localities like %:locality% " +
-            "group by p.id order by count(f.product_id) desc",nativeQuery = true)
-    List<Product> getFamousProducts(@Param("status") ProductStatus status, @Param("search")String search,
-                                    @Param("priceFrom")Integer priceFrom, @Param("priceTo")Integer priceTo,
-                                    @Param("locality")String locality, @Param("categoryId")Long categoryId);
+    @Query("select p from Product p " +
+            "left join Favorites f on p.id = f.product.id " +
+            "where p.status = :status and p.category.id = :categoryId and " +
+            "(lower(p.name) like %:search% or lower(p.description) like %:search%) and " +
+            "(p.price between :priceFrom and :priceTo) and " +
+            "lower(p.localities) like %:locality% " +
+            "group by p.id order by count(f.product.id) desc")
+    Page<Product> getFamousProducts(@Param("status") ProductStatus status, @Param("search") String search,
+                                    @Param("priceFrom") Integer priceFrom, @Param("priceTo") Integer priceTo,
+                                    @Param("locality") String locality, @Param("categoryId") Long categoryId,
+                                    Pageable pageable);
+
+
 }

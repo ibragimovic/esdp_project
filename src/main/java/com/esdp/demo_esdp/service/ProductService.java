@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -188,6 +189,16 @@ public class ProductService {
         }
     }
 
+//    public Page<ProductDTO> getTopProduct(Pageable pageable) {
+//        var products = productRepository.findTopProduct(ProductStatus.ACCEPTED, pageable);
+//        return products.map(ProductDTO::from);
+//
+//    }
+
+//    public Page<ProductDTO> getProductsToMainPage(Pageable pageable) {
+//        return builderProductDTO(productRepository.getProductsToMainPage(ProductStatus.ACCEPTED, pageable));
+//    }
+
     public Page<ProductDTO> getProductsCategory(Long id, Pageable pageable) {
         return builderProductDTO(productRepository.getProductsCategory(id, pageable));
     }
@@ -268,49 +279,60 @@ public class ProductService {
 
     }
 
-    public List<ProductDTO> handleFilter(FilterProductDto filters, Long categoryId) {
+    public Page<SimilarProductDto> handleFilter(FilterProductDto filters, Long categoryId, Pageable pageable) {
+        filters = formatFilter(filters);
+        Page<Product> products;
+
         switch (filters.getSortProduct()) {
-            case "new":
-                return getNewestAndFilteredProductsFromCategory(filters, categoryId);
-            case "cheap":
-                return getCheapAndFilteredProductsFromCategory(filters, categoryId);
-            case "expensive":
-                return getExpensiveAndFilteredProductsFromCategory(filters, categoryId);
-            default:
-                return getFamousAndFilteredProductsFromCategory(filters, categoryId);
+            case "popular": {
+                products = productRepository.getFamousProducts(ProductStatus.ACCEPTED, filters.getSearch().toLowerCase(),
+                        filters.getPriceFrom(), filters.getPriceTo(), filters.getLocality().toLowerCase(), categoryId, pageable);
+                break;
+            }
+            case "cheap": {
+                return builderSimilarProductDto(productRepository.getCheapProducts(ProductStatus.ACCEPTED, filters.getSearch().toLowerCase(),
+                        filters.getPriceFrom(), filters.getPriceTo(), filters.getLocality().toLowerCase(), categoryId, pageable));
+
+            }
+            case "expensive": {
+                products = productRepository.getExpensiveProducts(ProductStatus.ACCEPTED, filters.getSearch().toLowerCase(),
+                        filters.getPriceFrom(), filters.getPriceTo(), filters.getLocality().toLowerCase(), categoryId, pageable);
+                break;
+            }
+            case "new": {
+                products = productRepository.getNewProducts(ProductStatus.ACCEPTED, filters.getSearch().toLowerCase(),
+                        filters.getPriceFrom(), filters.getPriceTo(), filters.getLocality().toLowerCase(), categoryId, pageable);
+                break;
+            }
+            default: {
+                products = productRepository.getProducts(ProductStatus.ACCEPTED, pageable);
+                break;
+            }
         }
+        return builderSimilarProductDto(products);
     }
 
-    private List<ProductDTO> getNewestAndFilteredProductsFromCategory(FilterProductDto filters, Long categoryId) {
-        return productRepository.getNewProducts(ProductStatus.ACCEPTED, filters.getSearch().toLowerCase(),
-                filters.getPriceFrom(), filters.getPriceTo(), filters.getLocality().toLowerCase(), categoryId)
-                .stream()
-                .map(ProductDTO::from)
-                .collect(Collectors.toList());
-    }
+    private FilterProductDto formatFilter(FilterProductDto filter) {
+        if (filter.getLocality() == null) {
+            filter.setLocality("Бишкек");
+        }
+        if (filter.getSearch() == null) {
+            filter.setSearch("");
+        }
 
-    private List<ProductDTO> getExpensiveAndFilteredProductsFromCategory(FilterProductDto filters, Long categoryId) {
-        return productRepository.getExpensiveProducts(ProductStatus.ACCEPTED, filters.getSearch().toLowerCase(),
-                filters.getPriceFrom(), filters.getPriceTo(), filters.getLocality().toLowerCase(), categoryId)
-                .stream()
-                .map(ProductDTO::from)
-                .collect(Collectors.toList());
-    }
+        if (filter.getPriceFrom() == null) {
+            filter.setPriceFrom(0);
+        }
 
-    private List<ProductDTO> getCheapAndFilteredProductsFromCategory(FilterProductDto filters, Long categoryId) {
-        return productRepository.getCheapProducts(ProductStatus.ACCEPTED, filters.getSearch().toLowerCase(),
-                filters.getPriceFrom(), filters.getPriceTo(), filters.getLocality().toLowerCase(), categoryId)
-                .stream()
-                .map(ProductDTO::from)
-                .collect(Collectors.toList());
-    }
+        if (filter.getPriceTo() == null) {
+            filter.setPriceTo(Integer.MAX_VALUE);
+        }
 
-    private List<ProductDTO> getFamousAndFilteredProductsFromCategory(FilterProductDto filters, Long categoryId) {
-        return productRepository.getFamousProducts(ProductStatus.ACCEPTED, filters.getSearch().toLowerCase(),
-                filters.getPriceFrom(), filters.getPriceTo(), filters.getLocality().toLowerCase(), categoryId)
-                .stream()
-                .map(ProductDTO::from)
-                .collect(Collectors.toList());
+        if (filter.getSortProduct() == null) {
+            filter.setSortProduct("popular");
+        }
+
+        return filter;
     }
 
     private Page<ProductDTO> builderProductDTO(Page<Product> products) {

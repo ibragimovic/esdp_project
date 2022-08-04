@@ -63,22 +63,22 @@ styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons
                                 <div class="filter-sort">
                                     <p class="filter-main-title"><span>Сортировать</span></p>
                                     <label>
-                                        <input type="radio" name="sort" value="popular" checked>
+                                        <input type="radio" name="sortProduct" value="popular" checked>
                                         <span class="design"></span>
                                         <span class="value">Популярные</span>
                                     </label>
                                     <label>
-                                        <input type="radio" name="sort" value="new">
+                                        <input type="radio" name="sortProduct" value="new">
                                         <span class="design"></span>
                                         <span class="value">Сначала новые</span>
                                     </label>
                                     <label>
-                                        <input type="radio" name="sort" value="cheap">
+                                        <input type="radio" name="sortProduct" value="cheap">
                                         <span class="design"></span>
                                         <span class="value">Сначала дешевле</span>
                                     </label>
                                     <label>
-                                        <input type="radio" name="sort" value="expensive">
+                                        <input type="radio" name="sortProduct" value="expensive">
                                         <span class="design"></span>
                                         <span class="value">Сначала дороже</span>
                                     </label>
@@ -118,40 +118,40 @@ styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons
                         <input name="categoryId" hidden id="chosenCategory">
 
                         <#if !(search??)>
-                        <div class="dropdown" id="dropdownElem">
-                            <span id="chosenCat"><i class="bi bi-caret-down-fill mx-auto"></i></span>
-                        </div>
-                        <div class="options-cat-container">
+                            <div class="dropdown" id="dropdownElem">
+                                <span id="chosenCat"><i class="bi bi-caret-down-fill mx-auto"></i></span>
+                            </div>
+                            <div class="options-cat-container">
 
-                            <#list filteredCategories as num,catList>
-                                <div class="options" id="options${num}">
+                                <#list filteredCategories as num,catList>
+                                    <div class="options" id="options${num}">
 
-                                    <#if num!=0>
-                                        <input value="${catList[0].parent}" hidden>
-                                        <p class="options-header"><i
-                                                    class="bi bi-arrow-left-short goBack"></i><span>${catList[0].name?substring(15)}</span>
-                                        </p>
-                                    </#if>
-
-
-                                    <#list catList as cat>
-                                        <#if cat.hasChildren>
-                                            <p class="cat-option nestedOption">
-                                                <input value="${cat.id}" hidden>
-                                                <span>${cat.name}</span><i class="bi bi-arrow-right"></i>
-                                            </p>
-                                        <#else>
-                                            <p class="cat-option lastOption">
-                                                <input value="${cat.id}" name="categoryId" hidden>
-                                                <span>${cat.name}</span>
+                                        <#if num!=0>
+                                            <input value="${catList[0].parent}" hidden>
+                                            <p class="options-header"><i
+                                                        class="bi bi-arrow-left-short goBack"></i><span>${catList[0].name?substring(15)}</span>
                                             </p>
                                         </#if>
-                                    </#list>
 
-                                </div>
-                            </#list>
 
-                        </div>
+                                        <#list catList as cat>
+                                            <#if cat.hasChildren>
+                                                <p class="cat-option nestedOption">
+                                                    <input value="${cat.id}" hidden>
+                                                    <span>${cat.name}</span><i class="bi bi-arrow-right"></i>
+                                                </p>
+                                            <#else>
+                                                <p class="cat-option lastOption">
+                                                    <input value="${cat.id}" name="categoryId" hidden>
+                                                    <span>${cat.name}</span>
+                                                </p>
+                                            </#if>
+                                        </#list>
+
+                                    </div>
+                                </#list>
+
+                            </div>
                         </#if>
                     </div>
                     <input type="text" class="flex-grow-1 search-input" placeholder="Найти..." name="productSearch">

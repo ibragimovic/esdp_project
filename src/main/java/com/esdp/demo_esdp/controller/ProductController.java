@@ -77,13 +77,16 @@ public class ProductController {
     }
 
     @PostMapping("/category/{id}")
-    public String getProductsFilter(@PathVariable("id") Long categoryId, Model model,
-                                    @ModelAttribute("filterProduct") FilterProductDto filters) throws CategoryNotFoundException {
+    public String getProductsFilter(@PathVariable("id") Long categoryId,
+                                    Model model, @ModelAttribute("filterProduct") FilterProductDto filters,
+                                    Pageable pageable, HttpServletRequest uriBuilder) throws CategoryNotFoundException {
         model.addAttribute("goBack",true);
         model.addAttribute("localities", localitiesService.getFilterLocalities());
         model.addAttribute("filteredCategories",categoryService.getFilterCategories());
-        var products = productService.handleFilter(filters, categoryId);
-        model.addAttribute("products", products);
+        var products = productService.handleFilter(filters, categoryId, pageable);
+        var uri = uriBuilder.getRequestURI();
+        propertiesService.fillPaginationDataModel(products, "products",
+                propertiesService.getDefaultPageSize(), model, uri);
         model.addAttribute("thisCategory",categoryService.getOneCategory(categoryId));
         return "index";
     }
@@ -91,10 +94,8 @@ public class ProductController {
     @GetMapping("/category/{id}")
     public String getCategoryProducts(Model model, @PathVariable("id") Long categoryId,
                                       Pageable pageable, HttpServletRequest uriBuilder) throws CategoryNotFoundException {
-        FilterProductDto filter = new FilterProductDto();
         model.addAttribute("goBack",true);
         model.addAttribute("localities", localitiesService.getFilterLocalities());
-        model.addAttribute("products", filter);
         model.addAttribute("thisCategory",categoryService.getOneCategory(categoryId));
         var products = productService.getProductsCategory(categoryId, pageable);
         var uri = uriBuilder.getRequestURI();
