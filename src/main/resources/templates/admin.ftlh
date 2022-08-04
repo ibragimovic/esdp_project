@@ -90,7 +90,7 @@
                         <h3>${product.name}</h3>
                         <h4>Объявление добавил: ${product.user.email}</h4>
                         <h5>Цена: ${product.price} сом</h5>
-                        <h5>Категория: ${product.category.name}</h5>
+                        <h5>Категория: ${product.category}</h5>
                         <h5><a href="/product/${product.id}" style="text-decoration: none">Подробная информация </a></h5>
                     </div>
                     <div class="status">
