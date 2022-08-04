@@ -5,12 +5,7 @@ import com.esdp.demo_esdp.dto.ProductAddForm;
 import com.esdp.demo_esdp.entity.User;
 import com.esdp.demo_esdp.exception.CategoryNotFoundException;
 import com.esdp.demo_esdp.exception.ProductNotFoundException;
-import com.esdp.demo_esdp.service.CategoryService;
-import com.esdp.demo_esdp.service.ProductService;
-import com.esdp.demo_esdp.service.PropertiesService;
-import com.esdp.demo_esdp.service.UserService;
 import com.esdp.demo_esdp.service.*;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -21,8 +16,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
 import java.io.IOException;
 
 @Controller
@@ -36,12 +29,12 @@ public class ProductController {
 
 
     @GetMapping("/product/create")
-    public String createNewProductGET(Model model,Authentication authentication) throws ProductNotFoundException {
-        User user = userService.getUserByEmail(userService.getEmailFromAuthentication(authentication));
+    public String createNewProductGET(Model model,Authentication authentication) {
+        String email = userService.getEmailFromAuthentication(authentication);
+        User user = userService.getUserByEmail(email);
         if (user.getTelNumber() == null || user.getTelNumber().isEmpty()) {
             return "redirect:/phone";
         }
-
         model.addAttribute("localities", localitiesService.getLocalitiesDTOs());
         model.addAttribute("select_categories", categoryService.getEndCategory());
         return "create_product";
@@ -49,8 +42,9 @@ public class ProductController {
 
     @PostMapping("/product/create")
     public String createNewProductPOST(@ModelAttribute("newProductData") ProductAddForm newProduct,
-                                       Model model, Authentication authentication) throws IOException, ProductNotFoundException {
-        User user = userService.getUserByEmail(userService.getEmailFromAuthentication(authentication));
+                                       Authentication authentication) throws IOException, ProductNotFoundException {
+        String email = userService.getEmailFromAuthentication(authentication);
+        User user = userService.getUserByEmail(email);
         productService.addNewProduct(newProduct,user);
         return "successfully_created";
     }
@@ -58,14 +52,20 @@ public class ProductController {
     @PostMapping("/product/delete")
     public String deleteProductById(@RequestParam("productId") Long productId,
                                     Authentication authentication) {
-        return "redirect:/" + productService.deleteProductById(productId, userService.getEmailFromAuthentication(authentication));
+        String email = userService.getEmailFromAuthentication(authentication);
+        var uri = productService.deleteProductById(productId, email);
+        return "redirect:/" + uri;
     }
 
-    //main page start
-
     @PostMapping("/search")
-    public String getProductsSearch(Model model, @RequestParam String productSearch) {
-        model.addAttribute("products",productService.getMainProductsListByName(productSearch));
+    public String getProductsSearch(Model model, @RequestParam String productSearch,
+                                    Pageable pageable, HttpServletRequest uriBuilder) {
+        var products = productService.getMainProductsListByName(productSearch, pageable);
+        var uri = uriBuilder.getRequestURI();
+
+        propertiesService.fillPaginationDataModel(products, "products",
+                propertiesService.getDefaultPageSize(), model, uri);
+
         model.addAttribute("goBack",true);
         model.addAttribute("search",true);
         return "index";
@@ -77,12 +77,29 @@ public class ProductController {
     }
 
     @PostMapping("/category/{id}")
-    public String getProductsFilter(Model model, @ModelAttribute("filterProduct") FilterProductDto filters) throws CategoryNotFoundException {
+    public String getProductsFilter(@PathVariable("id") Long categoryId, Model model,
+                                    @ModelAttribute("filterProduct") FilterProductDto filters) throws CategoryNotFoundException {
         model.addAttribute("goBack",true);
         model.addAttribute("localities", localitiesService.getFilterLocalities());
         model.addAttribute("filteredCategories",categoryService.getFilterCategories());
-        model.addAttribute("products",productService.handleFilter(filters));
-        model.addAttribute("thisCategory",categoryService.getOneCategory(filters.getCategoryId()));
+        var products = productService.handleFilter(filters, categoryId);
+        model.addAttribute("products", products);
+        model.addAttribute("thisCategory",categoryService.getOneCategory(categoryId));
+        return "index";
+    }
+
+    @GetMapping("/category/{id}")
+    public String getCategoryProducts(Model model, @PathVariable("id") Long categoryId,
+                                      Pageable pageable, HttpServletRequest uriBuilder) throws CategoryNotFoundException {
+        FilterProductDto filter = new FilterProductDto();
+        model.addAttribute("goBack",true);
+        model.addAttribute("localities", localitiesService.getFilterLocalities());
+        model.addAttribute("products", filter);
+        model.addAttribute("thisCategory",categoryService.getOneCategory(categoryId));
+        var products = productService.getProductsCategory(categoryId, pageable);
+        var uri = uriBuilder.getRequestURI();
+        propertiesService.fillPaginationDataModel(products, "products",
+                propertiesService.getDefaultPageSize(), model, uri);
         return "index";
     }
 
@@ -97,19 +114,7 @@ public class ProductController {
         return "index";
     }
 
-    @GetMapping("/category/{id}")
-    public String getCategoryProducts(Model model, @PathVariable("id") Long catId) throws CategoryNotFoundException {
-        FilterProductDto f=new FilterProductDto();
-        f.setCategoryId(catId);
-        model.addAttribute("goBack",true);
-        model.addAttribute("products",productService.handleFilter(f));
-        model.addAttribute("localities", localitiesService.getFilterLocalities());
-        model.addAttribute("thisCategory",categoryService.getOneCategory(catId));
-        return "index";
 
-    }
-
-    //main page finish
 
     @PostMapping("/up/product")
     public String upProduct(@RequestParam(name = "id") Long productId) throws ProductNotFoundException {
