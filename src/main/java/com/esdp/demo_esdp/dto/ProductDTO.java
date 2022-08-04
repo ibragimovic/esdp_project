@@ -5,6 +5,7 @@ import com.esdp.demo_esdp.entity.Product;
 import com.esdp.demo_esdp.entity.User;
 import lombok.Builder;
 import lombok.Data;
+import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -14,7 +15,7 @@ import java.util.List;
 public class ProductDTO {
     private Long id;
     private String name;
-    private Category category;
+    private String category;
     private User user;
     private String description;
     private Integer price;
@@ -29,7 +30,7 @@ public class ProductDTO {
         return builder()
                 .id(product.getId())
                 .name(product.getName())
-                .category(product.getCategory())
+                .category(product.getCategory().getName())
                 .user(product.getUser())
                 .description(product.getDescription())
                 .price(product.getPrice())
@@ -41,11 +42,12 @@ public class ProductDTO {
                 .build();
     }
 
+
     public static ProductDTO fromImage(Product product,List<String> image) {
         return builder()
                 .id(product.getId())
                 .name(product.getName())
-                .category(product.getCategory())
+                .category(product.getCategory().getName())
                 .user(product.getUser())
                 .description(product.getDescription())
                 .price(product.getPrice())
