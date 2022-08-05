@@ -53,7 +53,7 @@ public class ProductService {
         return builderSimilarProductDto(productRepository.getProducts(ProductStatus.ACCEPTED, pageable));
     }
 
-    public void addNewProduct(ProductAddForm productAddForm, User user) throws ResourceNotFoundException {
+    public boolean addNewProduct(ProductAddForm productAddForm, User user) throws ResourceNotFoundException {
         Category category = categoryRepository.getCategory(productAddForm.getCategoryId())
                 .orElseThrow(ResourceNotFoundException::new);
 
@@ -71,6 +71,7 @@ public class ProductService {
                 .build();
         productRepository.save(product);
         imagesService.saveImagesFile(productAddForm.getImages(), product);
+        return true;
     }
 
 

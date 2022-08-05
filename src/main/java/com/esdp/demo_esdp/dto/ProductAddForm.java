@@ -8,6 +8,7 @@ import java.util.List;
 
 @Data
 @Builder
+@AllArgsConstructor(access = AccessLevel.PUBLIC)
 public class ProductAddForm {
     @NotNull
     @Size(min=4, message = "Length must be >= 4")

@@ -84,6 +84,16 @@ class CategoryServiceTest {
         assertTrue(isCreated);
         verify(categoryRepository, times(1)).findById(ID);
     }
+    @Test
+    void createCategory_when_parentNot() {
+       when(categoryRepository.findById(ID)).thenReturn(null);
+        CategoryDTO category = new CategoryDTO();
+        var isCreated = categoryService.createCategory(null, category);
+        assertNotNull(category);
+        assertTrue(isCreated);
+        verify(categoryRepository, times(1)).findById(null);
+    }
+
 
     @Test
     void changeNameCategory() throws CategoryNotFoundException {
