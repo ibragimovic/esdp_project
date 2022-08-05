@@ -63,16 +63,18 @@ styles=["/webjars/bootstrap-icons/font/bootstrap-icons.scss", "/css/navbar.css",
     <div class="mt-5 ">
         <div class="container">
             <div class="buttons mt-4">
-                <div class="button-container">
-                    <a class="btnfos btnfos-4" href="#"><span>админ панель</span></a>
-                </div>
+                <#if user.role=="Admin">
+                    <div class="button-container">
+                        <a class="btnfos btnfos-4" href="#"><span>админ панель</span></a>
+                    </div>
+                </#if>
             </div>
         </div>
 
 
         <div class="text-center mt-5 ">
-            <div class="user-name">Jon Snow</div>
-            <div class="user-email text-muted"><i class="bi bi-envelope"></i> jon.snow@gmail.com</div>
+            <div class="user-name">${user.name} ${user.lastname}</div>
+            <div class="user-email text-muted"><i class="bi bi-envelope"></i> ${user.email}</div>
         </div>
 
         <div class="tab_container mt-4">
@@ -97,439 +99,254 @@ styles=["/webjars/bootstrap-icons/font/bootstrap-icons.scss", "/css/navbar.css",
                 <span>Изменить пароль</span>
             </label>
             <section id="content1" class="tab-content">
-                <div class="product-status activated">Активные</div>
-                <div class="products pt-5 activated-products profile-products">
-                    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4">
-                        <div class="col">
-                            <div class="product-card-container">
-                                <input class="productId" value="1" name="productId" hidden>
-                                <button class="delete-button delete-product"><i class="bi bi-x-lg"></i></button>
-                                <div class="product-card mb-5" href="#">
-                                    <a href="#">
-                                        <div class="product-image">
-                                            <div class="picture bg-info d-flex">
-                                                <img src="https://www.adorama.com/alc/wp-content/uploads/2017/11/shutterstock_114802408.jpg"
-                                                     alt="фотография объявления">
+                <#if activeProducts??>
+                    <div class="product-status activated">Активные</div>
+                    <div class="products pt-5 activated-products profile-products">
+                        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4">
+                            <#list activeProducts as ap>
+                                <div class="col">
+                                    <div class="product-card-container">
+                                        <input class="productId" value="${ap.id}" name="productId" hidden>
+                                        <button class="delete-button delete-product"><i class="bi bi-x-lg"></i></button>
+                                        <div class="product-card mb-5">
+                                            <a href="/product/${ap.id}">
+                                                <div class="product-image">
+                                                    <div class="picture bg-info d-flex">
+                                                        <img src="/uploads/${ap.imagePaths[0]}"
+                                                             alt="фотография объявления">
+                                                    </div>
+                                                </div>
+                                                <div class="product-info">
+                                                    <div class="category-card">${ap.category}</div>
+                                                    <div class="title-card">
+                                                        ${ap.name}
+                                                    </div>
+                                                    <div class="cost-card"><i class="bi bi-cash-coin "></i>${ap.price}
+                                                        сом
+                                                    </div>
+                                                </div>
+                                            </a>
+                                            <div class="up-button text-center">
+                                                up
                                             </div>
-                                        </div>
-                                        <div class="product-info">
-                                            <div class="category-card">Sport</div>
-                                            <div class="title-card">
-                                                Lorem, ipsum. Lorem ipsum dolor sit amet
-                                            </div>
-                                            <div class="cost-card"><i class="bi bi-cash-coin "></i>30сом</div>
-                                        </div>
-                                    </a>
-                                    <div class="up-button text-center">
-                                        up
-                                    </div>
-                                    <input type="date" name="up_date" value="2022-08-04" hidden>
+                                            <input type="date" name="up_date" value="2022-08-04" hidden>
 
-                                </div>
+                                        </div>
 
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="product-card-container">
-                                <input class="productId" value="2" name="productId" hidden>
-                                <button class="delete-button delete-product"><i class="bi bi-x-lg"></i></button>
-                                <div class="product-card mb-5" href="#">
-                                    <a href="#">
-                                        <div class="product-image">
-                                            <div class="picture bg-info d-flex">
-                                                <img src="https://www.adorama.com/alc/wp-content/uploads/2017/11/shutterstock_114802408.jpg"
-                                                     alt="фотография объявления">
-                                            </div>
-                                        </div>
-                                        <div class="product-info">
-                                            <div class="category-card">Sport</div>
-                                            <div class="title-card">
-                                                Lorem, ipsum. Lorem ipsum dolor sit amet
-                                            </div>
-                                            <div class="cost-card"><i class="bi bi-cash-coin "></i>30сом</div>
-                                        </div>
-                                    </a>
-                                    <div class="up-button text-center">
-                                        up
                                     </div>
-                                    <input type="date" name="up_date" value="2022-08-05" hidden>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="product-card-container">
-                                <input class="productId" value="3" name="productId" hidden>
-                                <button class="delete-button delete-product"><i class="bi bi-x-lg"></i></button>
-                                <div class="product-card mb-5" href="#">
-                                    <a href="#">
-                                        <div class="product-image">
-                                            <div class="picture bg-info d-flex">
-                                                <img src="https://www.adorama.com/alc/wp-content/uploads/2017/11/shutterstock_114802408.jpg"
-                                                     alt="фотография объявления">
-                                            </div>
-                                        </div>
-                                        <div class="product-info">
-                                            <div class="category-card">Sport</div>
-                                            <div class="title-card">
-                                                Lorem, ipsum. Lorem ipsum dolor sit amet
-                                            </div>
-                                            <div class="cost-card"><i class="bi bi-cash-coin "></i>30сом</div>
-                                        </div>
-                                    </a>
-                                    <div class="up-button text-center">
-                                        up
-                                    </div>
-                                    <input type="date" name="up_date" value="2022-08-05" hidden>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="product-card-container">
-                                <input class="productId" value="4" name="productId" hidden>
-                                <button class="delete-button delete-product"><i class="bi bi-x-lg"></i></button>
-                                <div class="product-card mb-5" href="#">
-                                    <a href="#">
-                                        <div class="product-image">
-                                            <div class="picture bg-info d-flex">
-                                                <img src="https://www.adorama.com/alc/wp-content/uploads/2017/11/shutterstock_114802408.jpg"
-                                                     alt="фотография объявления">
-                                            </div>
-                                        </div>
-                                        <div class="product-info">
-                                            <div class="category-card">Sport</div>
-                                            <div class="title-card">
-                                                Lorem, ipsum. Lorem ipsum dolor sit amet
-                                            </div>
-                                            <div class="cost-card"><i class="bi bi-cash-coin "></i>30сом</div>
-                                        </div>
-                                    </a>
-                                    <div class="up-button text-center">
-                                        up
-                                    </div>
-                                    <input type="date" name="up_date" value="2022-08-03" hidden>
-                                </div>
-                            </div>
+                            </#list>
+
                         </div>
                     </div>
-                </div>
+                </#if>
 
-                <div class="product-status moderation">На модерации</div>
-                <div class="products pt-5 moderation-products profile-products">
-                    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4">
-                        <div class="col">
-                            <div class="product-card-container">
-                                <input class="productId" value="1" name="productId" hidden>
-                                <button class="delete-button delete-product"><i class="bi bi-x-lg"></i></button>
-                                <div class="product-card mb-5">
-                                    <div class="product-image">
-                                        <div class="picture bg-info d-flex">
-                                            <img src="https://www.adorama.com/alc/wp-content/uploads/2017/11/shutterstock_114802408.jpg"
-                                                 alt="фотография объявления">
+                <#if moderatedProducts??>
+                    <div class="product-status moderation">На модерации</div>
+                    <div class="products pt-5 moderation-products profile-products">
+                        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4">
+                            <#list moderatedProducts as mp>
+                                <div class="col">
+                                    <div class="product-card-container">
+                                        <input class="productId" value="${mp.id}" name="productId" hidden>
+                                        <button class="delete-button delete-product"><i class="bi bi-x-lg"></i></button>
+                                        <div class="product-card mb-5">
+                                            <div class="product-image">
+                                                <div class="picture bg-info d-flex">
+                                                    <img src="/uploads/${mp.imagePaths[0]}"
+                                                         alt="фотография объявления">
+                                                </div>
+                                            </div>
+                                            <div class="product-info">
+                                                <div class="category-card">${mp.category}</div>
+                                                <div class="title-card">
+                                                    ${mp.name}
+                                                </div>
+                                                <div class="cost-card"><i class="bi bi-cash-coin "></i>${mp.price}сом
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="product-info">
-                                        <div class="category-card">Sport</div>
-                                        <div class="title-card">
-                                            Lorem, ipsum. Lorem ipsum dolor sit amet
-                                        </div>
-                                        <div class="cost-card"><i class="bi bi-cash-coin "></i>30сом</div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="product-card-container">
-                                <input class="productId" value="1" name="productId" hidden>
-                                <button class="delete-button delete-product"><i class="bi bi-x-lg"></i></button>
-                                <div class="product-card mb-5">
-                                    <div class="product-image">
-                                        <div class="picture bg-info d-flex">
-                                            <img src="https://www.adorama.com/alc/wp-content/uploads/2017/11/shutterstock_114802408.jpg"
-                                                 alt="фотография объявления">
-                                        </div>
-                                    </div>
-                                    <div class="product-info">
-                                        <div class="category-card">Sport</div>
-                                        <div class="title-card">
-                                            Lorem, ipsum. Lorem ipsum dolor sit amet
-                                        </div>
-                                        <div class="cost-card"><i class="bi bi-cash-coin "></i>30сом</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="product-card-container">
-                                <input class="productId" value="1" name="productId" hidden>
-                                <button class="delete-button delete-product"><i class="bi bi-x-lg"></i></button>
-                                <div class="product-card mb-5">
-                                    <div class="product-image">
-                                        <div class="picture bg-info d-flex">
-                                            <img src="https://www.adorama.com/alc/wp-content/uploads/2017/11/shutterstock_114802408.jpg"
-                                                 alt="фотография объявления">
-                                        </div>
-                                    </div>
-                                    <div class="product-info">
-                                        <div class="category-card">Sport</div>
-                                        <div class="title-card">
-                                            Lorem, ipsum. Lorem ipsum dolor sit amet
-                                        </div>
-                                        <div class="cost-card"><i class="bi bi-cash-coin "></i>30сом</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="product-card-container">
-                                <input class="productId" value="1" name="productId" hidden>
-                                <button class="delete-button delete-product"><i class="bi bi-x-lg"></i></button>
-                                <div class="product-card mb-5">
-                                    <div class="product-image">
-                                        <div class="picture bg-info d-flex">
-                                            <img src="https://www.adorama.com/alc/wp-content/uploads/2017/11/shutterstock_114802408.jpg"
-                                                 alt="фотография объявления">
-                                        </div>
-                                    </div>
-                                    <div class="product-info">
-                                        <div class="category-card">Sport</div>
-                                        <div class="title-card">
-                                            Lorem, ipsum. Lorem ipsum dolor sit amet
-                                        </div>
-                                        <div class="cost-card"><i class="bi bi-cash-coin "></i>30сом</div>
-                                    </div>
-                                </div>
-                            </div>
+                            </#list>
+
                         </div>
                     </div>
-                </div>
+                </#if>
 
-                <div class="product-status declined">Отклоненные</div>
-                <div class="products pt-5 declined-products profile-products">
-                    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4">
-                        <div class="col">
-                            <div class="product-card-container">
-                                <input class="productId" value="1" name="productId" hidden>
-                                <button class="delete-button delete-product"><i class="bi bi-x-lg"></i></button>
-                                <div class="product-card mb-5">
-                                    <div class="product-image">
-                                        <div class="picture bg-info d-flex">
-                                            <img src="https://www.adorama.com/alc/wp-content/uploads/2017/11/shutterstock_114802408.jpg"
-                                                 alt="фотография объявления">
+                <#if declinedProducts??>
+                    <div class="product-status declined">Отклоненные</div>
+                    <div class="products pt-5 declined-products profile-products">
+                        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4">
+                            <#list declinedProducts as dp>
+                                <div class="col">
+                                    <div class="product-card-container">
+                                        <input class="productId" value="${dp.id}" name="productId" hidden>
+                                        <button class="delete-button delete-product"><i class="bi bi-x-lg"></i></button>
+                                        <div class="product-card mb-5">
+                                            <div class="product-image">
+                                                <div class="picture bg-info d-flex">
+                                                    <img src="/uploads/${dp.imagePaths[0]}"
+                                                         alt="фотография объявления">
+                                                </div>
+                                            </div>
+                                            <div class="product-info">
+                                                <div class="category-card">${dp.category}</div>
+                                                <div class="title-card">
+                                                    ${dp.name}
+                                                </div>
+                                                <div class="cost-card"><i class="bi bi-cash-coin "></i>${dp.price}сом
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="product-info">
-                                        <div class="category-card">Sport</div>
-                                        <div class="title-card">
-                                            Lorem, ipsum. Lorem ipsum dolor sit amet
-                                        </div>
-                                        <div class="cost-card"><i class="bi bi-cash-coin "></i>30сом</div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="product-card-container">
-                                <input class="productId" value="1" name="productId" hidden>
-                                <button class="delete-button delete-product"><i class="bi bi-x-lg"></i></button>
-                                <div class="product-card mb-5">
-                                    <div class="product-image">
-                                        <div class="picture bg-info d-flex">
-                                            <img src="https://www.adorama.com/alc/wp-content/uploads/2017/11/shutterstock_114802408.jpg"
-                                                 alt="фотография объявления">
-                                        </div>
-                                    </div>
-                                    <div class="product-info">
-                                        <div class="category-card">Sport</div>
-                                        <div class="title-card">
-                                            Lorem, ipsum. Lorem ipsum dolor sit amet
-                                        </div>
-                                        <div class="cost-card"><i class="bi bi-cash-coin "></i>30сом</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="product-card-container">
-                                <input class="productId" value="1" name="productId" hidden>
-                                <button class="delete-button delete-product"><i class="bi bi-x-lg"></i></button>
-                                <div class="product-card mb-5">
-                                    <div class="product-image">
-                                        <div class="picture bg-info d-flex">
-                                            <img src="https://www.adorama.com/alc/wp-content/uploads/2017/11/shutterstock_114802408.jpg"
-                                                 alt="фотография объявления">
-                                        </div>
-                                    </div>
-                                    <div class="product-info">
-                                        <div class="category-card">Sport</div>
-                                        <div class="title-card">
-                                            Lorem, ipsum. Lorem ipsum dolor sit amet
-                                        </div>
-                                        <div class="cost-card"><i class="bi bi-cash-coin "></i>30сом</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="product-card-container">
-                                <input class="productId" value="1" name="productId" hidden>
-                                <button class="delete-button delete-product"><i class="bi bi-x-lg"></i></button>
-                                <div class="product-card mb-5">
-                                    <div class="product-image">
-                                        <div class="picture bg-info d-flex">
-                                            <img src="https://www.adorama.com/alc/wp-content/uploads/2017/11/shutterstock_114802408.jpg"
-                                                 alt="фотография объявления">
-                                        </div>
-                                    </div>
-                                    <div class="product-info">
-                                        <div class="category-card">Sport</div>
-                                        <div class="title-card">
-                                            Lorem, ipsum. Lorem ipsum dolor sit amet
-                                        </div>
-                                        <div class="cost-card"><i class="bi bi-cash-coin "></i>30сом</div>
-                                    </div>
-                                </div>
-                            </div>
+                            </#list>
+
                         </div>
                     </div>
-                </div>
+                </#if>
+
+                <#if !(activeProducts??) && !(moderatedProducts??) && !(declinedProducts??)>
+                    <div class="not-found-image">
+                        <img src="/images/profile_products.svg" alt="not found">
+                        <p class="fs-4 mt-3">Вы не создали ни одной публикации. <a class="profile-product-link" href="/product/create" style="color:#FFB703;">Создайте публикацию</a></p>
+                    </div>
+                </#if>
+
+
             </section>
             <section id="content2" class="tab-content">
                 <div class="products pt-5  profile-products">
                     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4">
-                        <div class="col">
-                            <div class="product-card-container">
-                                <input class="productId" value="1" name="productId" hidden>
-                                <button class="delete-button delete-fav"><i class="bi bi-x-lg"></i></button>
-                                <a class="product-card mb-5" href="#">
-                                    <div class="product-image">
-                                        <div class="picture bg-info d-flex">
-                                            <img src="https://www.adorama.com/alc/wp-content/uploads/2017/11/shutterstock_114802408.jpg"
-                                                 alt="фотография объявления">
-                                        </div>
+                        <#if favs??>
+                            <#list fav as f>
+                                <div class="col">
+                                    <div class="product-card-container">
+                                        <input class="productId" value="${f.id}" name="productId" hidden>
+                                        <button class="delete-button delete-fav"><i class="bi bi-x-lg"></i></button>
+                                        <a class="product-card mb-5" href="/product/${f.id}">
+                                            <div class="product-image">
+                                                <div class="picture bg-info d-flex">
+                                                    <img src="/uploads/${f.id}" alt="фотография объявления">
+                                                </div>
+                                            </div>
+                                            <div class="product-info">
+                                                <div class="category-card">${f.category}</div>
+                                                <div class="title-card">
+                                                    ${f.name}
+                                                </div>
+                                                <div class="cost-card"><i class="bi bi-cash-coin "></i>${f.price}сом</div>
+                                            </div>
+                                        </a>
                                     </div>
-                                    <div class="product-info">
-                                        <div class="category-card">Sport</div>
-                                        <div class="title-card">
-                                            Lorem, ipsum. Lorem ipsum dolor sit amet
-                                        </div>
-                                        <div class="cost-card"><i class="bi bi-cash-coin "></i>30сом</div>
-                                    </div>
-                                </a>
+                                </div>
+                            </#list>
+                        <#else>
+                            <div class="not-found-image">
+                                <img src="/images/fav.svg" alt="not found">
+                                <p class="fs-4 mt-3">Вы не добавили ни одной публикации в избранные. <a class="profile-product-link" href="/product/create" style="color:#FE6D74;">Добавьте публикацию в избранные</a></p>
                             </div>
-                        </div>
-                        <div class="col">
-                            <div class="product-card-container">
-                                <input class="productId" value="1" name="productId" hidden>
-                                <button class="delete-button delete-fav"><i class="bi bi-x-lg"></i></button>
-                                <a class="product-card mb-5" href="#">
-                                    <div class="product-image">
-                                        <div class="picture bg-info d-flex">
-                                            <img src="https://www.adorama.com/alc/wp-content/uploads/2017/11/shutterstock_114802408.jpg"
-                                                 alt="фотография объявления">
-                                        </div>
-                                    </div>
-                                    <div class="product-info">
-                                        <div class="category-card">Sport</div>
-                                        <div class="title-card">
-                                            Lorem, ipsum. Lorem ipsum dolor sit amet
-                                        </div>
-                                        <div class="cost-card"><i class="bi bi-cash-coin "></i>30сом</div>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="product-card-container">
-                                <input class="productId" value="1" name="productId" hidden>
-                                <button class="delete-button delete-fav"><i class="bi bi-x-lg"></i></button>
-                                <a class="product-card mb-5" href="#">
-                                    <div class="product-image">
-                                        <div class="picture bg-info d-flex">
-                                            <img src="https://www.adorama.com/alc/wp-content/uploads/2017/11/shutterstock_114802408.jpg"
-                                                 alt="фотография объявления">
-                                        </div>
-                                    </div>
-                                    <div class="product-info">
-                                        <div class="category-card">Sport</div>
-                                        <div class="title-card">
-                                            Lorem, ipsum. Lorem ipsum dolor sit amet
-                                        </div>
-                                        <div class="cost-card"><i class="bi bi-cash-coin "></i>30сом</div>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="product-card-container">
-                                <input class="productId" value="1" name="productId" hidden>
-                                <button class="delete-button delete-fav"><i class="bi bi-x-lg"></i></button>
-                                <a class="product-card mb-5" href="#">
-                                    <div class="product-image">
-                                        <div class="picture bg-info d-flex">
-                                            <img src="https://www.adorama.com/alc/wp-content/uploads/2017/11/shutterstock_114802408.jpg"
-                                                 alt="фотография объявления">
-                                        </div>
-                                    </div>
-                                    <div class="product-info">
-                                        <div class="category-card">Sport</div>
-                                        <div class="title-card">
-                                            Lorem, ipsum. Lorem ipsum dolor sit amet
-                                        </div>
-                                        <div class="cost-card"><i class="bi bi-cash-coin "></i>30сом</div>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
+                        </#if>
+
+
                     </div>
                 </div>
             </section>
             <section id="content3" class="tab-content">
                 <div class="container">
-                    <form class="profile-card-form">
+
+                    <form action="/profile" method="post" class="profile-card-form" id="profileForm">
+
+                        <#if _csrf??>
+                            <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
+                                   value="${(_csrf.token)!'--no-token--'}"/>
+                        </#if>
+
+                        <input name="id" value="${user.id}" hidden>
+
                         <div class="profile-input">
-                            <input type="text" class="profile-input-field" value="Alexander Parkinson" required
-                                   minlength="3" />
-                            <label class="profile-input-label">Full name</label>
+                            <input name="name" type="text" class="profile-input-field" value="${(user.lastname)!''}" required />
+                            <label class="profile-input-label">Имя</label>
                         </div>
+
                         <div class="profile-input">
-                            <input type="text" class="profile-input-field" value="vlockn@gmail.com" required />
-                            <label class="profile-input-label">Email</label>
+                            <input name="lastName" type="text" class="profile-input-field" value="${(user.lastname)!''}" required />
+                            <label class="profile-input-label">Фамилия</label>
                         </div>
+
                         <div class="profile-input">
-                            <input type="password" class="profile-input-field" required />
-                            <label class="profile-input-label">Password</label>
+                            <input name="login" type="text" class="profile-input-field" value="${(user.login)!''}" required />
+                            <label class="profile-input-label">Логин</label>
                         </div>
+
+                        <div class="profile-input">
+                            <input name="email" type="email" class="profile-input-field" value="${(user.email)!''}" required />
+                            <label class="profile-input-label">Адрес электронной почты</label>
+                        </div>
+
+                        <div class="profile-input">
+                            <input name="telNumber" type="tel" class="profile-input-field" value="${(user.telNumber)!''}" required />
+                            <label class="profile-input-label">Телефон</label>
+                        </div>
+
                         <div class="action">
-                            <button class="action-button">Сохранить</button>
+                            <button class="action-button" type="submit">Сохранить</button>
                         </div>
                     </form>
+
                 </div>
             </section>
             <section id="content4" class="tab-content">
                 <div class="container">
-                    <form class="profile-card-form">
+                    <form action="/update-password" method="post" class="profile-card-form" id="passwordForm">
+
+                        <#if _csrf??>
+                            <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
+                                   value="${(_csrf.token)!'--no-token--'}"/>
+                        </#if>
+
                         <div class="profile-input">
-                            <input type="text" class="profile-input-field" value="Alexander Parkinson" required
-                                   minlength="3" />
-                            <label class="profile-input-label">Full name</label>
+                            <input name="oldPassword" type="password" class="profile-input-field" required autocomplete="off" />
+                            <label class="profile-input-label">Старый пароль</label>
                         </div>
+
                         <div class="profile-input">
-                            <input type="text" class="profile-input-field" value="vlockn@gmail.com" required />
-                            <label class="profile-input-label">Email</label>
+                            <input name="newPassword" type="password" class="profile-input-field" required autocomplete="off" minlength="8"/>
+                            <label class="profile-input-label">Новый пароль</label>
                         </div>
+
                         <div class="profile-input">
-                            <input type="password" class="profile-input-field" required />
-                            <label class="profile-input-label">Password</label>
+                            <input name="repeatingPassword" type="password" class="profile-input-field" required autocomplete="off" minlength="8"/>
+                            <label class="profile-input-label">Подтверждение пароля</label>
                         </div>
+
                         <div class="action">
-                            <button class="action-button">Сохранить</button>
+                            <button class="action-button" type="submit">Сохранить</button>
                         </div>
+
                     </form>
                 </div>
             </section>
-
-
         </div>
-
     </div>
+
+    <style>
+
+        <#if errorPassword??>
+            openTab(4)
+            showPasswordError(${errorPassword})
+        </#if>
+
+        <#if successPasswordChange??>
+            openTab(4)
+            showSuccessMessage('Пароль успешно изменен!')
+        </#if>
+
+        <#if successProfileChange??>
+            openTab(3)
+            showSuccessMessage('Данные успешно изменены!')
+        </#if>
+
+    </style>
 </@main.renderWith>

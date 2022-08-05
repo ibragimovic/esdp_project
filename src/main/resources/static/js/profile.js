@@ -1,9 +1,28 @@
 let deleteProductButtons = $(".delete-product")
 let deleteFavButtons = $(".delete-fav")
 let upButtons = $(".up-button")
+let profileForm=$("#profileForm")
 
 
 $(document).ready(function () {
+
+    profileForm.trackChanges();
+
+    profileForm.on("submit",(e)=>{
+        let thisForm=e.currentTarget
+
+        if( !(thisForm.isChanged()) ){
+            thisForm.preventDefault()
+
+            Swal.fire({
+                title: 'Данные не были изменены',
+                icon: 'warning',
+                showCloseButton: true,
+                confirmButtonColor: '#6495ED'
+            })
+        }
+    })
+
 
     deleteProductButtons.on("click", (e) => {
         let thisButton = e.currentTarget
@@ -39,7 +58,7 @@ $(document).ready(function () {
                     icon: 'success',
                     title: 'Публикация успешно удалена!',
                     showConfirmButton: false,
-                    timer: 1000
+                    timer: 1200
                 })
             }
         })
@@ -81,7 +100,7 @@ $(document).ready(function () {
                     icon: 'success',
                     title: 'Публикация успешно удалена из избранных!',
                     showConfirmButton: false,
-                    timer: 1000
+                    timer: 1200
                 })
             }
         })
@@ -138,4 +157,42 @@ function getTodaysDate() {
 
     today=`${yyyy}-${mm}-${dd}`
     return today
+}
+
+$.fn.extend({
+    trackChanges: function() {
+        $(":input",this).change(function() {
+            $(this.form).data("changed", true);
+        });
+    }
+    ,
+    isChanged: function() {
+        return this.data("changed");
+    }
+});
+
+function openTab(tabNum){
+    if(tabNum>=1 && tabNum<=4){
+        let tab=document.getElementById("tab"+tabNum)
+        tab.checked=true
+    }
+}
+
+function showPasswordError(errorText){
+    Swal.fire({
+        title: 'Ошибка!',
+        text: errorText,
+        icon: 'error',
+        showCloseButton: true,
+        confirmButtonColor: '#6495ED'
+    })
+}
+
+function showSuccessMessage(message){
+    Swal.fire({
+        icon: 'success',
+        title: message,
+        showConfirmButton: false,
+        timer: 1200
+    })
 }
