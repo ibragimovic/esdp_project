@@ -116,7 +116,6 @@ public class ProductController {
     }
 
 
-
     @PostMapping("/up/product")
     public String upProduct(@RequestParam(name = "id") Long productId) throws ProductNotFoundException {
         productService.upProduct(productId);

@@ -1,7 +1,7 @@
 <#import "partials/admin_template.ftlh" as admin />
 
 <#-- обрабатываем его, и передаём ему список скриптов, которые необходимо подключить-->
-<@admin.renderWith scripts=["js/categories.js"]>
+<@admin.renderWith>
     <body>
     <h2>Работа с категориями</h2>
     <select readonly="on" class="form-control" name="category_id" id="category_id">

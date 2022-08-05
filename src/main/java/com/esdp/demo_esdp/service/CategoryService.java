@@ -1,6 +1,9 @@
 package com.esdp.demo_esdp.service;
 
-import com.esdp.demo_esdp.dto.*;
+import com.esdp.demo_esdp.dto.CategoryDTO;
+import com.esdp.demo_esdp.dto.FilterCategoryDto;
+import com.esdp.demo_esdp.dto.HierarchicalCategoryDTO;
+import com.esdp.demo_esdp.dto.ProductDTO;
 import com.esdp.demo_esdp.entity.Category;
 import com.esdp.demo_esdp.entity.Product;
 import com.esdp.demo_esdp.enums.ProductStatus;
@@ -20,7 +23,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Filter;
 import java.util.stream.Collectors;
 
 @Transactional
@@ -91,32 +93,37 @@ public class CategoryService {
     }
 
 
-    public void createCategory(Long categoryId, CategoryDTO dto) {
+    public boolean createCategory(Long categoryId, CategoryDTO dto) {
         var parrent = categoryRepository.findById(categoryId);
         if (parrent.isPresent()) {
             categoryRepository.save(Category.builder()
                     .name(dto.getName())
                     .parent(parrent.get())
                     .build());
-        } else {
+            return true;
+        } else if (!parrent.isPresent()){
             categoryRepository.save(Category.builder()
                     .name(dto.getName())
                     .parent(null)
                     .build());
-        }
+            return true;
+        }return false;
     }
 
-    public void changeNameCategory(String newName, Long categoryId) throws CategoryNotFoundException {
-        var category = categoryRepository.findById(categoryId);
-        var defaultCategory = categoryRepository.findCategoryByName("Прочее");
+    public boolean changeNameCategory(String newName, Long categoryId) throws CategoryNotFoundException {
+        var category = categoryRepository.findById(categoryId).orElseThrow(() -> new CategoryNotFoundException("Категория не найдена!"));
+        var defaultCategory = categoryRepository.findCategoryByName("Прочее").orElseThrow(() -> new CategoryNotFoundException("Категория не найдена!"));
         if (category.equals(defaultCategory)) {
-            throw new CategoryNotFoundException("Нельзя изменять дефолтную категорию"+ defaultCategory.get().getName());
+            throw new CategoryNotFoundException("Нельзя изменять дефолтную категорию "+ defaultCategory.getName());
         }
-        category.ifPresent(value -> value.setName(newName));
-    }
+        category.setName(newName);
+        categoryRepository.save(category);
+        return true;
+        }
 
 
-    public void deleteCategory(Long categoryId) throws CategoryNotFoundException {
+
+    public boolean deleteCategory(Long categoryId) throws CategoryNotFoundException {
         var category = categoryRepository.findById(categoryId).orElseThrow(() -> new CategoryNotFoundException(""));
         var defaultCategory = categoryRepository.findCategoryByName("Прочее").orElseThrow(() -> new CategoryNotFoundException("Категория не найдена!"));
         if (!category.equals(defaultCategory)) {
@@ -135,29 +142,32 @@ public class CategoryService {
                 }
                 categoryRepository.deleteCategoriesByParentId(category.getId());
                 categoryRepository.delete(category);
+                return true;
             } else {
                 var child = categoryRepository.findCategoriesByParentId(category.getId());
                 productRepository.findProductsByCategory(category.getId()).forEach(p -> productRepository.updateProductCategory(defaultCategory.getId(), p.getId()));
                 child.forEach(p -> productRepository.updateProductCategory(defaultCategory.getId(), p.getId()));
                 categoryRepository.deleteCategoriesByParentId(category.getId());
                 categoryRepository.delete(category);
+                return true;
             }
         } else {
             throw new CategoryNotFoundException("Нельзя удалять категорию"+defaultCategory.getName());
         }
     }
 
-    public void changeSubcategory(Long subCategoryId, Long parentId) throws CategoryNotFoundException {
-        var subCategory = categoryRepository.findById(subCategoryId);
+    public boolean changeSubcategory(Long subCategoryId, Long parentId) throws CategoryNotFoundException {
+        var subCategory = categoryRepository.findById(subCategoryId).orElseThrow(() -> new CategoryNotFoundException("Категория не найдена!"));;
         var category = categoryRepository.findById(parentId);
         var defaultCategory = categoryRepository.findCategoryByName("Прочее");
         if (!subCategory.equals(defaultCategory.get())) {
             if (category.isPresent()) {
-                subCategory.get().setParent(category.get());
+                subCategory.setParent(category.get());
             } else {
-                subCategory.get().setParent(null);
+                subCategory.setParent(null);
             }
-            categoryRepository.save(subCategory.get());
+            categoryRepository.save(subCategory);
+            return true;
         } else
             throw new CategoryNotFoundException("Нельзя изменять дефолтную категорию "+ defaultCategory.get().getName());
     }

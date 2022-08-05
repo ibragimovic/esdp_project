@@ -143,7 +143,7 @@ public class AdminController {
 
 
     @GetMapping("/category")
-    public String changeCategoryNamePage(Model model) {
+    public String categoryPage(Model model) {
         var categories = categoryService.getHierarchicalCategories();
         model.addAttribute("categoriesList", categories);
         return "admin_category";
