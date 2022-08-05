@@ -1,0 +1,343 @@
+.user-email {
+    font-size: 20px;
+}
+
+.user-name {
+    font-size: 40px;
+    color: #FB8501;
+}
+
+.buttons {
+    display: table;
+    /*   height: 100%; */
+    width: 100%;
+    /*   background-color:tomato; */
+    -moz-box-sizing: inherit;
+    box-sizing: inherit;
+    -webkit-transition-property: all;
+    transition-property: all;
+    -webkit-transition-duration: .6s;
+    transition-duration: .6s;
+    -webkit-transition-timing-function: ease;
+    transition-timing-function: ease;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+
+}
+
+.button-container {
+    display: table-cell;
+    padding: 1em;
+    text-align: center;
+    vertical-align: middle;
+
+}
+
+.btnfos {
+    color: #fff;
+    cursor: pointer;
+    display: block;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 45px;
+    max-width: 160px;
+    margin: 0 5em 0 auto;
+    position: relative;
+    text-transform: capitalize;
+    vertical-align: middle;
+    width: 100%;
+    text-decoration: none;
+    /* border: 1px solid; */
+    overflow: hidden;
+    position: relative;
+    background-color: #FFB703;
+    border-radius: 4px;
+    box-shadow: rgba(255, 183, 3, 0.3) 0px 4px 12px;
+}
+
+.btnfos span {
+    z-index: 20;
+}
+
+.btnfos:after {
+    background: #fff;
+    content: "";
+    height: 155px;
+    left: -75px;
+    opacity: .2;
+    position: absolute;
+    top: -50px;
+    width: 50px;
+    -webkit-transition: all 550ms cubic-bezier(0.19, 1, 0.22, 1);
+    transition: all 550ms cubic-bezier(0.19, 1, 0.22, 1);
+    -webkit-transform: rotate(35deg);
+    -ms-transform: rotate(35deg);
+    transform: rotate(35deg);
+    z-index: 1;
+}
+
+.btnfos:hover:after {
+    left: 120%;
+    -webkit-transition: all 550ms cubic-bezier(0.19, 1, 0.22, 1);
+    transition: all 550ms cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.btnfos:hover {
+    color: white
+}
+
+
+
+
+/* tabs style */
+
+.tab_container {
+    width: 90%;
+    margin: 0 auto;
+    padding-top: 70px;
+    position: relative;
+}
+
+.tab_container .tab-input,
+.tab_container section {
+    clear: both;
+    padding-top: 10px;
+    display: none;
+}
+
+.tab_container .tab-label {
+    font-weight: 700;
+    font-size: 18px;
+    display: block;
+    float: left;
+    width: 25%;
+    padding: 1em;
+    color: #757575;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+    background: #f0f0f0;
+    height: 100%;
+}
+
+#tab1:checked~#content1,
+#tab2:checked~#content2,
+#tab3:checked~#content3,
+#tab4:checked~#content4 {
+    display: block;
+    padding: 20px;
+    background: #fff;
+    color: #999;
+    /*   border-bottom: 2px solid #f0f0f0; */
+}
+
+.tab_container .tab-content p,
+.tab_container .tab-content h3 {
+    -webkit-animation: fadeInScale 0.7s ease-in-out;
+    -moz-animation: fadeInScale 0.7s ease-in-out;
+    animation: fadeInScale 0.7s ease-in-out;
+}
+
+.tab_container .tab-content h3 {
+    text-align: center;
+}
+
+.tab_container [id^="tab"]:checked+.tab-label {
+    background: #fff;
+    box-shadow: inset 0 3px #FFB703;
+}
+
+.tab_container [id^="tab"]:checked+.tab-label .tab-icon {
+    color: #FFB703;
+}
+
+.tab_container .tab-label .tab-icon {
+    font-size: 1.3em;
+    margin: 0 0.4em 0 0;
+}
+
+/*Media query*/
+@media only screen and (max-width: 900px) {
+    .tab-label span {
+        display: none;
+    }
+
+    .tab_container {
+        width: 98%;
+    }
+}
+
+/*Content Animation*/
+@keyframes fadeInScale {
+    0% {
+        transform: scale(0.9);
+        opacity: 0;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.product-status {
+    color: black !important;
+    text-align: center;
+    font-size: 18px;
+    letter-spacing: 3px;
+    margin-top: 45px
+}
+
+
+
+.activated {
+    background-color: #93F693;
+    box-shadow: rgba(147, 246, 147, 0.3) 0px 10px 12px;
+}
+
+/* .activated-products .product-card-container:hover::before{
+    background: #57E117 !important;
+} */
+
+.activated-products .product-card-container:hover::after {
+    background: #B4F8C8 !important;
+}
+
+.moderation {
+    background-color: #FFF387;
+    box-shadow: rgba(255, 243, 135, 0.3) 0px 10px 12px;
+}
+
+.moderation-products .product-card-container:hover::after {
+    background: #FFB703 !important;
+}
+
+.declined {
+    background-color: #FE6D74;
+    box-shadow: rgba(254, 109, 116, 0.3) 0px 10px 12px;
+}
+
+.declined-products .product-card-container:hover::after {
+    background: #FE6D74 !important;
+
+}
+
+
+.moderation-products .product-card,
+.declined-products .product-card {
+    cursor: default;
+}
+
+.profile-products .product-card-container {
+    position: relative;
+}
+
+.profile-products .delete-button {
+    position: absolute;
+    z-index: 100;
+    color: white;
+    font-size: 23px;
+    left: auto;
+    right: 10px;
+    top: 10px;
+    background: transparent;
+    border: none;
+    font-weight: bold;
+}
+
+.profile-input {
+    appearance: none;
+    border-radius: 0;
+}
+
+.profile-card-form {
+    padding: 2rem 1rem 0;
+}
+
+.profile-input {
+    display: flex;
+    flex-direction: column-reverse;
+    position: relative;
+    padding-top: 1.5rem;
+}
+
+.profile-input+.profile-input {
+    margin-top: 1.5rem;
+}
+
+.profile-input-label {
+    color: #8597a3;
+    position: absolute;
+    top: 1.5rem;
+    transition: 0.25s ease;
+}
+
+.profile-input-field {
+    border: 0;
+    z-index: 1;
+    background-color: transparent;
+    border-bottom: 2px solid #BABCC3;
+    font: inherit;
+    font-size: 1.125rem;
+    padding: 0.25rem 0;
+}
+
+.profile-input-field:focus,
+.profile-input-field:valid {
+    outline: 0;
+    border-bottom-color: #FB8501;
+}
+
+.profile-input-field:focus+.profile-input-label,
+.profile-input-field:valid+.profile-input-label {
+    color: #FB8501;
+    transform: translateY(-1.5rem);
+}
+
+.action {
+    max-width: 400px;
+    margin: 2rem auto 0 auto
+}
+
+.action-button {
+    font: inherit;
+    font-size: 1.25rem;
+    padding: 1em;
+    width: 100%;
+    font-weight: 500;
+    background-color: #FFB703;
+    border-radius: 6px;
+    color: #FFF;
+    border: 0;
+}
+
+.action-button:focus {
+    outline: 0;
+}
+
+.activated-products .product-card {
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.activated-products a {
+    text-decoration: none;
+    color: black
+}
+
+.activated-products .up-button {
+    background-color: cornflowerblue;
+    color: white;
+    text-transform: uppercase;
+    font-size: 18px;
+    padding: 7px 0;
+    margin-top: 8px
+}
+
+.activated-products .up-button:hover {
+    background-color: rgb(75, 130, 234);
+}
+
+.swal2-popup .swal2-styled:focus {
+    box-shadow: none !important;
+}
