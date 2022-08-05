@@ -113,22 +113,25 @@ public class ProductService {
         throw new ResourceNotFoundException();
     }
 
-    public void addProductToTop(Long productId, Integer hour) throws ProductNotFoundException {
+    public boolean addProductToTop(Long productId, Integer hour) throws ProductNotFoundException {
         var product = productRepository.findById(productId).orElseThrow(() -> new ProductNotFoundException("Не найден продукт с id " + productId));
-        if (product.getEndOfPayment().isAfter(LocalDateTime.now())) {
+        if (product.getEndOfPayment().isAfter(LocalDateTime.now()) || product.getEndOfPayment().isEqual(LocalDateTime.now())) {
             productRepository.updateProductEndOfPayment(product.getEndOfPayment().plusHours(hour), product.getId());
+            return true;
         } else if (product.getEndOfPayment().isBefore(LocalDateTime.now())) {
             productRepository.updateProductEndOfPayment(LocalDateTime.now().plusHours(hour), product.getId());
+            return true;
         }
+        return false;
     }
 
-    public void upProduct(Long productId) throws ProductNotFoundException {
+    public boolean upProduct(Long productId) throws ProductNotFoundException {
         var product = productRepository.findById(productId).orElseThrow(() -> new ProductNotFoundException("Не найден продукт с id " + productId));
         if (product.getUp().getDayOfYear() != LocalDateTime.now().getDayOfYear()) {
             productRepository.updateProductUpToTop(LocalDateTime.now(), product.getId());
-        } else {
+            return true;
+        } else
             throw new ProductNotFoundException("Вы достигли максимального количества возможности делать UP!");
-        }
     }
 
     public Page<ProductDTO> getProductsCategory(Long id, Pageable pageable) {
