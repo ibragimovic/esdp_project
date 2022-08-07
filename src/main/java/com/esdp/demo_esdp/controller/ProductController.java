@@ -3,6 +3,7 @@ package com.esdp.demo_esdp.controller;
 import com.esdp.demo_esdp.dto.FavoritesJson;
 import com.esdp.demo_esdp.dto.FilterProductDto;
 import com.esdp.demo_esdp.dto.ProductAddForm;
+import com.esdp.demo_esdp.dto.ProductIdDto;
 import com.esdp.demo_esdp.entity.User;
 import com.esdp.demo_esdp.exception.CategoryNotFoundException;
 import com.esdp.demo_esdp.exception.ProductNotFoundException;
@@ -62,8 +63,8 @@ public class ProductController {
 
     @PostMapping("/profile/product/delete")
     @ResponseBody
-    public ResponseEntity<Void>  deleteProfileProductById(@RequestParam Long productId) throws ProductNotFoundException {
-        productService.deleteProductById(productId);
+    public ResponseEntity<Void>  deleteProfileProductById(@RequestBody ProductIdDto p) throws ProductNotFoundException {
+        productService.deleteProductById(p.getProductId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -128,8 +129,8 @@ public class ProductController {
 
     @PostMapping("/up/product")
     @ResponseBody
-    public ResponseEntity<Void>  upProduct(@RequestParam Long productId) throws ProductNotFoundException {
-        productService.upProduct(productId);
+    public ResponseEntity<Void>  upProduct(@RequestBody ProductIdDto p) throws ProductNotFoundException {
+        productService.upProduct(p.getProductId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

@@ -1,28 +1,18 @@
 let deleteProductButtons = $(".delete-product")
 let deleteFavButtons = $(".delete-fav")
 let upButtons = $(".up-button")
-let profileForm=$("#profileForm")
+let openTabNum=document.getElementById("openTab").value
+let errorPassword=document.getElementById("errorPassword").value
+let successProfileChange=document.getElementById("successProfileChange").value
+let successPasswordChange=document.getElementById("successPasswordChange").value
 
 
 $(document).ready(function () {
 
-    profileForm.trackChanges();
-
-    profileForm.on("submit",(e)=>{
-        let thisForm=e.currentTarget
-
-        if( !(thisForm.isChanged()) ){
-            thisForm.preventDefault()
-
-            Swal.fire({
-                title: 'Данные не были изменены',
-                icon: 'warning',
-                showCloseButton: true,
-                confirmButtonColor: '#6495ED'
-            })
-        }
-    })
-
+    openTab(openTabNum)
+    showPasswordError(errorPassword)
+    showSuccessMessage(successProfileChange)
+    showSuccessMessage(successPasswordChange)
 
     deleteProductButtons.on("click", (e) => {
         let thisButton = e.currentTarget
@@ -54,6 +44,9 @@ $(document).ready(function () {
                 })
 
                 productCol.remove()
+
+                formatProducts()
+
                 Swal.fire({
                     icon: 'success',
                     title: 'Публикация успешно удалена!',
@@ -179,20 +172,35 @@ function openTab(tabNum){
 }
 
 function showPasswordError(errorText){
-    Swal.fire({
-        title: 'Ошибка!',
-        text: errorText,
-        icon: 'error',
-        showCloseButton: true,
-        confirmButtonColor: '#6495ED'
-    })
+    if(errorText.length>0){
+        Swal.fire({
+            title: 'Ошибка!',
+            text: errorText,
+            icon: 'error',
+            showCloseButton: true,
+            confirmButtonColor: '#6495ED'
+        })
+    }
 }
 
 function showSuccessMessage(message){
-    Swal.fire({
-        icon: 'success',
-        title: message,
-        showConfirmButton: false,
-        timer: 1200
-    })
+    if(message.length>0){
+        Swal.fire({
+            icon: 'success',
+            title: message,
+            showConfirmButton: false,
+            timer: 1200
+        })
+    }
+}
+
+function formatProducts(){
+    let productStatusTitle=document.getElementsByClassName("product-status")
+
+    for(let title of productStatusTitle){
+        let productsCount=title.nextElementSibling.firstElementChild.childElementCount
+        if(productsCount===0){
+            title.style.display="none";
+        }
+    }
 }

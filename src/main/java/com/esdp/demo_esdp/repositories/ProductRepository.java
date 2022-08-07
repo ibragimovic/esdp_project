@@ -76,8 +76,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     List<Product> findProductsByCategoryIdAndStatus(Long id, ProductStatus status);
 
-    @Query("select p from Product p where p.category.id = :catId and not (p.id= :productId)")
-    List<Product> getSimilarProducts(Long catId, Long productId);
+    @Query("select p from Product p where p.category.id = :catId and not (p.id= :productId) and p.status=:productStatus ")
+    List<Product> getSimilarProducts(Long catId, Long productId, ProductStatus productStatus);
 
     @Query("select p from Product p " +
             "where upper(p.status) = :status and p.category.id = :categoryId and " +
@@ -125,5 +125,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                                     @Param("locality") String locality, @Param("categoryId") Long categoryId,
                                     Pageable pageable);
 
+    @Query("select p from Product p where lower(p.user.email) =  :userEmail and p.status = :status order by p.dateAdd desc")
+    List<Product> getUserProductsByStatus(String userEmail, ProductStatus status);
 
 }

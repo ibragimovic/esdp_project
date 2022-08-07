@@ -2,7 +2,10 @@ package com.esdp.demo_esdp.controller;
 
 import com.esdp.demo_esdp.dto.UpdatePasswordDTO;
 import com.esdp.demo_esdp.dto.UserRegisterForm;
+import com.esdp.demo_esdp.dto.UserResponseDTO;
 import com.esdp.demo_esdp.dto.UserUpdateForm;
+import com.esdp.demo_esdp.enums.ProductStatus;
+import com.esdp.demo_esdp.service.FavoritesService;
 import com.esdp.demo_esdp.service.ProductService;
 import com.esdp.demo_esdp.service.PropertiesService;
 import com.esdp.demo_esdp.service.UserService;
@@ -16,6 +19,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.support.RequestContextUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolationException;
@@ -24,6 +28,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.security.Principal;
+import java.util.Map;
 
 @Validated
 @Controller
@@ -34,6 +39,7 @@ public class UserController {
     private final UserService userService;
     private final ProductService productService;
     private final PropertiesService propertiesService;
+    private final FavoritesService favoritesService;
 
 
     @GetMapping("/phone")
@@ -50,25 +56,61 @@ public class UserController {
         return "redirect:/product/create";
     }
 
+//    @GetMapping("/profile")
+//    public String pageCustomerProfile(Model model, Authentication authentication,
+//                                      Pageable pageable, HttpServletRequest uriBuilder) {
+//        String email = userService.getEmailFromAuthentication(authentication);
+//        var user = userService.getByEmail(email);
+//        model.addAttribute("dto", user);
+//        model.addAttribute("userPassword", new UpdatePasswordDTO());
+//        var uri = uriBuilder.getRequestURI();
+//        var products = productService.getProductsUser(email, pageable);
+//        propertiesService.fillPaginationDataModel(products, "products",
+//                propertiesService.getDefaultPageSize(), model, uri);
+//        return "profile";
+//    }
+
     @GetMapping("/profile")
-    public String pageCustomerProfile(Model model, Authentication authentication,
-                                      Pageable pageable, HttpServletRequest uriBuilder) {
+    public String pageCustomerProfile(Model model, Authentication authentication,HttpServletRequest request) {
         String email = userService.getEmailFromAuthentication(authentication);
-        var user = userService.getByEmail(email);
-        model.addAttribute("dto", user);
-        model.addAttribute("userPassword", new UpdatePasswordDTO());
-        var uri = uriBuilder.getRequestURI();
-        var products = productService.getProductsUser(email, pageable);
-        propertiesService.fillPaginationDataModel(products, "products",
-                propertiesService.getDefaultPageSize(), model, uri);
-        return "profile";
+        UserResponseDTO user = userService.getByEmail(email);
+
+        model.addAttribute("user", user);
+        model.addAttribute("activeProducts",productService.getUserProductsByStatus(email, ProductStatus.ACCEPTED));
+        model.addAttribute("moderatedProducts",productService.getUserProductsByStatus(email, ProductStatus.MODERNIZATION));
+        model.addAttribute("declinedProducts",productService.getUserProductsByStatus(email, ProductStatus.DECLINED));
+        model.addAttribute("favs",favoritesService.getUsersFav(email));
+
+        Map<String, ?> inputFlashMap = RequestContextUtils.getInputFlashMap(request);
+        if (inputFlashMap != null) {
+            model.addAttribute("successProfileChange", inputFlashMap.get("successProfileChange"));
+            model.addAttribute("openTab", inputFlashMap.get("openTab"));
+            model.addAttribute("errorPassword",inputFlashMap.get("errorPassword"));
+        }
+
+        return "profile_";
     }
 
     @PostMapping("/profile")
-    public String updateUserProfile(@Valid UserUpdateForm userRequestDto,
+    public String updateUserProfile(HttpServletRequest request,
+                                    @Valid UserUpdateForm userRequestDto,
                                     RedirectAttributes attributes) {
-        attributes.addFlashAttribute("dto", userRequestDto);
         userService.update(userRequestDto);
+        attributes.addFlashAttribute("successProfileChange", "Данные успешно изменены");
+        attributes.addFlashAttribute("openTab", 3);
+        return "redirect:/profile";
+    }
+
+    @PostMapping("/update-password")
+    public String updatePassword(HttpServletRequest request,Principal principal,
+                                 @Valid UpdatePasswordDTO updatePasswordDTO,
+                                 RedirectAttributes attributes) {
+        String errorMessage=userService.updateUserPassword(principal.getName(), updatePasswordDTO);
+        attributes.addFlashAttribute("errorPassword", errorMessage);
+        if(errorMessage==null){
+            attributes.addFlashAttribute("successPasswordChange","Пароль успешно изменен");
+        }
+        attributes.addFlashAttribute("openTab",4);
         return "redirect:/profile";
     }
 
@@ -109,13 +151,7 @@ public class UserController {
     }
 
 
-    @PostMapping("update-password")
-    public String updatePassword(Principal principal, @Valid UpdatePasswordDTO updatePasswordDTO,
-                                 RedirectAttributes attributes) {
-        attributes.addFlashAttribute("errorPassword", userService.updateUserPassword(principal.getName(),
-                updatePasswordDTO));
-        return "redirect:/profile";
-    }
+
 
 
     @GetMapping("/password-recovery")

@@ -23,8 +23,8 @@ public class FavoritesController {
     }
 
     @PostMapping("/fav/delete")
-    public ResponseEntity<Void> deleteFav(@RequestParam Long productId,@RequestParam String userEmail) throws ProductNotFoundException {
-        favoritesService.removeFromFavorites(userEmail,productId);
+    public ResponseEntity<Void> deleteFav(@RequestBody FavoritesJson f) throws ProductNotFoundException {
+        favoritesService.removeFromFavorites(f.getUserEmail(),f.getProductId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

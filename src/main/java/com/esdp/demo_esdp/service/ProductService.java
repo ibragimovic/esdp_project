@@ -184,7 +184,7 @@ public class ProductService {
         Category currentCategory = productCategory;
 
         while (true) {
-            similarProducts = productRepository.getSimilarProducts(currentCategory.getId(), id);
+            similarProducts = productRepository.getSimilarProducts(currentCategory.getId(), id, ProductStatus.ACCEPTED);
             if (similarProducts.isEmpty()) {
                 currentCategory = currentCategory.getParent();
                 if (currentCategory == null) {
@@ -309,5 +309,11 @@ public class ProductService {
                         .price(p.getPrice())
                         .imagePaths(imagesService.getImagesPathsByProductId(p.getId()))
                         .build());
+    }
+
+    public List<ProductDTO> getUserProductsByStatus(String userEmail,ProductStatus status){
+        return productRepository.getUserProductsByStatus(userEmail, status).stream()
+                .map(p->ProductDTO.fromImage(p,imagesService.getImagesPathsByProductId(p.getId()))).collect(Collectors.toList());
+
     }
 }
