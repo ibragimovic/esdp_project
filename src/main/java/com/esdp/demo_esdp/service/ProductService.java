@@ -89,6 +89,15 @@ public class ProductService {
         return "profile";
     }
 
+    public void deleteProductById(Long productId) throws ProductNotFoundException {
+        if(productRepository.findById(productId).isEmpty()){
+            throw new ProductNotFoundException(String.format("publication with id %s was not found",productId));
+        }
+        imagesService.deleteImagesFile(productId);
+        favoritesService.deleteFavoritesByProductId(productId);
+        productRepository.deleteById(productId);
+    }
+
     public Page<ProductDTO> getProductsAll(Pageable pageable) {
         return builderProductDTO(productRepository.findAll(pageable));
     }
@@ -126,13 +135,13 @@ public class ProductService {
         return false;
     }
 
-    public boolean upProduct(Long productId) throws ProductNotFoundException {
+    public void upProduct(Long productId) throws ProductNotFoundException {
         var product = productRepository.findById(productId).orElseThrow(() -> new ProductNotFoundException("Не найден продукт с id " + productId));
-        if (product.getUp().getDayOfYear() != LocalDateTime.now().getDayOfYear()) {
+        LocalDateTime today=LocalDateTime.now();
+        LocalDateTime productUpDate=product.getUp();
+        if ( (productUpDate.getDayOfYear() != today.getDayOfYear()) && (productUpDate.getYear()!=today.getYear())) {
             productRepository.updateProductUpToTop(LocalDateTime.now(), product.getId());
-            return true;
-        } else
-            throw new ProductNotFoundException("Вы достигли максимального количества возможности делать UP!");
+        }
     }
 
     public Page<ProductDTO> getProductsCategory(Long id, Pageable pageable) {
@@ -175,7 +184,7 @@ public class ProductService {
         Category currentCategory = productCategory;
 
         while (true) {
-            similarProducts = productRepository.getSimilarProducts(currentCategory.getId(), id);
+            similarProducts = productRepository.getSimilarProducts(currentCategory.getId(), id, ProductStatus.ACCEPTED);
             if (similarProducts.isEmpty()) {
                 currentCategory = currentCategory.getParent();
                 if (currentCategory == null) {
@@ -300,5 +309,11 @@ public class ProductService {
                         .price(p.getPrice())
                         .imagePaths(imagesService.getImagesPathsByProductId(p.getId()))
                         .build());
+    }
+
+    public List<ProductDTO> getUserProductsByStatus(String userEmail,ProductStatus status){
+        return productRepository.getUserProductsByStatus(userEmail, status).stream()
+                .map(p->ProductDTO.fromImage(p,imagesService.getImagesPathsByProductId(p.getId()))).collect(Collectors.toList());
+
     }
 }

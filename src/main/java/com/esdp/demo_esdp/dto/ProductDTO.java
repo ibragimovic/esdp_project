@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Data
@@ -23,6 +24,7 @@ public class ProductDTO {
     private LocalDateTime up_to_top;
     private String localities;
     private List<String> imagePaths;
+    private String upDateString;
 
     public static ProductDTO from(Product product) {
         return builder()
@@ -54,6 +56,7 @@ public class ProductDTO {
                 .localities(product.getLocalities())
                 .up_to_top(product.getUp())
                 .imagePaths(image)
+                .upDateString(product.getUp().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
                 .build();
     }
 }

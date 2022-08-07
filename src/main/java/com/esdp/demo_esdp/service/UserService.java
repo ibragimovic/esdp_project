@@ -76,13 +76,12 @@ public class UserService {
         return userRepository.existsByEmail(email);
     }
 
-    public UserResponseDTO update(UserUpdateForm form) {
+    public void update(UserUpdateForm form) {
         if (!userRepository.existsById(form.getId())) {
             throw new UserNotFoundException();
         }
         userRepository.updateUserData(form.getName(), form.getLastName(), form.getEmail(), form.getTelNumber(), form.getLogin(), form.getId());
-        var user = userRepository.findById(form.getId()).get();
-        return UserResponseDTO.from(user);
+
     }
 
     public UserResponseDTO getByEmail(String email) {
@@ -147,12 +146,16 @@ public class UserService {
     }
 
 
-    public Boolean updateUserPassword(String email, UpdatePasswordDTO updatePasswordDTO) {
+    public String updateUserPassword(String email, UpdatePasswordDTO updatePasswordDTO) {
         User user = getUserEmail(email);
-        if (!doPasswordsMatch(updatePasswordDTO.getOldPassword(), user.getPassword())) return false;
-        if (!updatePasswordDTO.getNewPassword().equals(updatePasswordDTO.getRepeatingPassword())) return false;
+        if (!doPasswordsMatch(updatePasswordDTO.getOldPassword(), user.getPassword())) {
+            return "Неверно указан старый пароль";
+        }
+        if (!updatePasswordDTO.getNewPassword().equals(updatePasswordDTO.getRepeatingPassword())){
+            return "Пароли не совпадают";
+        }
         userRepository.updateUserPassword(encoder.encode(updatePasswordDTO.getNewPassword()), user.getId());
-        return true;
+        return null;
     }
 
     public String getEmailFromAuthentication(Authentication authentication) {

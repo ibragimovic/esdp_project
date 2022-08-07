@@ -2,6 +2,7 @@ package com.esdp.demo_esdp.service;
 
 import com.esdp.demo_esdp.dto.FavoritesDTO;
 import com.esdp.demo_esdp.dto.FavoritesJson;
+import com.esdp.demo_esdp.dto.ProductDTO;
 import com.esdp.demo_esdp.dto.SimilarProductDto;
 import com.esdp.demo_esdp.entity.Favorites;
 import com.esdp.demo_esdp.entity.Product;
@@ -29,6 +30,7 @@ public class FavoritesService {
     private final FavoritesRepository favoritesRepository;
     private final ProductRepository productRepository;
     private final ImagesRepository imagesRepository;
+    private final ImagesService imagesService;
 
 
     public List<FavoritesDTO> getFavoritesUser(String email) throws ProductNotFoundException {
@@ -44,16 +46,9 @@ public class FavoritesService {
         return favoritesList;
     }
 
-
-    public void addToFavorites(Long userId, Product product) {
-        User user = findUserById(userId);
-        Optional<Favorites> favoritesOpt = favoritesRepository.findByUserAndProduct(user, product);
-        if (favoritesOpt.isEmpty()) {
-            favoritesRepository.save(Favorites.builder()
-                    .user(user)
-                    .product(product)
-                    .build());
-        }
+    public List<ProductDTO> getUsersFav(String email){
+        return favoritesRepository.getFavProducts(email,ProductStatus.ACCEPTED).stream()
+                .map(p->ProductDTO.fromImage(p,imagesService.getImagesPathsByProductId(p.getId()))).collect(Collectors.toList());
     }
 
 
@@ -70,13 +65,6 @@ public class FavoritesService {
         }
     }
 
-    public void removeFromFavorites(Long userId, Product product) {
-        User user = findUserById(userId);
-        Optional<Favorites> favoritesOpt = favoritesRepository.findByUserAndProduct(user, product);
-        if (favoritesOpt.isPresent()) {
-            favoritesRepository.delete(favoritesOpt.get());
-        }
-    }
 
     public void removeFromFavorites(String userEmail, Long productId) throws ProductNotFoundException {
         User user = userRepository.findByEmail(userEmail).orElseThrow(UserNotFoundException::new);

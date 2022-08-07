@@ -1,7 +1,9 @@
 package com.esdp.demo_esdp.controller;
 
+import com.esdp.demo_esdp.dto.FavoritesJson;
 import com.esdp.demo_esdp.dto.FilterProductDto;
 import com.esdp.demo_esdp.dto.ProductAddForm;
+import com.esdp.demo_esdp.dto.ProductIdDto;
 import com.esdp.demo_esdp.entity.User;
 import com.esdp.demo_esdp.exception.CategoryNotFoundException;
 import com.esdp.demo_esdp.exception.ProductNotFoundException;
@@ -10,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -55,6 +59,13 @@ public class ProductController {
         String email = userService.getEmailFromAuthentication(authentication);
         var uri = productService.deleteProductById(productId, email);
         return "redirect:/" + uri;
+    }
+
+    @PostMapping("/profile/product/delete")
+    @ResponseBody
+    public ResponseEntity<Void>  deleteProfileProductById(@RequestBody ProductIdDto p) throws ProductNotFoundException {
+        productService.deleteProductById(p.getProductId());
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/search")
@@ -117,10 +128,12 @@ public class ProductController {
 
 
     @PostMapping("/up/product")
-    public String upProduct(@RequestParam(name = "id") Long productId) throws ProductNotFoundException {
-        productService.upProduct(productId);
-        return "redirect:/";
+    @ResponseBody
+    public ResponseEntity<Void>  upProduct(@RequestBody ProductIdDto p) throws ProductNotFoundException {
+        productService.upProduct(p.getProductId());
+        return new ResponseEntity<>(HttpStatus.OK);
     }
+
 
     @GetMapping("/product/{id}")
     public String seeProductDetails(Model model, @PathVariable Long id, Authentication authentication) throws ProductNotFoundException {
