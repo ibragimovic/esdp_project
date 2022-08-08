@@ -70,4 +70,19 @@ class ProductServiceTest {
 
     }
 
+    @Test
+    void getMainProductsListByName() {
+        String name = "test";
+        Pageable page = PageRequest.of(2, 10, Sort.unsorted());
+        List<Product> productsList = new ArrayList<>();
+        Page<Product> productsPageResponce = new PageImpl(productsList);
+        when(productRepository.getProductListByName(name, ProductStatus.ACCEPTED, page)).thenReturn(productsPageResponce);
+        var products = productService.getMainProductsListByName(name, page);
+        for (int i = 0; i < products.getContent().size(); i++) {
+            assertTrue(name.equals(products.getContent().get(i).getName()) || name.equals(productsPageResponce.getContent().get(i).getDescription()));
+        }
+        assertNotNull(products);
+        verify(productRepository).getProductListByName(name, ProductStatus.ACCEPTED, page);
+    }
+
 }
