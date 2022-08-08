@@ -163,4 +163,33 @@ class ProductServiceTest {
     }
 
 
+    @Test
+    void addProductToTop() throws ProductNotFoundException {
+        int hours = 24;
+        var product = mock(Product.class);
+        when(productRepository.findById(ID)).thenReturn(Optional.of(product));
+        when(product.getEndOfPayment()).thenReturn(LocalDateTime.now());
+        when(product.getId()).thenReturn(ID);
+
+        var isAddToTop = productService.addProductToTop(product.getId(), hours);
+
+        assertTrue(isAddToTop);
+        verify(productRepository).findById(product.getId());
+    }
+
+
+    @Test
+    void upProduct() throws ProductNotFoundException {
+        var product = mock(Product.class);
+        when(productRepository.findById(ID)).thenReturn(Optional.of(product));
+        when(product.getUp()).thenReturn(LocalDateTime.now().minusDays(1));
+        when(product.getId()).thenReturn(ID);
+
+        var isUped = productService.upProduct(product.getId());
+        assertTrue(isUped);
+        assertTrue(product.getUp().getDayOfYear() != LocalDateTime.now().getDayOfYear());
+        verify(productRepository).findById(product.getId());
+    }
+
+
 }
