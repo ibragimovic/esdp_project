@@ -148,5 +148,19 @@ class ProductServiceTest {
         verify(productRepository).getProductsUser(user.getEmail(), page);
     }
 
+    @Test
+    void getProductsStatus() {
+        Pageable page = PageRequest.of(2, 10, Sort.unsorted());
+        List<Product> productsList = new ArrayList<>();
+        Page<Product> productsPageResponce = new PageImpl(productsList);
+        when(productRepository.getProductsStatus(ProductStatus.DECLINED, page)).thenReturn(productsPageResponce);
+        var products = productService.getProductsStatus(ProductStatus.DECLINED.name(), page);
+        assertNotNull(products);
+        for (int i = 0; i < products.getContent().size(); i++) {
+            assertTrue(ProductStatus.ACCEPTED.name().equals(products.getContent().get(i).getStatus()));
+        }
+        verify(productRepository).getProductsStatus(ProductStatus.DECLINED, page);
+    }
+
 
 }
