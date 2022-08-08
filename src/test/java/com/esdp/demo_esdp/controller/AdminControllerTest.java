@@ -102,7 +102,6 @@ class AdminControllerTest {
         adminController.createCategory(null, categoryDTO);
         assertNotNull(categoryDTO);
 
-
     }
 
     @Test

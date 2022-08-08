@@ -1,12 +1,9 @@
 package com.esdp.demo_esdp.service;
 
-import com.esdp.demo_esdp.dto.ProductAddForm;
 import com.esdp.demo_esdp.entity.Category;
-import com.esdp.demo_esdp.entity.Images;
 import com.esdp.demo_esdp.entity.Product;
 import com.esdp.demo_esdp.entity.User;
 import com.esdp.demo_esdp.enums.ProductStatus;
-import com.esdp.demo_esdp.exception.CategoryNotFoundException;
 import com.esdp.demo_esdp.exception.ProductNotFoundException;
 import com.esdp.demo_esdp.exception.ResourceNotFoundException;
 import com.esdp.demo_esdp.repositories.CategoryRepository;
@@ -19,14 +16,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.data.domain.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -41,6 +35,12 @@ class ProductServiceTest {
     @Autowired
     ProductService productService;
 
+    @Autowired
+    ImagesService imagesService;
+
+    @Autowired
+    FavoritesService favoritesService;
+
     @MockBean
     ProductRepository productRepository;
 
@@ -53,64 +53,115 @@ class ProductServiceTest {
     @MockBean
     ImagesRepository imagesRepository;
 
+
     @Test
     void getProductName() {
-//        Pageable page = PageRequest.of(2,10);
-//        String name = "test";
-//        var product  = mock(Product.class);
-//        when(product.getName()).thenReturn("Test");
-//        when(productRepository.getProductName(name, ProductStatus.ACCEPTED,page)).getMock();
-//        var products = productService.getProductName(name.toLowerCase(),page);
-//            assertEquals(name.toLowerCase(),product.getName());
+        String name = "test";
+        Pageable page = PageRequest.of(2, 10, Sort.unsorted());
+        List<Product> products = new ArrayList<>();
+        Page<Product> productsPageResponce = new PageImpl(products);
+        when(productRepository.getProductName(name, ProductStatus.ACCEPTED, page)).thenReturn(productsPageResponce);
+        var productList = productService.getProductName(name, page);
+        assertNotNull(productList.getContent());
+        for (int i = 0; i < productList.getContent().size(); i++) {
+            assertTrue(name.toLowerCase().equalsIgnoreCase(productList.getContent().get(i).getName()));
+        }
+        verify(productRepository).getProductName(name, ProductStatus.ACCEPTED, page);
 
     }
 
     @Test
     void getMainProductsListByName() {
+        String name = "test";
+        Pageable page = PageRequest.of(2, 10, Sort.unsorted());
+        List<Product> productsList = new ArrayList<>();
+        Page<Product> productsPageResponce = new PageImpl(productsList);
+        when(productRepository.getProductListByName(name, ProductStatus.ACCEPTED, page)).thenReturn(productsPageResponce);
+        var products = productService.getMainProductsListByName(name, page);
+        for (int i = 0; i < products.getContent().size(); i++) {
+            assertTrue(name.equals(products.getContent().get(i).getName()) || name.equals(productsPageResponce.getContent().get(i).getDescription()));
+        }
+        assertNotNull(products);
+        verify(productRepository).getProductListByName(name, ProductStatus.ACCEPTED, page);
     }
 
     @Test
     void getProducts() {
+        Pageable page = PageRequest.of(2, 10, Sort.unsorted());
+        List<Product> productsList = new ArrayList<>();
+        Page<Product> productsPageResponce = new PageImpl(productsList);
+        when(productRepository.getProducts(ProductStatus.ACCEPTED, page)).thenReturn(productsPageResponce);
+        var products = productService.getProducts(page);
+        assertNotNull(products);
+        for (int i = 0; i < products.getContent().size(); i++) {
+            assertTrue(productsPageResponce.getContent().get(i).getStatus().equals(ProductStatus.ACCEPTED));
+        }
+        verify(productRepository).getProducts(ProductStatus.ACCEPTED, page);
+
     }
 
     @Test
     void addNewProduct() throws ResourceNotFoundException {
-//        var category = mock(Category.class);
-//        when(categoryRepository.getCategory(ID)).thenReturn(Optional.of(category));
-//        when(category.getId()).thenReturn(ID);
-//
-//        var images = mock(MultipartFile.class);
-//
-//        var user = mock(User.class);
-//        ProductAddForm product = new ProductAddForm("test",ID,"test publications",125, List.of(images),"Бишкек");
-//
-//
-//        assertThrows(ResourceNotFoundException.class, () -> productService.addNewProduct(product, user));
-//
-//        var isCreated = productService.addNewProduct(product, user);
-//        assertTrue(isCreated);
-
     }
 
     @Test
     void deleteProductById() {
+        var user = mock(User.class);
+        when(userRepository.findByEmail("test@test.test")).thenReturn(Optional.of(user));
+        when(user.getEmail()).thenReturn("test@test.test");
+        when(user.getRole()).thenReturn("Admin");
+        var product = mock(Product.class);
+        when(product.getId()).thenReturn(ID);
+        var isDeleted = productService.deleteProductById(product.getId(), user.getEmail());
+        imagesService.deleteImagesFile(ID);
+        favoritesService.deleteFavoritesByProductId(product.getId());
+        productRepository.deleteById(product.getId());
+        assertEquals("admin", isDeleted);
+        verify(productRepository).getPublicationUserEmail(ID);
     }
 
     @Test
     void getProductsAll() {
-    }
+        Pageable page = PageRequest.of(2, 10, Sort.unsorted());
+        List<Product> productsList = new ArrayList<>();
+        Page<Product> productsPageResponce = new PageImpl(productsList);
+        when(productRepository.findAll(page)).thenReturn(productsPageResponce);
+        var products = productService.getProductsAll(page);
+        assertNotNull(products);
+        verify(productRepository).findAll(page);
 
-    @Test
-    void updateProductStatusId() {
     }
 
     @Test
     void getProductsUser() {
+        Pageable page = PageRequest.of(2, 10, Sort.unsorted());
+        List<Product> productsList = new ArrayList<>();
+        Page<Product> productsPageResponce = new PageImpl(productsList);
+        var user = mock(User.class);
+        when(user.getEmail()).thenReturn("test@test.test");
+        when(productRepository.getProductsUser(user.getEmail(), page)).thenReturn(productsPageResponce);
+        var products = productService.getProductsUser(user.getEmail(), page);
+        assertNotNull(products);
+        for (int i = 0; i < products.getContent().size(); i++) {
+            assertTrue(user.getEmail().equals(products.getContent().get(i).getUser().getEmail()));
+        }
+        verify(productRepository).getProductsUser(user.getEmail(), page);
     }
 
     @Test
     void getProductsStatus() {
+        Pageable page = PageRequest.of(2, 10, Sort.unsorted());
+        List<Product> productsList = new ArrayList<>();
+        Page<Product> productsPageResponce = new PageImpl(productsList);
+        when(productRepository.getProductsStatus(ProductStatus.DECLINED, page)).thenReturn(productsPageResponce);
+        var products = productService.getProductsStatus(ProductStatus.DECLINED.name(), page);
+        assertNotNull(products);
+        for (int i = 0; i < products.getContent().size(); i++) {
+            assertTrue(ProductStatus.ACCEPTED.name().equals(products.getContent().get(i).getStatus()));
+        }
+        verify(productRepository).getProductsStatus(ProductStatus.DECLINED, page);
     }
+
 
     @Test
     void addProductToTop() throws ProductNotFoundException {
@@ -125,6 +176,7 @@ class ProductServiceTest {
         assertTrue(isAddToTop);
         verify(productRepository).findById(product.getId());
     }
+
 
     @Test
     void upProduct() throws ProductNotFoundException {
@@ -141,10 +193,23 @@ class ProductServiceTest {
 
     @Test
     void getProductsCategory() {
+        Pageable page = PageRequest.of(2, 10, Sort.unsorted());
+        List<Product> productsList = new ArrayList<>();
+        Page<Product> productsPageResponce = new PageImpl(productsList);
+        var category = mock(Category.class);
+        when(category.getId()).thenReturn(ID);
+        when(productRepository.getProductsCategory(category.getId(),page)).thenReturn(productsPageResponce);
+        var productsByCategory = productService.getProductsCategory(category.getId(),page);
+        assertNotNull(productsByCategory);
+        for (int i = 0; i < productsByCategory.getContent().size(); i++) {
+            assertTrue(category.getId().equals(productsList.get(i).getCategory().getId()));
+        }
+        verify(productRepository).getProductsCategory(category.getId(),page);
     }
 
     @Test
     void getProductDetails() {
+
     }
 
     @Test
@@ -154,4 +219,5 @@ class ProductServiceTest {
     @Test
     void handleFilter() {
     }
+
 }
