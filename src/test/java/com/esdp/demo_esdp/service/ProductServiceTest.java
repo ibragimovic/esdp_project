@@ -132,4 +132,21 @@ class ProductServiceTest {
 
     }
 
+    @Test
+    void getProductsUser() {
+        Pageable page = PageRequest.of(2, 10, Sort.unsorted());
+        List<Product> productsList = new ArrayList<>();
+        Page<Product> productsPageResponce = new PageImpl(productsList);
+        var user = mock(User.class);
+        when(user.getEmail()).thenReturn("test@test.test");
+        when(productRepository.getProductsUser(user.getEmail(), page)).thenReturn(productsPageResponce);
+        var products = productService.getProductsUser(user.getEmail(), page);
+        assertNotNull(products);
+        for (int i = 0; i < products.getContent().size(); i++) {
+            assertTrue(user.getEmail().equals(products.getContent().get(i).getUser().getEmail()));
+        }
+        verify(productRepository).getProductsUser(user.getEmail(), page);
+    }
+
+
 }
