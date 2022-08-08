@@ -191,5 +191,33 @@ class ProductServiceTest {
         verify(productRepository).findById(product.getId());
     }
 
+    @Test
+    void getProductsCategory() {
+        Pageable page = PageRequest.of(2, 10, Sort.unsorted());
+        List<Product> productsList = new ArrayList<>();
+        Page<Product> productsPageResponce = new PageImpl(productsList);
+        var category = mock(Category.class);
+        when(category.getId()).thenReturn(ID);
+        when(productRepository.getProductsCategory(category.getId(),page)).thenReturn(productsPageResponce);
+        var productsByCategory = productService.getProductsCategory(category.getId(),page);
+        assertNotNull(productsByCategory);
+        for (int i = 0; i < productsByCategory.getContent().size(); i++) {
+            assertTrue(category.getId().equals(productsList.get(i).getCategory().getId()));
+        }
+        verify(productRepository).getProductsCategory(category.getId(),page);
+    }
+
+    @Test
+    void getProductDetails() {
+
+    }
+
+    @Test
+    void getSimilarProducts() {
+    }
+
+    @Test
+    void handleFilter() {
+    }
 
 }
