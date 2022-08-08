@@ -120,4 +120,16 @@ class ProductServiceTest {
         verify(productRepository).getPublicationUserEmail(ID);
     }
 
+    @Test
+    void getProductsAll() {
+        Pageable page = PageRequest.of(2, 10, Sort.unsorted());
+        List<Product> productsList = new ArrayList<>();
+        Page<Product> productsPageResponce = new PageImpl(productsList);
+        when(productRepository.findAll(page)).thenReturn(productsPageResponce);
+        var products = productService.getProductsAll(page);
+        assertNotNull(products);
+        verify(productRepository).findAll(page);
+
+    }
+
 }
