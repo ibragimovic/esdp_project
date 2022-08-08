@@ -100,4 +100,24 @@ class ProductServiceTest {
 
     }
 
+    @Test
+    void addNewProduct() throws ResourceNotFoundException {
+    }
+
+    @Test
+    void deleteProductById() {
+        var user = mock(User.class);
+        when(userRepository.findByEmail("test@test.test")).thenReturn(Optional.of(user));
+        when(user.getEmail()).thenReturn("test@test.test");
+        when(user.getRole()).thenReturn("Admin");
+        var product = mock(Product.class);
+        when(product.getId()).thenReturn(ID);
+        var isDeleted = productService.deleteProductById(product.getId(), user.getEmail());
+        imagesService.deleteImagesFile(ID);
+        favoritesService.deleteFavoritesByProductId(product.getId());
+        productRepository.deleteById(product.getId());
+        assertEquals("admin", isDeleted);
+        verify(productRepository).getPublicationUserEmail(ID);
+    }
+
 }
