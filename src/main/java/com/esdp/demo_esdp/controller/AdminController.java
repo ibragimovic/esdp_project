@@ -12,10 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -78,69 +75,85 @@ public class AdminController {
     }
 
 
-    @GetMapping("/product/search-name")
-    public String getProductName(@RequestParam @NotBlank String name, Model model, Pageable pageable, HttpServletRequest uriBuilder) {
-        var products = productService.getProductName(name, pageable);
+    @GetMapping("/product/search-name/{name}")
+    public String getProductName(@PathVariable String name, Model model, Pageable pageable, HttpServletRequest uriBuilder) {
+        var products = productService.getProductNameAll(name, pageable);
         model.addAttribute("users", userService.getUsers());
         model.addAttribute("categories", categoryService.getCategories());
         if (products.isEmpty()) {
             model.addAttribute("empty", "Ничего не найдено!");
             return "admin";
-        } else {
-            var uri = uriBuilder.getRequestURI();
-            propertiesService.fillPaginationDataModel(products, "products", propertiesService.getDefaultPageSize(), model, uri);
-            return "admin";
         }
+        var uri = uriBuilder.getRequestURI();
+        propertiesService.fillPaginationDataModel(products, "products", propertiesService.getDefaultPageSize(), model, uri);
+        return "admin";
+
     }
 
+    @PostMapping("/product/search-name")
+    public String postProductName(@RequestParam @NotBlank String name) {
+        return "redirect:/admin/product/search-name/" + name;
+    }
 
-    @GetMapping("/products/search-user")
-    public String getProductUser(String userEmail, Model model, Pageable pageable, HttpServletRequest uriBuilder) {
+    @GetMapping("/products/search-user/{userEmail}")
+    public String getProductUser(@PathVariable String userEmail, Model model, Pageable pageable, HttpServletRequest uriBuilder) {
         var products = productService.getProductsUser(userEmail, pageable);
         model.addAttribute("users", userService.getUsers());
         model.addAttribute("categories", categoryService.getCategories());
         if (products.isEmpty()) {
             model.addAttribute("empty", "Ничего не найдено!");
             return "admin";
-        } else {
-            var uri = uriBuilder.getRequestURI();
-            propertiesService.fillPaginationDataModel(products, "products", propertiesService.getDefaultPageSize(), model, uri);
-            return "admin";
         }
+        var uri = uriBuilder.getRequestURI();
+        propertiesService.fillPaginationDataModel(products, "products", propertiesService.getDefaultPageSize(), model, uri);
+        return "admin";
     }
 
+    @PostMapping("/products/search-user")
+    public String postProductUser(@RequestParam @NotBlank String userEmail) {
+        return "redirect:/admin/products/search-user/" + userEmail;
+    }
 
-    @GetMapping("/products/search-status")
-    public String getProductsStatus(String status, Model model, HttpServletRequest uriBuilder, Pageable pageable) {
+    @GetMapping("/products/search-status/{status}")
+    public String getProductsStatus(@PathVariable String status, Model model, HttpServletRequest uriBuilder, Pageable pageable) {
         var products = productService.getProductsStatus(status, pageable);
         model.addAttribute("users", userService.getUsers());
         model.addAttribute("categories", categoryService.getCategories());
         if (products.isEmpty()) {
             model.addAttribute("empty", "Ничего не найдено!");
             return "admin";
-        } else {
-            var uri = uriBuilder.getRequestURI();
-            propertiesService.fillPaginationDataModel(products, "products", propertiesService.getDefaultPageSize(), model, uri);
-            return "admin";
         }
+        var uri = uriBuilder.getRequestURI();
+        propertiesService.fillPaginationDataModel(products, "products", propertiesService.getDefaultPageSize(), model, uri);
+        return "admin";
+
+    }
+
+    @PostMapping("/products/search-status")
+    public String postProductStatus(@RequestParam @NotBlank String status) {
+        return "redirect:/admin/products/search-status/" + status;
     }
 
 
-    @GetMapping("/products/search-category")
-    public String getProductUser(Long categoryId, Model model, HttpServletRequest uriBuilder, Pageable pageable) {
+    @GetMapping("/products/search-category/{categoryId}")
+    public String getProductCategory(@PathVariable Long categoryId, Model model, HttpServletRequest uriBuilder, Pageable pageable) {
         var products = productService.getProductsCategory(categoryId, pageable);
         model.addAttribute("users", userService.getUsers());
         model.addAttribute("categories", categoryService.getCategories());
         if (products.isEmpty()) {
             model.addAttribute("empty", "Ничего не найдено!");
             return "admin";
-        } else {
-            var uri = uriBuilder.getRequestURI();
-            propertiesService.fillPaginationDataModel(products, "products", propertiesService.getDefaultPageSize(), model, uri);
-            return "admin";
         }
+        var uri = uriBuilder.getRequestURI();
+        propertiesService.fillPaginationDataModel(products, "products", propertiesService.getDefaultPageSize(), model, uri);
+        return "admin";
+
     }
 
+    @PostMapping("/products/search-category")
+    public String postProductCategory(@RequestParam Long categoryId) {
+        return "redirect:/admin/products/search-category/" + categoryId;
+    }
 
     @GetMapping("/category")
     public String categoryPage(Model model) {
@@ -174,84 +187,116 @@ public class AdminController {
         return "redirect:/admin/category";
     }
 
-    @GetMapping("/user/search-name")
-    public String getUserName(@RequestParam @NotBlank String name, Model model, Pageable pageable, HttpServletRequest uriBuilder) {
+    @GetMapping("/user/search-name/{name}")
+    public String getUserName(@PathVariable String name, Model model, Pageable pageable, HttpServletRequest uriBuilder) {
         var users = userService.getUserName(name, pageable);
         if (users.isEmpty()) {
             model.addAttribute("empty", "Ничего не найдено!");
             return "admin_users";
-        } else {
-            var uri = uriBuilder.getRequestURI();
-            propertiesService.fillPaginationDataModel(users, "users", propertiesService.getDefaultPageSize(), model, uri);
-            return "admin_users";
         }
+        var uri = uriBuilder.getRequestURI();
+        propertiesService.fillPaginationDataModel(users, "users", propertiesService.getDefaultPageSize(), model, uri);
+        return "admin_users";
+
     }
 
-    @GetMapping("/user/search-email")
-    public String getUserEmail(@RequestParam @NotBlank String name, Model model, Pageable pageable, HttpServletRequest uriBuilder) {
-        var users = userService.getUsersEmail(name, pageable);
+    @PostMapping("/user/search-name")
+    public String postUserName(@RequestParam @NotBlank String name) {
+        return "redirect:/admin/user/search-name/" + name;
+    }
+
+    @GetMapping("/user/search-email/{email}")
+    public String getUserEmail(@PathVariable String email, Model model, Pageable pageable, HttpServletRequest uriBuilder) {
+        var users = userService.getUsersEmail(email, pageable);
         if (users.isEmpty()) {
             model.addAttribute("empty", "Ничего не найдено!");
             return "admin_users";
-        } else {
-            var uri = uriBuilder.getRequestURI();
-            propertiesService.fillPaginationDataModel(users, "users", propertiesService.getDefaultPageSize(), model, uri);
-            return "admin_users";
         }
+        var uri = uriBuilder.getRequestURI();
+        propertiesService.fillPaginationDataModel(users, "users", propertiesService.getDefaultPageSize(), model, uri);
+        return "admin_users";
+
     }
 
-    @GetMapping("/user/search-login")
-    public String getUserLogin(@RequestParam @NotBlank String name, Model model, Pageable pageable, HttpServletRequest uriBuilder) {
-        var users = userService.getUserLogin(name, pageable);
+    @PostMapping("/user/search-email")
+    public String postUserEmail(@RequestParam @NotBlank String name) {
+        return "redirect:/admin/user/search-email/" + name;
+    }
+
+    @GetMapping("/user/search-login/{login}")
+    public String getUserLogin(@PathVariable String login, Model model, Pageable pageable, HttpServletRequest uriBuilder) {
+        var users = userService.getUserLogin(login, pageable);
         if (users.isEmpty()) {
             model.addAttribute("empty", "Ничего не найдено!");
             return "admin_users";
-        } else {
-            var uri = uriBuilder.getRequestURI();
-            propertiesService.fillPaginationDataModel(users, "users", propertiesService.getDefaultPageSize(), model, uri);
-            return "admin_users";
         }
+        var uri = uriBuilder.getRequestURI();
+        propertiesService.fillPaginationDataModel(users, "users", propertiesService.getDefaultPageSize(), model, uri);
+        return "admin_users";
+
     }
 
+    @PostMapping("/user/search-login")
+    public String postUserLogin(@RequestParam @NotBlank String name) {
+        return "redirect:/admin/user/search-login/" + name;
+    }
 
-    @GetMapping("/user/search-lastname")
-    public String getUserLastName(@RequestParam @NotBlank String name, Model model, Pageable pageable, HttpServletRequest uriBuilder) {
-        var users = userService.getUserLastName(name, pageable);
+    @GetMapping("/user/search-lastname/{lastname}")
+    public String getUserLastName(@PathVariable String lastname, Model model, Pageable pageable, HttpServletRequest uriBuilder) {
+        var users = userService.getUserLastName(lastname, pageable);
         if (users.isEmpty()) {
             model.addAttribute("empty", "Ничего не найдено!");
             return "admin_users";
-        } else {
-            var uri = uriBuilder.getRequestURI();
-            propertiesService.fillPaginationDataModel(users, "users", propertiesService.getDefaultPageSize(), model, uri);
-            return "admin_users";
         }
+        var uri = uriBuilder.getRequestURI();
+        propertiesService.fillPaginationDataModel(users, "users", propertiesService.getDefaultPageSize(), model, uri);
+        return "admin_users";
+
     }
 
 
-    @GetMapping("/user/search-tel")
-    public String getUserTel(@RequestParam @NotBlank String name, Model model, Pageable pageable, HttpServletRequest uriBuilder) {
-        var users = userService.getUserTel(name, pageable);
-        if (users.isEmpty()) {
-            model.addAttribute("empty", "Ничего не найдено!");
-            return "admin_users";
-        } else {
-            var uri = uriBuilder.getRequestURI();
-            propertiesService.fillPaginationDataModel(users, "users", propertiesService.getDefaultPageSize(), model, uri);
-            return "admin_users";
-        }
+    @PostMapping("/user/search-lastname")
+    public String postUserLastname(@RequestParam @NotBlank String name) {
+        return "redirect:/admin/user/search-lastname/" + name;
     }
 
 
-    @GetMapping("/user/search-status")
-    public String getUserStatus(@RequestParam @NotBlank String name, Model model, Pageable pageable, HttpServletRequest uriBuilder) {
-        var users = userService.getUserStatus(name, pageable);
+    @GetMapping("/user/search-tel/{tel}")
+    public String getUserTel(@PathVariable String tel, Model model, Pageable pageable, HttpServletRequest uriBuilder) {
+        var users = userService.getUserTel(tel, pageable);
         if (users.isEmpty()) {
             model.addAttribute("empty", "Ничего не найдено!");
             return "admin_users";
-        } else {
-            var uri = uriBuilder.getRequestURI();
-            propertiesService.fillPaginationDataModel(users, "users", propertiesService.getDefaultPageSize(), model, uri);
+        }
+        var uri = uriBuilder.getRequestURI();
+        propertiesService.fillPaginationDataModel(users, "users", propertiesService.getDefaultPageSize(), model, uri);
+        return "admin_users";
+
+    }
+
+
+    @PostMapping("/user/search-tel")
+    public String postUserTel(@RequestParam @NotBlank String name) {
+        return "redirect:/admin/user/search-tel/" + name;
+    }
+
+
+    @GetMapping("/user/search/{status}")
+    public String getUserStatus(@PathVariable String status, Model model, Pageable pageable, HttpServletRequest uriBuilder) {
+        var users = userService.getUserStatus(status, pageable);
+        if (users.isEmpty()) {
+            model.addAttribute("empty", "Ничего не найдено!");
             return "admin_users";
         }
+        var uri = uriBuilder.getRequestURI();
+        propertiesService.fillPaginationDataModel(users, "users", propertiesService.getDefaultPageSize(), model, uri);
+        return "admin_users";
+
+    }
+
+
+    @PostMapping("/user/search-status")
+    public String postUserStatus(@RequestParam @NotBlank String status) {
+        return "redirect:/admin/user/search/" + status;
     }
 }
