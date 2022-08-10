@@ -205,9 +205,14 @@ styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons
 <#--        <a class="bttn">Load more</a>-->
 <#--    </div>-->
 
+<#--    <div style="text-align: right">-->
+<#--    <#include "partials/pagination.ftlh">-->
+<#--    </div>-->
 
     </div>
-
+    <div class="container" style="display: flex; justify-content: end">
+        <#include "partials/pagination.ftlh">
+    </div>
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
         <path fill="#D4F1F4" fill-opacity="1"
               d="M0,160L48,154.7C96,149,192,139,288,122.7C384,107,480,85,576,106.7C672,128,768,192,864,186.7C960,181,1056,107,1152,69.3C1248,32,1344,32,1392,32L1440,32L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z">
@@ -215,6 +220,7 @@ styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons
     </svg>
 
     <div class="footer-container">
+
         <div class="container pb-5">
             <div class="footer-info row row-cols-1 row-cols-md-2 ">
                 <div class="col">
