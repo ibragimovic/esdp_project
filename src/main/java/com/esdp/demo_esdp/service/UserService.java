@@ -236,8 +236,8 @@ public class UserService {
     }
 
 
-    public Page<UserResponseDTO> getUserStatus(String name, Pageable pageable) {
-        return userRepository.getUserStatus(name.toLowerCase(), pageable)
+    public Page<UserResponseDTO> getUserStatus(String status, Pageable pageable) {
+        return userRepository.getUserStatus(Boolean.valueOf(status), pageable)
                 .map(UserResponseDTO::from);
     }
 

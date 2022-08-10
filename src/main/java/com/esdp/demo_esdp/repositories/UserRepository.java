@@ -83,6 +83,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Page<User> getUserTel(@Param("name") String name, Pageable pageable);
 
 
-    @Query("select u from User u where lower(u.enabled) like  %:enabled% ")
-    Page<User> getUserStatus(@Param("enabled") String name, Pageable pageable);
+    @Query("select u from User u where u.enabled = :enabled")
+    Page<User> getUserStatus(@Param("enabled") Boolean enabled, Pageable pageable);
 }

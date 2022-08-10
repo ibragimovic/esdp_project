@@ -20,6 +20,10 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query("select p from Product p where lower(p.name) like  %:name% and p.status = :status ")
     Page<Product> getProductName(@Param("name") String name, @Param("status") ProductStatus status, Pageable pageable);
 
+    @Query("select p from Product p where lower(p.name) like  %:name% ")
+    Page<Product> getProductNameAll(@Param("name") String name, Pageable pageable);
+
+
     @Query("select p from Product p where lower(p.name) like  %:name% or lower(p.description) like %:name% and p.status = :status order by p.dateAdd desc")
     Page<Product> getProductListByName(@Param("name") String name, @Param("status") ProductStatus status, Pageable pageable);
 
