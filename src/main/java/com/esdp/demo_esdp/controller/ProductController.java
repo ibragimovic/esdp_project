@@ -122,7 +122,8 @@ public class ProductController {
         model.addAttribute("filteredCategories",categoryService.getFilterCategories());
         var products = productService.getProducts(page);
         var uri = httpServletRequest.getRequestURI();
-        propertiesService.fillPaginationDataModel(products, "products", propertiesService.getDefaultPageSize(), model, uri);
+        propertiesService.fillPaginationDataModel(products, "products",
+                propertiesService.getDefaultPageSize(), model, uri);
         return "index";
     }
 
