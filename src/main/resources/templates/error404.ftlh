@@ -2,7 +2,10 @@
 
 <#import "partials/main.ftlh" as main>
 
-<@main.renderWith >
+<#assign security=JspTaglibs["http://www.springframework.org/security/tags"]/>
+
+<@main.renderWith title="Arenda.kg"
+scripts=scripts_js styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css","https://use.fontawesome.com/releases/v5.14.0/css/all.css","/css/create_product.css","/css/dropdown_style.css","/css/error_message.css","/css/navbar.css", "/css/nested_dropdown.css","/css/main_page.css","/css/dropdown_style.css"]>
 
     <div class="error">
         <div class="container-floud">
