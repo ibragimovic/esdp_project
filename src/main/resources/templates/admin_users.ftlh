@@ -13,7 +13,7 @@
 
     <div style="margin-top: 25px; margin-bottom: 40px; text-align: right; display: inline-block">
         <div id="name" class="name">
-            <form method="get" action="/admin/user/search-name">
+            <form method="post" action="/admin/user/search-name">
                 <#if _csrf??>
                     <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
                            value="${(_csrf.token)!'--no-token--'}"/>
@@ -23,7 +23,7 @@
             </form>
         </div>
         <div id="user-email" style="display: none">
-            <form class="d-flex" id="user-productFrom" method="get" action="/admin/user/search-email">
+            <form class="d-flex" id="user-productFrom" method="post" action="/admin/user/search-email">
                 <#if _csrf??>
                     <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
                            value="${(_csrf.token)!'--no-token--'}"/>
@@ -35,7 +35,7 @@
             </form>
         </div>
         <div id="user-login" style="display: none">
-            <form class="d-flex" id="category-productFrom" method="get" action="/admin/user/search-login">
+            <form class="d-flex" id="category-productFrom" method="post" action="/admin/user/search-login">
                 <#if _csrf??>
                     <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
                            value="${(_csrf.token)!'--no-token--'}"/>
@@ -47,7 +47,7 @@
             </form>
         </div>
         <div id="user-lastname" style="display: none">
-            <form class="d-flex" id="category-productFrom" method="get" action="/admin/user/search-lastname">
+            <form class="d-flex" id="category-productFrom" method="post" action="/admin/user/search-lastname">
                 <#if _csrf??>
                     <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
                            value="${(_csrf.token)!'--no-token--'}"/>
@@ -59,7 +59,7 @@
             </form>
         </div>
         <div id="user-tel" style="display: none">
-            <form class="d-flex" id="category-productFrom" method="get" action="/admin/user/search-tel">
+            <form class="d-flex" id="category-productFrom" method="post" action="/admin/user/search-tel">
                 <#if _csrf??>
                     <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
                            value="${(_csrf.token)!'--no-token--'}"/>
@@ -71,14 +71,14 @@
             </form>
         </div>
         <div id="statusForm" style="display: none">
-            <form class="d-flex" id="modernizationForm" method="get" action="/admin/user/search-status">
+            <form class="d-flex" id="modernizationForm" method="post" action="/admin/user/search-status">
                 <#if _csrf??>
                     <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
                            value="${(_csrf.token)!'--no-token--'}"/>
                 </#if>
                 <select name="status" id="status" style="margin-right: 25px;">
-                    <option value="ACCEPTED">ACCEPTED</option>
-                    <option value="DECLINED">DECLINED</option>
+                    <option value="true">Разблокированые</option>
+                    <option value="false">Заблокированы</option>
                 </select>
                 <button class="btn btn-outline-success" type="submit"
                         style=" margin-right: -70px">
@@ -128,11 +128,12 @@
             </#list>
             </tbody>
         </table>
+        <#include "partials/pagination.ftlh">
     </#if>
 
 
 
-    <#include "partials/pagination.ftlh">
+
 
     <script>
         $(document).ready(
