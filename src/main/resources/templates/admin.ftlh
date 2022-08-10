@@ -14,7 +14,7 @@
 
         <div style="text-align: right; display: inline-block">
             <div id="name" class="name">
-                <form method="get" action="/admin/product/search-name">
+                <form method="post" action="/admin/product/search-name">
                     <#if _csrf??>
                         <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
                                value="${(_csrf.token)!'--no-token--'}"/>
@@ -24,7 +24,7 @@
                 </form>
             </div>
             <div id="user-product" style="display: none">
-                <form class="d-flex" id="user-productFrom" method="get" action="/admin/products/search-user">
+                <form class="d-flex" id="user-productFrom" method="post" action="/admin/products/search-user">
                     <#if _csrf??>
                         <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
                                value="${(_csrf.token)!'--no-token--'}"/>
@@ -41,7 +41,7 @@
                 </form>
             </div>
             <div id="category-product" style="display: none">
-                <form class="d-flex" id="category-productFrom" method="get" action="/admin/products/search-category">
+                <form class="d-flex" id="category-productFrom" method="post" action="/admin/products/search-category">
                     <#if _csrf??>
                         <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
                                value="${(_csrf.token)!'--no-token--'}"/>
@@ -58,7 +58,7 @@
                 </form>
             </div>
             <div id="statusForm" style="display: none">
-                <form class="d-flex" id="modernizationForm" method="get" action="/admin/products/search-status">
+                <form class="d-flex" id="modernizationForm" method="post" action="/admin/products/search-status">
                     <#if _csrf??>
                         <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
                                value="${(_csrf.token)!'--no-token--'}"/>
@@ -91,7 +91,8 @@
                         <h4>Объявление добавил: ${product.user.email}</h4>
                         <h5>Цена: ${product.price} сом</h5>
                         <h5>Категория: ${product.category}</h5>
-                        <h5><a href="/product/${product.id}" style="text-decoration: none">Подробная информация </a></h5>
+                        <h5><a href="/product/${product.id}" style="text-decoration: none">Подробная информация </a>
+                        </h5>
                     </div>
                     <div class="status">
 
@@ -149,9 +150,10 @@
                 <br>
             </#list>
         </div>
+        <#include "partials/pagination.ftlh">
     </#if>
 
-    <#include "partials/pagination.ftlh">
+
 
     <script>
         $(document).ready(
