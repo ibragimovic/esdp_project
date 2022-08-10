@@ -113,7 +113,7 @@ styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons
                                             <a href="/product/${ap.id}">
                                                 <div class="product-image">
                                                     <div class="picture bg-info d-flex">
-                                                        <img src="/uploads/${ap.imagePaths[0]}"
+                                                        <img src="/uploads/${ap.imagePaths[0]!''}"
                                                              alt="фотография объявления">
                                                     </div>
                                                 </div>
