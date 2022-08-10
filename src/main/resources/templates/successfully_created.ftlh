@@ -2,10 +2,10 @@
 
 
 <#assign scripts_js = ["/js/create_product.js","/js/dropdown_script.js","/js/showLastStep.js"]>
+<#assign security=JspTaglibs["http://www.springframework.org/security/tags"]/>
 
-
-<@main.renderWith title="Arenda.kg" scripts=scripts_js styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css","https://use.fontawesome.com/releases/v5.14.0/css/all.css","/css/create_product.css","/css/dropdown_style.css","/css/error_message.css"]>
-    <#assign security=JspTaglibs["http://www.springframework.org/security/tags"]/>
+<@main.renderWith title="Arenda.kg"
+scripts=scripts_js styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css","https://use.fontawesome.com/releases/v5.14.0/css/all.css","/css/create_product.css","/css/dropdown_style.css","/css/error_message.css","/css/navbar.css", "/css/nested_dropdown.css","/css/main_page.css","/css/dropdown_style.css"]>
     <nav class="navbar navbar-expand-custom navbar-mainbg">
         <a class="navbar-brand navbar-logo" href="/main">Arenda.kg</a>
         <button class="navbar-toggler" type="button" aria-controls="navbarSupportedContent" aria-expanded="false"
@@ -273,7 +273,7 @@
     <script>
         var timer = setTimeout(function () {
             window.location = '/'
-        }, 5000);
+        }, 2000);
     </script>
 
 </@main.renderWith>
