@@ -44,6 +44,10 @@ public class ProductService {
         return builderProductDTO(productRepository.getProductName(name.toLowerCase(), ProductStatus.ACCEPTED, pageable));
     }
 
+    public Page<ProductDTO> getProductNameAll(String name, Pageable pageable) {
+        return builderProductDTO(productRepository.getProductNameAll(name.toLowerCase(), pageable));
+    }
+
     public Page<SimilarProductDto> getMainProductsListByName(String name, Pageable pageable) {
         var products = productRepository.getProductListByName(name.toLowerCase(), ProductStatus.ACCEPTED, pageable);
         return builderSimilarProductDto(products);
@@ -90,8 +94,8 @@ public class ProductService {
     }
 
     public void deleteProductById(Long productId) throws ProductNotFoundException {
-        if(productRepository.findById(productId).isEmpty()){
-            throw new ProductNotFoundException(String.format("publication with id %s was not found",productId));
+        if (productRepository.findById(productId).isEmpty()) {
+            throw new ProductNotFoundException(String.format("publication with id %s was not found", productId));
         }
         imagesService.deleteImagesFile(productId);
         favoritesService.deleteFavoritesByProductId(productId);
@@ -137,9 +141,9 @@ public class ProductService {
 
     public void upProduct(Long productId) throws ProductNotFoundException {
         var product = productRepository.findById(productId).orElseThrow(() -> new ProductNotFoundException("Не найден продукт с id " + productId));
-        LocalDateTime today=LocalDateTime.now();
-        LocalDateTime productUpDate=product.getUp();
-        if ( (productUpDate.getDayOfYear() != today.getDayOfYear()) && (productUpDate.getYear()!=today.getYear())) {
+        LocalDateTime today = LocalDateTime.now();
+        LocalDateTime productUpDate = product.getUp();
+        if ((productUpDate.getDayOfYear() != today.getDayOfYear()) && (productUpDate.getYear() != today.getYear())) {
             productRepository.updateProductUpToTop(LocalDateTime.now(), product.getId());
         }
     }
@@ -311,9 +315,9 @@ public class ProductService {
                         .build());
     }
 
-    public List<ProductDTO> getUserProductsByStatus(String userEmail,ProductStatus status){
+    public List<ProductDTO> getUserProductsByStatus(String userEmail, ProductStatus status) {
         return productRepository.getUserProductsByStatus(userEmail, status).stream()
-                .map(p->ProductDTO.fromImage(p,imagesService.getImagesPathsByProductId(p.getId()))).collect(Collectors.toList());
+                .map(p -> ProductDTO.fromImage(p, imagesService.getImagesPathsByProductId(p.getId()))).collect(Collectors.toList());
 
     }
 }
