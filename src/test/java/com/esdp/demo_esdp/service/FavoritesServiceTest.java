@@ -70,7 +70,16 @@ class FavoritesServiceTest {
 
     @Test
     void addToFavorites() throws ProductNotFoundException {
-
+        var user = mock(User.class);
+        when(userRepository.findByEmail("test@test.kg")).thenReturn(Optional.of(user));
+        when(user.getEmail()).thenReturn("test@test.kg");
+        var product = mock(Product.class);
+        when(product.getId()).thenReturn(ID);
+        when(productRepository.findById(ID)).thenReturn(Optional.of(product));
+        var isAdded = favoritesService.addToFavorites(user.getEmail(),product.getId());
+        assertTrue(isAdded);
+        verify(userRepository).findByEmail(user.getEmail());
+        verify(productRepository).findById(product.getId());
 
     }
 
