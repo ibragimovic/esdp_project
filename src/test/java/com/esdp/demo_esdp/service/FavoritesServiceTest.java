@@ -1,6 +1,7 @@
 package com.esdp.demo_esdp.service;
 
 import com.esdp.demo_esdp.entity.Category;
+import com.esdp.demo_esdp.entity.Favorites;
 import com.esdp.demo_esdp.entity.Product;
 import com.esdp.demo_esdp.entity.User;
 import com.esdp.demo_esdp.enums.ProductStatus;
@@ -84,7 +85,21 @@ class FavoritesServiceTest {
     }
 
     @Test
-    void removeFromFavorites() {
+    void removeFromFavorites() throws ProductNotFoundException {
+        var user = mock(User.class);
+        when(userRepository.findByEmail("test@test.kg")).thenReturn(Optional.of(user));
+        when(user.getEmail()).thenReturn("test@test.kg");
+        var product = mock(Product.class);
+        when(product.getId()).thenReturn(ID);
+        when(productRepository.findById(ID)).thenReturn(Optional.of(product));
+        var favorite  = mock(Favorites.class);
+        when(favoritesRepository.findByUserAndProduct(user,product)).thenReturn(Optional.of(favorite));
+
+        var isRemoved = favoritesService.removeFromFavorites(user.getEmail(),product.getId());
+        assertTrue(isRemoved);
+        verify(userRepository).findByEmail(user.getEmail());
+        verify(productRepository).findById(product.getId());
+        verify(favoritesRepository).delete(favorite);
     }
 
     @Test
