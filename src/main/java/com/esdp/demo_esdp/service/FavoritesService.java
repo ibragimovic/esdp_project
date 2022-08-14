@@ -52,28 +52,32 @@ public class FavoritesService {
     }
 
 
-    public void addToFavorites(String userEmail, Long productId) throws ProductNotFoundException {
+    public boolean addToFavorites(String userEmail, Long productId) throws ProductNotFoundException {
         User user = userRepository.findByEmail(userEmail).orElseThrow(UserNotFoundException::new);
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new ProductNotFoundException(String.format(String.format("product with id %s was not found", productId))));
+                .orElseThrow(() -> new ProductNotFoundException(String.format(String.format("Не найдена публикация с id ", productId))));
         Optional<Favorites> favoritesOpt = favoritesRepository.findByUserAndProduct(user, product);
         if (favoritesOpt.isEmpty()) {
             favoritesRepository.save(Favorites.builder()
                     .user(user)
                     .product(product)
                     .build());
+            return true;
         }
+            return false;
     }
 
 
-    public void removeFromFavorites(String userEmail, Long productId) throws ProductNotFoundException {
+    public boolean removeFromFavorites(String userEmail, Long productId) throws ProductNotFoundException {
         User user = userRepository.findByEmail(userEmail).orElseThrow(UserNotFoundException::new);
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ProductNotFoundException(String.format(String.format("product with id %s was not found", productId))));
         Optional<Favorites> favoritesOpt = favoritesRepository.findByUserAndProduct(user, product);
         if (favoritesOpt.isPresent()) {
             favoritesRepository.delete(favoritesOpt.get());
+            return true;
         }
+        return false;
     }
 
 

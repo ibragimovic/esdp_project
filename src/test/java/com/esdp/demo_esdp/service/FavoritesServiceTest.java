@@ -4,6 +4,7 @@ import com.esdp.demo_esdp.entity.Category;
 import com.esdp.demo_esdp.entity.Product;
 import com.esdp.demo_esdp.entity.User;
 import com.esdp.demo_esdp.enums.ProductStatus;
+import com.esdp.demo_esdp.exception.ProductNotFoundException;
 import com.esdp.demo_esdp.repositories.FavoritesRepository;
 import com.esdp.demo_esdp.repositories.ImagesRepository;
 import com.esdp.demo_esdp.repositories.ProductRepository;
@@ -15,9 +16,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
@@ -54,6 +58,7 @@ class FavoritesServiceTest {
         when(product.getId()).thenReturn(ID);
         when(product.getCategory()).thenReturn(category);
         when(product.getCategory().getName()).thenReturn("test name");
+        when(product.getUp()).thenReturn(LocalDateTime.now());
         when(favoritesRepository.getFavProducts(user.getEmail(),ProductStatus.ACCEPTED)).thenReturn(List.of(product));
         var image  = "test/path";
         when(imagesService.getImagesPathsByProductId(product.getId())).thenReturn(List.of(image));
@@ -64,7 +69,9 @@ class FavoritesServiceTest {
     }
 
     @Test
-    void addToFavorites() {
+    void addToFavorites() throws ProductNotFoundException {
+
+
     }
 
     @Test
