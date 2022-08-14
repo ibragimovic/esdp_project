@@ -35,20 +35,20 @@ public class FavoritesService {
 
     public List<FavoritesDTO> getFavoritesUser(String email) throws ProductNotFoundException {
         List<FavoritesDTO> favoritesList = new ArrayList<>();
-        var favorites = favoritesRepository.getFavoritesUser(email,ProductStatus.ACCEPTED);
+        var favorites = favoritesRepository.getFavoritesUser(email, ProductStatus.ACCEPTED);
         if (!favorites.isEmpty()) {
             for (int i = 0; i < favorites.size(); i++) {
-                var product = productRepository.findById(favorites.get(i).getProduct().getId()).orElseThrow(()->new ProductNotFoundException("Публикация не найдена!"));
+                var product = productRepository.findById(favorites.get(i).getProduct().getId()).orElseThrow(() -> new ProductNotFoundException("Публикация не найдена!"));
                 var image = imagesRepository.getProductImagePath(product.getId());
-               favoritesList.add(FavoritesDTO.from(favorites.get(i),image));
+                favoritesList.add(FavoritesDTO.from(favorites.get(i), image));
             }
         }
         return favoritesList;
     }
 
-    public List<ProductDTO> getUsersFav(String email){
-        return favoritesRepository.getFavProducts(email,ProductStatus.ACCEPTED).stream()
-                .map(p->ProductDTO.fromImage(p,imagesService.getImagesPathsByProductId(p.getId()))).collect(Collectors.toList());
+    public List<ProductDTO> getUsersFav(String email) {
+        return favoritesRepository.getFavProducts(email, ProductStatus.ACCEPTED).stream()
+                .map(p -> ProductDTO.fromImage(p, imagesService.getImagesPathsByProductId(p.getId()))).collect(Collectors.toList());
     }
 
 
@@ -64,7 +64,7 @@ public class FavoritesService {
                     .build());
             return true;
         }
-            return false;
+        return false;
     }
 
 
@@ -85,8 +85,13 @@ public class FavoritesService {
         return userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
     }
 
-    public void deleteFavoritesByProductId(Long productId) {
-        favoritesRepository.deleteAll(favoritesRepository.getFavoritesByProductId(productId));
+    public boolean deleteFavoritesByProductId(Long productId) {
+        var products = favoritesRepository.getFavoritesByProductId(productId);
+        if (!products.isEmpty()) {
+            favoritesRepository.deleteAll(products);
+            return true;
+        }
+        return false;
     }
 
     public void handleFavorites(FavoritesJson fav) throws ProductNotFoundException {

@@ -102,12 +102,16 @@ class FavoritesServiceTest {
         verify(favoritesRepository).delete(favorite);
     }
 
-    @Test
-    void findUserById() {
-    }
 
     @Test
     void deleteFavoritesByProductId() {
+        var product = mock(Product.class);
+        when(product.getId()).thenReturn(ID);
+        var favorites = mock(Favorites.class);
+        when(favoritesRepository.getFavoritesByProductId(product.getId())).thenReturn(List.of(favorites));
+
+        var isDeleted = favoritesService.deleteFavoritesByProductId(product.getId());
+        assertTrue(isDeleted);
     }
 
     @Test
