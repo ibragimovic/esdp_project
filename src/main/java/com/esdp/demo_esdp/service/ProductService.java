@@ -95,7 +95,7 @@ public class ProductService {
 
     public void deleteProductById(Long productId) throws ProductNotFoundException {
         if (productRepository.findById(productId).isEmpty()) {
-            throw new ProductNotFoundException(String.format("publication with id %s was not found", productId));
+            throw new ProductNotFoundException(String.format("Не найдена публикация с id ", productId));
         }
         imagesService.deleteImagesFile(productId);
         favoritesService.deleteFavoritesByProductId(productId);
@@ -128,7 +128,7 @@ public class ProductService {
     }
 
     public boolean addProductToTop(Long productId, Integer hour) throws ProductNotFoundException {
-        var product = productRepository.findById(productId).orElseThrow(() -> new ProductNotFoundException("Не найден продукт с id " + productId));
+        var product = productRepository.findById(productId).orElseThrow(() -> new ProductNotFoundException("Не найдена публикация с id " + productId));
         if (product.getEndOfPayment().isAfter(LocalDateTime.now()) || product.getEndOfPayment().isEqual(LocalDateTime.now())) {
             productRepository.updateProductEndOfPayment(product.getEndOfPayment().plusHours(hour), product.getId());
             return true;
@@ -140,7 +140,7 @@ public class ProductService {
     }
 
     public void upProduct(Long productId) throws ProductNotFoundException {
-        var product = productRepository.findById(productId).orElseThrow(() -> new ProductNotFoundException("Не найден продукт с id " + productId));
+        var product = productRepository.findById(productId).orElseThrow(() -> new ProductNotFoundException("Не найдена публикация с id " + productId));
         LocalDateTime today = LocalDateTime.now();
         LocalDateTime productUpDate = product.getUp();
         if ((productUpDate.getDayOfYear() != today.getDayOfYear()) && (productUpDate.getYear() != today.getYear())) {
@@ -153,7 +153,7 @@ public class ProductService {
     }
 
     public ProductDetailsDto getProductDetails(Long id, Authentication auth) throws ProductNotFoundException {
-        Product p = productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(String.format("product with id %s was not found", id)));
+        Product p = productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(String.format("Не найдена публикация с id ", id)));
         return ProductDetailsDto.builder()
                 .id(p.getId())
                 .name(p.getName())

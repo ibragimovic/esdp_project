@@ -187,8 +187,9 @@ class ProductServiceTest {
 
 //        var isUped = productService.upProduct(product.getId());
 //        assertTrue(isUped);
-        assertTrue(product.getUp().getDayOfYear() != LocalDateTime.now().getDayOfYear());
+//        assertTrue(product.getUp().getDayOfYear() != LocalDateTime.now().getDayOfYear());
         verify(productRepository).findById(product.getId());
+        verify(productRepository).updateProductUpToTop(LocalDateTime.now(),product.getId());
     }
 
     @Test
@@ -205,19 +206,6 @@ class ProductServiceTest {
             assertTrue(category.getId().equals(productsList.get(i).getCategory().getId()));
         }
         verify(productRepository).getProductsCategory(category.getId(),page);
-    }
-
-    @Test
-    void getProductDetails() {
-
-    }
-
-    @Test
-    void getSimilarProducts() {
-    }
-
-    @Test
-    void handleFilter() {
     }
 
 }

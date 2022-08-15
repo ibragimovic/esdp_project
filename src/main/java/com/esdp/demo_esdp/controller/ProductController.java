@@ -117,7 +117,7 @@ public class ProductController {
 
     @GetMapping("/")
     public String getTopProducts(Model model,@RequestParam(required = false, defaultValue = "") String search,
-                                 @PageableDefault(sort = "endOfPayment", direction = Sort.Direction.DESC)Pageable page,
+                                 @PageableDefault Pageable page,
                                  HttpServletRequest httpServletRequest){
         model.addAttribute("filteredCategories",categoryService.getFilterCategories());
         var products = productService.getProducts(page);

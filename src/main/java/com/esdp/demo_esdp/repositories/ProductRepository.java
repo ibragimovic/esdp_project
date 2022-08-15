@@ -30,7 +30,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query("select p from Product p where p.price >= :from and p.price <= :before and p.status = :status")
     Page<Product> getProductPrice(@Param("from") Integer from, @Param("before") Integer before, @Param("status") ProductStatus status, Pageable pageable);
 
-    @Query("select p from Product p where p.status = :status order by p.dateAdd desc")
+    @Query("select p from Product p where p.status = :status order by p.up desc")
     Page<Product> getProducts(@Param("status") ProductStatus status, Pageable pageable);
 
     @Query("select p from Product p where p.status = :status order by p.dateAdd desc")
