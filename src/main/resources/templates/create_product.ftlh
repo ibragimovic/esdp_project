@@ -45,13 +45,13 @@ scripts=scripts_js styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/f
                 </@security.authorize>
                 <@security.authorize access="isAuthenticated()">
                     <div class="px-4 logout-btn d-flex align-items-center">
-                        <form action="/logout" method="post">
+                        <form action="/logout" method="post" id="logoutForm">
                             <#if _csrf??>
                                 <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
                                        value="${(_csrf.token)!'--no-token--'}"/>
                             </#if>
 
-                            <button type="submit" class="btn btn-danger" id="logOut">
+                            <button type="button" class="btn btn-danger" id="logOut">
                                 <i class="bi bi-door-open-fill"></i> Выйти
                             </button>
                         </form>
@@ -186,14 +186,9 @@ scripts=scripts_js styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/f
                                 <label class="fieldlabels mt-4">Установите цену аренды:</label>
                                 <div class="row">
                                     <div class="input-group mb-5 col-6 row">
-                                        <input type="number" min="1" name="price" placeholder="В день (сом)"
-                                               class="input valid col-12" id="dayRent" onkeyup="calcWeekRent()" required="required"/>
+                                        <input type="number" min="1" max="2147483647" name="price" placeholder="В день (сом)"
+                                               class="input valid col-12" required="required" />
                                         <div class="error-message col-12">* Цена аренды должна быть больше 1</div>
-                                    </div>
-
-                                    <div class="col-6">
-                                        <input type="number" min="0" placeholder="В неделю (сом)"
-                                               class="mb-5 input" id="weekRent" readonly/>
                                     </div>
 
                                 </div>
@@ -205,7 +200,7 @@ scripts=scripts_js styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/f
                                             <#list localities as local>
                                                 <div class="option">
                                                     <input type="radio" class="radio radio-input" id="local_${local.id}"
-                                                           name="locality" value="${local.name}"/>
+                                                           name="locality" value="${local.name}" required/>
                                                     <label for="local_${local.id}">${local.name}</label>
                                                 </div>
                                             </#list>
@@ -227,7 +222,7 @@ scripts=scripts_js styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/f
 
                             <input type="hidden" name="${(_csrf.parameterName)!'csrf'}" value="${(_csrf.token)!'--no-token--'}"/>
 
-                            <input type="submit" class="next action-button" value="Submit" />
+                            <input type="submit" class="next action-button" value="Submit" id="submit" />
                             <input type="button" class="previous action-button-previous"
                                    value="Назад" />
                         </fieldset>

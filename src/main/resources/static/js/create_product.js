@@ -27,12 +27,6 @@ function preview() {
     }
 }
 
-const dayRentInput = document.getElementById("dayRent")
-const weekRentInput = document.getElementById("weekRent")
-
-function calcWeekRent() {
-    weekRentInput.value = (dayRentInput.value) * 7
-}
 
 function hasEmptyInput(inputs) {
     for (let i of inputs) {

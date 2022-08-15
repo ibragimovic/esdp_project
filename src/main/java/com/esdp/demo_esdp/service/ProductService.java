@@ -153,7 +153,11 @@ public class ProductService {
     }
 
     public ProductDetailsDto getProductDetails(Long id, Authentication auth) throws ProductNotFoundException {
-        Product p = productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(String.format("Не найдена публикация с id ", id)));
+        Product p = productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(String.format("Не найдена публикация с id %s", id)));
+        if(p.getStatus()!= ProductStatus.ACCEPTED){
+            throw new ProductNotFoundException(String.format("Не найдена публикация с id %s", id));
+        }
+
         return ProductDetailsDto.builder()
                 .id(p.getId())
                 .name(p.getName())
