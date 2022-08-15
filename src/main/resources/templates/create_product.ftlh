@@ -186,8 +186,8 @@ scripts=scripts_js styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/f
                                 <label class="fieldlabels mt-4">Установите цену аренды:</label>
                                 <div class="row">
                                     <div class="input-group mb-5 col-6 row">
-                                        <input type="number" min="1" name="price" placeholder="В день (сом)"
-                                               class="input valid col-12" required="required"/>
+                                        <input type="number" min="1" max="2147483647" name="price" placeholder="В день (сом)"
+                                               class="input valid col-12" required="required" />
                                         <div class="error-message col-12">* Цена аренды должна быть больше 1</div>
                                     </div>
 
