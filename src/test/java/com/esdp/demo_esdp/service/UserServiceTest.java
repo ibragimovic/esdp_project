@@ -54,9 +54,9 @@ class UserServiceTest {
         var user = mock(User.class);
         when(user.getEmail()).thenReturn("test@test.kg");
         when(userRepository.existsByEmail("test@test.kg")).thenReturn(false);
-         var isExist = userService.isUserExistByEmail(user.getEmail());
-         assertFalse(isExist);
-         verify(userRepository).existsByEmail(user.getEmail());
+        var isExist = userService.isUserExistByEmail(user.getEmail());
+        assertFalse(isExist);
+        verify(userRepository).existsByEmail(user.getEmail());
     }
 
     @Test
@@ -69,10 +69,18 @@ class UserServiceTest {
 
     @Test
     void activateUser() {
+        var user = mock(User.class);
+        when(userRepository.findByActivationCode("test_code")).thenReturn(user);
+
+        var isActivated = userService.activateUser("test_code");
+        assertTrue(isActivated);
+
+        verify(userRepository).findByActivationCode("test_code");
     }
 
     @Test
     void getUsers() {
+
     }
 
     @Test
