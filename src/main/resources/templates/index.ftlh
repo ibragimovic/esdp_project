@@ -227,8 +227,8 @@ styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons
                     <div class="info-container contact-us text-center">
                         <div class="d-inline-block text-start">
                             <p class="footer-title text-center"><span>Contact Us</span></p>
-                            <p><i class="bi bi-telephone-plus-fill"></i> +99612345679</p>
-                            <p><i class="bi bi-envelope"></i> hello.world@gmail.com</p>
+                            <p><i class="bi bi-telephone-plus-fill"></i> +996777800300 (Ежедневно с 9:00 до 21:00)</p>
+                            <p><i class="bi bi-envelope"></i> eubeysheke@gmail.com</p>
                         </div>
 
                     </div>
