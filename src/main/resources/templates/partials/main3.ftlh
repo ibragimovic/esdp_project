@@ -66,13 +66,13 @@
                 </@security.authorize>
                 <@security.authorize access="isAuthenticated()">
                     <div class="px-4 logout-btn d-flex align-items-center">
-                        <form action="/logout" method="post">
+                        <form action="/logout" method="post" id="logoutForm">
                             <#if _csrf??>
                                 <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
                                        value="${(_csrf.token)!'--no-token--'}"/>
                             </#if>
 
-                            <button type="submit" class="btn btn-danger" id="logOut">
+                            <button type="button" class="btn btn-danger" id="logOut">
                                 <i class="bi bi-door-open-fill"></i> Выйти
                             </button>
                         </form>
@@ -84,29 +84,15 @@
 
     <#nested>
 
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous">
     </script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script type="text/javascript" src="/js/logout.js"></script>
     <#list scripts as scriptSource>
         <script src="${scriptSource}"></script>
     </#list>
-
-    <script>
-        const inButton = document.getElementById("logOut");
-        if(inButton !== null) {
-            inButton.addEventListener("click", function () {
-                var isExit = confirm("Вы действительно хотите выйти из профиля?");
-                if (isExit){
-                    alert( "Вы вышли из профиля" );
-                }else {
-                    alert( "Вы остались в профиле" );
-                }
-            });
-        }
-    </script>
-
 
     </body>
     </html>

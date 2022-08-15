@@ -1,6 +1,6 @@
 <link rel="stylesheet" href="/css/error_style.css">
 
-<#import "partials/main2.ftlh" as main />
+<#import "partials/main.ftlh" as main />
 
 
 <#assign scripts_js = ["/js/create_product.js","/js/dropdown_script.js","/js/showLastStep.js"]>

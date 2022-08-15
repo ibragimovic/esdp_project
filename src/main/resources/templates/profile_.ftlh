@@ -44,13 +44,13 @@ styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons
                 </@security.authorize>
                 <@security.authorize access="isAuthenticated()">
                     <div class="px-4 logout-btn d-flex align-items-center">
-                        <form action="/logout" method="post">
+                        <form action="/logout" method="post" id="logoutForm">
                             <#if _csrf??>
                                 <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
                                        value="${(_csrf.token)!'--no-token--'}"/>
                             </#if>
 
-                            <button type="submit" class="btn btn-danger" id="logOut">
+                            <button type="button" class="btn btn-danger" id="logOut">
                                 <i class="bi bi-door-open-fill"></i> Выйти
                             </button>
                         </form>
