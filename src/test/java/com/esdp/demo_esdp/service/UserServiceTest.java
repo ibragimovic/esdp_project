@@ -51,6 +51,12 @@ class UserServiceTest {
 
     @Test
     void isUserExistByEmail() {
+        var user = mock(User.class);
+        when(user.getEmail()).thenReturn("test@test.kg");
+        when(userRepository.existsByEmail("test@test.kg")).thenReturn(false);
+         var isExist = userService.isUserExistByEmail(user.getEmail());
+         assertFalse(isExist);
+         verify(userRepository).existsByEmail(user.getEmail());
     }
 
     @Test
