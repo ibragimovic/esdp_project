@@ -90,15 +90,14 @@ scripts=scripts_js styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/f
                             <div class="form-card">
                                 <div class="row">
                                     <div class="col-7">
-                                        <h2 class="fs-title">Название и фотографии товара:</h2>
+                                        <h2 class="fs-title">Название и фотографии объявления:</h2>
                                     </div>
                                     <div class="col-5">
                                         <h2 class="steps">Шаг 1 - 3</h2>
                                     </div>
                                 </div>
-                                <label class="fieldlabels">Название товара?</label>
                                 <div class="input-group mb-3">
-                                    <input type="text" name="name" placeholder="Наименование" minlength="4" required="required" autocomplete="off" class="input valid" />
+                                    <input type="text" name="name" placeholder="Введите название объявления" minlength="4" required="required" autocomplete="off" class="input valid" />
                                     <div class="error-message">* Название должно содержать 4 или более символов.</div>
                                 </div>
 
@@ -115,14 +114,14 @@ scripts=scripts_js styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/f
                                 </div>
                                 </div>
 
-                            </div> <input type="button" class="next action-button" value="Далее" />
+                            </div> <input type="button" class="next action-button" style="margin-bottom: 55px" value="Далее" />
                         </fieldset>
 
                         <fieldset>
                             <div class="form-card mb-3">
                                 <div class="row">
                                     <div class="col-7">
-                                        <h2 class="fs-title">Категория и цена товара:</h2>
+                                        <h2 class="fs-title">Категория и описание объявления:</h2>
                                     </div>
                                     <div class="col-5">
                                         <h2 class="steps">Шаг 2 - 3</h2>
@@ -131,7 +130,6 @@ scripts=scripts_js styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/f
 
 
 
-                                <label class="fieldlabels mt-3">Выберите категорию:</label>
                                 <div class="select-box">
                                     <div class="options-container">
                                         <#if select_categories??>
@@ -150,11 +148,11 @@ scripts=scripts_js styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/f
                                     </div>
 
                                     <div class="search-box">
-                                        <input type="text" placeholder="Start Typing..."/>
+                                        <input type="text" placeholder="Поиск "/>
                                     </div>
                                 </div>
 
-                                <label class="fieldlabels mt-5">Описание товара:</label>
+                                <label class="fieldlabels mt-5">Описание:</label>
 
                                 <div class="input-group mb-3">
                                     <textarea class='autoExpand input valid'
@@ -166,7 +164,7 @@ scripts=scripts_js styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/f
 
                             </div>
 
-                            <input type="button" class="next action-button" value="Далее"/>
+                            <input type="button" class="next action-button" style="margin-bottom: 55px" value="Далее"/>
                             <input type="button" class="previous action-button-previous"
                                    value="Назад" />
 
@@ -183,17 +181,16 @@ scripts=scripts_js styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/f
                                 </div>
 
 
-                                <label class="fieldlabels mt-4">Установите цену аренды:</label>
                                 <div class="row">
                                     <div class="input-group mb-5 col-6 row">
-                                        <input type="number" min="1" max="2147483647" name="price" placeholder="В день (сом)"
-                                               class="input valid col-12" required="required" />
+                                        <input type="number" min="1" max="2147483647" name="price" placeholder="Введите суточную стоимость аренды (сом)"
+                                               class="input valid col-12" required="required" style="margin-left: 12px" />
                                         <div class="error-message col-12">* Цена аренды должна быть больше 1</div>
                                     </div>
 
                                 </div>
 
-                                <label class="fieldlabels mt-2">Выберите город:</label>
+                                <label class="fieldlabels mt-2">Выберите город или село:</label>
                                 <div class="select-box mb-5 pb-5">
                                     <div class="options-container">
                                         <#if localities??>
@@ -209,11 +206,11 @@ scripts=scripts_js styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/f
                                     </div>
 
                                     <div class="selected">
-                                        Выберите город
+                                        Выбрать
                                     </div>
 
                                     <div class="search-box">
-                                        <input type="text" placeholder="Start Typing..." />
+                                        <input type="text" placeholder="Поиск" />
                                     </div>
                                 </div>
 
@@ -222,21 +219,21 @@ scripts=scripts_js styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/f
 
                             <input type="hidden" name="${(_csrf.parameterName)!'csrf'}" value="${(_csrf.token)!'--no-token--'}"/>
 
-                            <input type="submit" class="next action-button" value="Submit" id="submit" />
-                            <input type="button" class="previous action-button-previous"
+                            <input type="submit" class="next action-button" style="margin-bottom: 55px" value="Создать" id="submit" />
+                            <input type="button" class="previous action-button-previous" style="margin-bottom: 55px"
                                    value="Назад" />
                         </fieldset>
                         <fieldset id="lastFs">
                             <div class="form-card">
                                 <div class="row">
                                     <div class="col-7">
-                                        <h2 class="fs-title">Finish:</h2>
+                                        <h2 class="fs-title">Конец</h2>
                                     </div>
                                     <div class="col-5">
                                         <h2 class="steps">Шаг 4 - 4</h2>
                                     </div>
                                 </div> <br><br>
-                                <h2 class="purple-text text-center"><strong>SUCCESS !</strong></h2> <br>
+                                <h2 class="purple-text text-center"><strong>УСПЕШНО!</strong></h2> <br>
                                 <div class="row justify-content-center">
                                     <div class="col-3"> <img src="/images/done.png" class="fit-image">
                                     </div>
