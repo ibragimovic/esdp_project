@@ -7,19 +7,19 @@ styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons
     <#assign security=JspTaglibs["http://www.springframework.org/security/tags"]/>
 
     <div>
-        <h2>Please enter your email</h2>
+        <h2 style="margin:25px 0">Пожалуйста введите повторно вашу электронную почту</h2>
         <form action="/password-recovery" method="post">
             <#if _csrf??>
                 <input type="hidden" name="${(_csrf.parameterName)!'csrf'}" value="${(_csrf.token)!'--no-token--'}"/>
             </#if>
 
-            <div class="form-group">
+            <div class="form-group recovery-password">
                 <label for="email">Адрес почты</label>
-                <input type="email" name="username" class="form-control" id="email" placeholder="Ваш адрес почты"
+                <input type="email" name="username" class="form-control" id="email" placeholder="Ваш адрес электронной почты"
                        value="${(dto.email)!''}" autofocus>
             </div>
             <div>
-                <button type="submit" class="btn btn-primary">Продолжить</button>
+                <button type="submit" style="margin-top: 20px" class="btn btn-primary">Продолжить</button>
             </div>
         </form>
     </div>
