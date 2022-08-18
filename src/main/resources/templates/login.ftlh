@@ -3,7 +3,7 @@
 <@main.renderWith title="Логин"
     scripts=["/js/navbar.js"]
     styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css",
-    "/css/navbar.css"]>
+    "/css/navbar.css","/css/main_page.css"]>
     <#assign security=JspTaglibs["http://www.springframework.org/security/tags"]/>
 
     <nav class="navbar navbar-expand-custom navbar-mainbg">
@@ -62,7 +62,7 @@
     </nav>
 
     <div class="container">
-        <h2>Пожалуйста войдите!</h2>
+        <h2 style="margin-top: 50px">Войти</h2>
         <form action="/login" method="post">
             <div>
                 <#if error!false >
@@ -83,25 +83,25 @@
 
             ${message?ifExists}
 
-            <div class="form-group">
+            <div class="form-group login-form">
                 <label for="email">Адрес почты</label>
                 <input type="email" name="username" class="form-control" id="email" placeholder="Ваш адрес почты"
                        value="${(dto.email)!''}" autofocus>
             </div>
             <div>
-                <div class="form-group">
+                <div class="form-group login-form">
                     <label for="password">Пароль:</label>
                     <input type="password" class="form-control" name="password" id="password" placeholder="Пароль"
                            value="">
                 </div>
             </div>
             <div>
-                <button type="submit" class="btn btn-primary" style="margin-right: 15px">Войти</button>
-                <a type="submit" class="btn btn-primary" style="margin-right: 15px" href="/password-recovery">Забыли
+                <button type="submit" class="btn btn-primary" style="margin-right: 15px;margin-top: 20px">Войти</button>
+                <a type="submit" class="btn btn-primary" style="margin-right: 15px;margin-top: 20px" href="/password-recovery">Забыли
                         пароль?</a>
                 <#if urls??>
                     <#list urls?keys as key>
-                        <a text="${key}" href="${urls[key]}"><img src="/images/icons8-google-48.png"></a>
+                        <a text="${key}" href="${urls[key]}" ><img style="margin-top: 20px" src="/images/icons8-google-48.png"></a>
                     </#list>
                 </#if>
             </div>

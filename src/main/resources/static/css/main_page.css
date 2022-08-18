@@ -582,3 +582,10 @@ input::-webkit-inner-spin-button {
 .step-of-instruction{
     border: 4px gray;
 }
+
+.register-form, .login-form{
+    margin-top: 20px;
+}
+.login-form{
+    margin-top: 20px;
+}
