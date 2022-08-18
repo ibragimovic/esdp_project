@@ -589,3 +589,7 @@ input::-webkit-inner-spin-button {
 .login-form{
     margin-top: 20px;
 }
+
+.register-form label, .login-form label, .recovery-password label{
+    margin-bottom: 5px;
+}
