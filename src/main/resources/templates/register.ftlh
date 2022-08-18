@@ -62,7 +62,7 @@ styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons
     </nav>
 
     <div class="container">
-        <h2 style="margin-top: 50px;">Регистрация пользователя</h2>
+        <h2 style="margin-top: 50px;">Регистрация</h2>
         <form action="/register" method="post">
 
             <#if _csrf??>
