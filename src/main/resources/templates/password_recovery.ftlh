@@ -7,7 +7,7 @@ styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons
     <#assign security=JspTaglibs["http://www.springframework.org/security/tags"]/>
 
     <div>
-        <h2 style="margin:25px 0">Пожалуйста введите повторно вашу электронную почту</h2>
+        <h2 style="margin: 50px 0 20px 0;">Пожалуйста введите повторно вашу электронную почту</h2>
         <form action="/password-recovery" method="post">
             <#if _csrf??>
                 <input type="hidden" name="${(_csrf.parameterName)!'csrf'}" value="${(_csrf.token)!'--no-token--'}"/>
