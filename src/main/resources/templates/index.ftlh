@@ -17,7 +17,7 @@ styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons
                         <div class="mx-md-5 filter-modal-header text-center">
                             <button type="button" class="btn-close fs-4" data-bs-dismiss="modal"
                                     aria-label="Close"></button>
-                            <p class="filter-title"><span>Filter</span></p>
+                            <p class="filter-title"><span>Сортировка</span></p>
                             <#--                        <p class="reset-btn fill">Reset</p>-->
                         </div>
                         <div class="modal-body">
@@ -51,7 +51,7 @@ styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons
                                         </div>
 
                                         <div class="search-box">
-                                            <input type="text" placeholder="Start Typing..."/>
+                                            <input type="text" placeholder="Поиск"/>
                                         </div>
                                     </div>
                                 </div>
@@ -88,7 +88,7 @@ styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons
                                        value="${(_csrf.token)!'--no-token--'}"/>
 
                                 <div class="d-flex justify-content-center align-items-center mt-5">
-                                    <button type="submit" class="filterSubmit">Submit <i
+                                    <button type="submit" class="filterSubmit">Найти <i
                                                 class="bi bi-check-lg p-0 m-0"></i>
                                     </button>
                                 </div>
@@ -111,7 +111,7 @@ styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons
                 <#if thisCategory??>
                     <p class="my-auto flex-fill category-name">${thisCategory.name}</p>
                     <a class="filter shadow-none" data-bs-toggle="modal"
-                       data-bs-target="#filterModal"><span>Filter</span></a>
+                       data-bs-target="#filterModal"><span>Сортировка</span></a>
 
                 <#else>
                     <div class="dropdown-container">
@@ -226,7 +226,7 @@ styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons
                 <div class="col">
                     <div class="info-container contact-us text-center">
                         <div class="d-inline-block text-start">
-                            <p class="footer-title text-center"><span>Contact Us</span></p>
+                            <p class="footer-title text-center"><span>Контакты</span></p>
                             <p><i class="bi bi-telephone-plus-fill"></i> +996777800300 (Ежедневно с 9:00 до 21:00)</p>
                             <p><i class="bi bi-envelope"></i> eubeysheke@gmail.com</p>
                         </div>
@@ -236,7 +236,7 @@ styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons
                 <div class="col">
                     <div class="info-container qa text-center">
                         <div class="d-inline-block text-start">
-                            <p class="footer-title text-center"><span>Q&A</span></p>
+                            <p class="footer-title text-center"><span>Помощь и поддержка</span></p>
                             <ul>
                                 <li data-bs-toggle="modal" data-bs-target="#footerModal1">Как подать объявление об
                                     аренде?
@@ -265,7 +265,14 @@ styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons
                 <div class="modal-body">
                     <div class="container footer-modal-container">
                         <p class="title"><span>Как подать объявление?</span></p>
-                        <div class="main-text">тут будет инструкция</div>
+                        <div class="main-text">
+                            <div class="clickedelement">
+                                asdf
+                            </div>
+                            <div class="wr2">
+                                asdf
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -283,7 +290,15 @@ styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons
                 <div class="modal-body">
                     <div class="container footer-modal-container">
                         <p class="title"><span>Как взять товар в аренду?</span></p>
-                        <div class="main-text">тут будет инструкция</div>
+                        <div class="main-text">
+                            <div class="clickedelement">
+                                <button type="button" class="sc">Ldbu
+                                </button>
+                            </div>
+                            <div class="wr2">
+                                asdf
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
