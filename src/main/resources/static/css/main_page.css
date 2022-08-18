@@ -558,3 +558,27 @@ input::-webkit-inner-spin-button {
     top: 5px;
     z-index: 100;
 }
+
+.instuction{
+    word-spacing: 2px;
+    margin-bottom: 35px;
+}
+
+.title-img-instuction{
+    text-align: center;
+    color: black;
+}
+
+.instruction-img{
+
+    max-width: 100%;
+    height: auto;
+}
+
+.instuction h4{
+    text-align: center;
+}
+
+.step-of-instruction{
+    border: 4px gray;
+}
