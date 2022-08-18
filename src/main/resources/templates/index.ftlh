@@ -386,7 +386,7 @@ styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons
                     <div class="container footer-modal-container">
                         <p class="title"><span>Почему вам стоит выбрать нас?</span></p>
                         <div class="main-text" style="text-align: center">
-                            Огромный выбор среди тысяч предложений от физлиц и прокатных компаний в одном месте. Удобный
+                            Огромный выбор среди тысяч предложений от физ. лиц и прокатных компаний в одном месте. Удобный
                             каталог и разнообразие
                             помогут найти все что нужно взять в аренду на одном сайте.
                         </div>
