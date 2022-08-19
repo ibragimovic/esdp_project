@@ -141,9 +141,7 @@ public class ProductService {
 
     public void upProduct(Long productId) throws ProductNotFoundException {
         var product = productRepository.findById(productId).orElseThrow(() -> new ProductNotFoundException("Не найдена публикация с id " + productId));
-        LocalDateTime today = LocalDateTime.now();
-        LocalDateTime productUpDate = product.getUp();
-        if ((productUpDate.getDayOfYear() != today.getDayOfYear()) && (productUpDate.getYear() != today.getYear())) {
+        if (product.getUp().getDayOfYear()!=LocalDateTime.now().getDayOfYear()) {
             productRepository.updateProductUpToTop(LocalDateTime.now(), product.getId());
         }
     }

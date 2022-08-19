@@ -36,7 +36,7 @@
                 </#if>
                 <h4>Создать категорию:</h4>
                 <select class="form-control" name="parent_id" id="parent_id" required>
-                    <p>Выберите категорию:</p>
+
                     <option selected value="0">Создать главную категорию</option>
 
                     <#list categoriesList as category>
@@ -53,11 +53,11 @@
                     <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
                            value="${(_csrf.token)!'--no-token--'}"/>
                 </#if>
-                <input type="text" name="name" class="form-control" placeholder="Введите название категории" aria-describedby="inputGroup-sizing-lg" required>
+                <input type="text" name="name" class="form-control" style="margin-top: 15px" placeholder="Введите название категории" aria-describedby="inputGroup-sizing-lg" required>
 
             </div>
             <div style="margin-top: 50px">
-                <button type="submit" style="margin-top: 100px" class="btn btn-primary createCategory">Создать</button>
+                <button type="submit" style="margin-top: 97px" class="btn btn-primary createCategory">Создать</button>
             </div>
         </form>
     </div>
@@ -71,7 +71,6 @@
                 </#if>
                 <h4>Сменить название категории:</h4>
                 <select class="form-control" name="id" id="parent_id" required>
-                    <p>Выберите категорию:</p>
                     <#list categoriesList as category>
                         <option value="${category.id}">${category.name}</option>
 
@@ -91,11 +90,11 @@
                     <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
                            value="${(_csrf.token)!'--no-token--'}"/>
                 </#if>
-                <input type="text" name="newName" class="form-control" placeholder="Введите новое название категории" aria-describedby="inputGroup-sizing-lg" required>
+                <input type="text" style="margin-top: 15px" name="newName" class="form-control" placeholder="Введите новое название категории" aria-describedby="inputGroup-sizing-lg" required>
 
             </div>
             <div style="margin-top: 50px">
-                <button type="submit" style="margin-top: 100px" class="btn btn-primary changeNameCategory">Сменить</button>
+                <button type="submit" style="margin-top: 97px" class="btn btn-primary changeNameCategory">Сменить</button>
             </div>
         </form>
     </div>
@@ -174,7 +173,7 @@
                 </select>
             </div>
             <div style="margin-top: 50px">
-                <button type="submit" style="margin-top: 105px" class="btn btn-primary changeCategoryParent">Изменить</button>
+                <button type="submit" style="margin-top: 90px" class="btn btn-primary changeCategoryParent">Изменить</button>
             </div>
         </form>
     </div>

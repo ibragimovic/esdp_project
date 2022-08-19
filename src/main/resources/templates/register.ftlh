@@ -62,46 +62,46 @@ styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons
     </nav>
 
     <div class="container">
-        <h2>Please register</h2>
+        <h2 style="margin-top: 50px;">Регистрация</h2>
         <form action="/register" method="post">
 
             <#if _csrf??>
                 <input type="hidden" name="${(_csrf.parameterName)!'csrf'}" value="${(_csrf.token)!'--no-token--'}"/>
             </#if>
 
-            <div class="form-group">
+            <div class="form-group register-form">
                 <label for="name">Имя</label>
                 <input type="text" name="name" class="form-control" id="name" placeholder="Ваше имя"
                        value="${(dto.name)!''}" required autofocus>
             </div>
-            <div class="form-group">
+            <div class="form-group register-form">
                 <label for="lastName">Фамилия</label>
                 <input type="text" name="lastName" class="form-control" id="lastName" placeholder="Ваша фамилия"
                        value="${(dto.lastName)!''}" required autofocus>
             </div>
-            <div class="form-group">
+            <div class="form-group register-form">
                 <label for="login">Логин</label>
                 <input type="text" name="login" class="form-control" id="login" placeholder="Ваш логин"
                        value="${(dto.login)!''}" required autofocus>
             </div>
 
-            <div class="form-group">
+            <div class="form-group register-form">
                 <label for="email">Адрес почты</label>
                 <input type="email" name="email" class="form-control" id="email" placeholder="Ваш адрес почты"
                        value="${(dto.email)!''}" required autofocus>
             </div>
-            <div class="form-group">
+            <div class="form-group register-form">
                 <label for="tel">Телефон</label>
                 <input type="tel" name="telNumber" class="form-control" id="telNumber" value="+996"
                        placeholder="+996552902002"
                        value="${(dto.telNumber)!''}" required autofocus>
             </div>
-            <div class="form-group">
+            <div class="form-group register-form">
                 <label for="password">Пароль:</label>
                 <input type="password" name="password" class="form-control" id="password" placeholder="Пароль" value="">
             </div>
             <div>
-                <button type="submit" class="btn btn-primary">Регистрация</button>
+                <button type="submit" style="margin:25px 0;" class="btn btn-primary">Регистрация</button>
             </div>
             <div>
                 <#if errors?? >
