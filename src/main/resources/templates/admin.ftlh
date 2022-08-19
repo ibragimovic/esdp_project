@@ -3,7 +3,7 @@
 
 <#-- обрабатываем его, и передаём ему список скриптов, которые необходимо подключить-->
 <@admin.renderWith>
-    <div style="margin-left: 60px">
+    <div style="margin-left: 60px; margin-bottom: 50px">
         <h3 style="display: inline-block; margin-right: 15px">Найти все совпадения по:</h3>
         <select name="type" id="type" style="display: inline-block">
             <option value="name">названию</option>
@@ -19,7 +19,7 @@
                         <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
                                value="${(_csrf.token)!'--no-token--'}"/>
                     </#if>
-                    <input name="name" style="margin-right: 120px; background: lightgray;">
+                    <input name="name" style=" background: lightgray;">
                     <button class="btn btn-outline-success" type="submit" style="margin-right: 25px">Поиск</button>
                 </form>
             </div>
@@ -46,7 +46,7 @@
                         <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
                                value="${(_csrf.token)!'--no-token--'}"/>
                     </#if>
-                    <select name="categoryId" id="categoryId" style=" margin-right: 25px;">
+                    <select name="categoryId" id="categoryId" style=" margin-right: 25px; width: 20px">
                         <#list categories as category>
                             <option value="${category.id}">${category.name}</option>
                         </#list>
@@ -79,77 +79,54 @@
     <#if empty??>
         <h1 style="text-align: center">${empty}</h1>
     <#else>
-        <div class="flex flex-wrap" id="itemList" style="margin-top: 50px">
-            <#list products as product>
-                <div class="flex flex-column box flex-v-center">
-                    <div class="img flex flex-column flex-v-center box-128">
-                        <img src="/uploads/${product.imagePaths[0]!''}"
-                             alt="фотография объявления" height="200">
-                    </div>
-                    <div class="product">
-                        <h3>${product.name}</h3>
-                        <h4>Объявление добавил: ${product.user.email}</h4>
-                        <h5>Цена: ${product.price} сом</h5>
-                        <h5>Категория: ${product.category}</h5>
-                        <h5><a href="/product/${product.id}" style="text-decoration: none">Подробная информация </a>
-                        </h5>
-                    </div>
-                    <div class="status">
 
-                        <h5>Статус: ${product.status}</h5>
-                        <div style="margin-right: 600px;">
-                            <form method="post" action="/admin/product-update-status">
-
-                                <select name="status" id="status" style="margin-bottom: 50px; margin-right: 25px;">
-                                    <option value="ACCEPTED">ACCEPTED</option>
-                                    <option value="DECLINED">DECLINED</option>
-                                    <option hidden>*********************</option>
-                                </select>
-                                <p style="margin-bottom: 50px; margin-right: 25px;"></p>
-                                <#if _csrf??>
-                                    <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
-                                           value="${(_csrf.token)!'--no-token--'}"/>
-                                </#if>
-                                <input type="hidden" name="id" value="${product.id}">
-                                <button class="btn btn-success" style="width:170px; margin-top: 25px">Изменить статус
-                                </button>
-                            </form>
-                            <form method="post" action="/product/delete">
-                                <#if _csrf??>
-                                    <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
-                                           value="${(_csrf.token)!'--no-token--'}"/>
-                                </#if>
-                                <input type="hidden" name="productId" value="${product.id}">
-                                <button class="btn btn-danger" style="width:170px;">Удалить</button>
-                            </form>
-                        </div>
-                    </div>
-
-                    <div class="product-vip" style="display: inline">
-                        <form action="/admin/product_add_top" method="post">
-                            <#if _csrf??>
-                                <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
-                                       value="${(_csrf.token)!'--no-token--'}"/>
-                            </#if>
-                            <input type="hidden" name="id" value="${product.id}">
-                            <div class="form-group" style="margin-top: 10px">
-                                <div style="margin-top: -80px">
-                                    <select class="form-control" name="hour" id="hour" style="width: 150px">
-                                        <option selected value="24">на 24 часа</option>
-                                        <option value="48">на 48 часов</option>
-                                        <option value="72">на 72 часа</option>
-                                    </select>
-                                </div>
-                                <button type="submit" class="btn btn-success" style="width:140px; margin-right: 1370px">
-                                    Добавить в топ
-                                </button>
-                            </div>
-                        </form>
-                    </div>
+        <#list products as product>
+            <div class="row">
+                <div class="img  col-xl col-sm-5">
+                    <img src="/uploads/${product.imagePaths[0]!''}"
+                         alt="фотография объявления" height="200">
                 </div>
+                <div class="product  col-sm-5">
+                    <h3>${product.name}</h3>
+                    <h4>Объявление добавил: ${product.user.email}</h4>
+                    <h5>Цена: ${product.price} сом</h5>
+                    <h5>Категория: ${product.category}</h5>
+                    <h5><a href="/product/${product.id}" style="text-decoration: none; color: #2C3E50">Подробная информация </a>
+                    </h5>
+                </div>
+                <div class="col-xl col-sm-5 " style="text-align: center">
+
+                    <h5>Статус: ${product.status}</h5>
+
+                    <form method="post" action="/admin/product-update-status">
+
+                        <select name="status" id="status" >
+                            <option value="ACCEPTED">ACCEPTED</option>
+                            <option value="DECLINED">DECLINED</option>
+                            <option hidden>*********************</option>
+                        </select>
+                        <#if _csrf??>
+                            <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
+                                   value="${(_csrf.token)!'--no-token--'}"/>
+                        </#if>
+                        <input type="hidden" name="id" value="${product.id}">
+                        <button class="btn btn-success" style="width:170px; margin-top: 25px; margin-bottom: 25px">Изменить статус
+                        </button>
+                    </form>
+                    <form method="post" action="/product/delete">
+                        <#if _csrf??>
+                            <input type="hidden" name="${(_csrf.parameterName)!'csrf'}"
+                                   value="${(_csrf.token)!'--no-token--'}"/>
+                        </#if>
+                        <input type="hidden" name="productId" value="${product.id}">
+                        <button class="btn btn-danger" style="width:170px;">Удалить</button>
+                    </form>
+                </div>
+
                 <br>
-            </#list>
-        </div>
+            </div>
+        </#list>
+
         <#include "partials/pagination.ftlh">
     </#if>
 

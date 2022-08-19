@@ -154,7 +154,7 @@ styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons
                                         <div class="product-card mb-5">
                                             <div class="product-image">
                                                 <div class="picture bg-info d-flex">
-                                                    <img src="/uploads/${mp.imagePaths[0]}"
+                                                    <img src="/uploads/${mp.imagePaths[0]!''}"
                                                          alt="фотография объявления">
                                                 </div>
                                             </div>
@@ -187,7 +187,7 @@ styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons
                                         <div class="product-card mb-5">
                                             <div class="product-image">
                                                 <div class="picture bg-info d-flex">
-                                                    <img src="/uploads/${dp.imagePaths[0]}"
+                                                    <img src="/uploads/${dp.imagePaths[0]!''}"
                                                          alt="фотография объявления">
                                                 </div>
                                             </div>
@@ -230,7 +230,7 @@ styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons
                                         <a class="product-card mb-5" href="/product/${f.id}">
                                             <div class="product-image">
                                                 <div class="picture bg-info d-flex">
-                                                    <img src="/uploads/${f.imagePaths[0]}" alt="фотография объявления">
+                                                    <img src="/uploads/${f.imagePaths[0]!''}" alt="фотография объявления">
                                                 </div>
                                             </div>
                                             <div class="product-info">

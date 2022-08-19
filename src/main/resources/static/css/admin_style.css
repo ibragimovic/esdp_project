@@ -251,12 +251,7 @@ body {
     fill: var(--page-content-txtColor);
 }
 
-.search-and-user form button {
-    position: absolute;
-    top: 50%;
-    right: 15px;
-    transform: translateY(-50%);
-}
+
 
 .search-and-user .admin-profile {
     display: flex;
@@ -615,18 +610,6 @@ body {
 }
 
 
-.status {
-    margin-top: -250px;
-    padding-left: 900px;
-    display: inline-block;
-    vertical-align: top;
-}
-
-.product-vip{
-    margin-top: -250px;
-    display: inline-block;
-    vertical-align: top;
-}
 
 table tbody tr .action-btn {
     vertical-align: middle;
