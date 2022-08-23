@@ -593,3 +593,9 @@ input::-webkit-inner-spin-button {
 .register-form label, .login-form label, .recovery-password label{
     margin-bottom: 5px;
 }
+
+.main-panel .go-back-btn{
+    width:45px;
+    height:45px;
+    margin:auto 0
+}
