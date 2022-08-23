@@ -361,12 +361,9 @@ styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons
                                     <hr>
                                     <br>
                                     <p>8. Наше объявление уже заполнено. Теперь нажав на кнопку "Создать" объявление
-                                        успешно создано как показано на
-                                        Снимке №8 и будет на Модерации сайта, т.е. на
+                                        успешно создано и появится окно со словом "Success". В дальнейшем Ваше объявление будет на Модерации сайта, т.е. на
                                         рассмотрении администрации сайта.</p><br>
-                                    <p class="title-img-instuction">Снимок №8</p>
-                                    <img class="instruction-img" src="/images/instuction/select_locations.jpg">
-                                </div>
+                                    </div>
                                 <br>
                                 <hr>
                                 <h5 style="text-align: center;color: black">Благодарим Вас за терпение и внимание!
