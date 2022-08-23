@@ -4,18 +4,18 @@ let productId=document.getElementById("productId").value
 
 $(document).ready(function() {
 
-    likeProduct()
+    if(likeLabel!=null){
+        likeLabel.addEventListener("click",function (e){
 
-    likeLabel.addEventListener("click",function (e){
+            if(authUserEmail!=null){
+                fetchFavJson(authUserEmail.value,productId)
+            }else{
+                addFavToLocalStorage()
+            }
 
+        })
+    }
 
-        if(authUserEmail!=null){
-            fetchFavJson(authUserEmail.value,productId)
-        }else{
-            addFavToLocalStorage()
-        }
-
-    })
 });
 
 function fetchFavJson(userEmail,productId){

@@ -138,7 +138,9 @@ public class ProductController {
 
     @GetMapping("/product/{id}")
     public String seeProductDetails(Model model, @PathVariable Long id, Authentication authentication) throws ProductNotFoundException {
-
+        if(authentication!=null){
+            model.addAttribute("userEmail",userService.getEmailFromAuthentication(authentication));
+        }
         model.addAttribute("product", productService.getProductDetails(id,authentication));
         return "product_details";
     }

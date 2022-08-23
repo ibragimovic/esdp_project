@@ -35,6 +35,7 @@ public class ProductService {
     private final FavoritesService favoritesService;
     private final UserRepository userRepository;
     private final FavoritesRepository favoritesRepository;
+    private final UserService userService;
 
     @Value("${upload.path}")
     private String uploadPath;
@@ -177,7 +178,7 @@ public class ProductService {
         if (auth == null) {
             return false;
         }
-        User user = userRepository.findByEmail(auth.getName()).orElseThrow(UserNotFoundException::new);
+        User user = userRepository.findByEmail(userService.getEmailFromAuthentication(auth)).orElseThrow(UserNotFoundException::new);
         Optional<Favorites> fav = favoritesRepository.findByUserAndProduct(user, product);
         return fav.isPresent();
 
