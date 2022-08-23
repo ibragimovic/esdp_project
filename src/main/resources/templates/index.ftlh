@@ -106,7 +106,7 @@ styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons
         <form method="post" action="/search">
             <div class="main-panel d-flex">
                 <#if goBack??>
-                    <a class="btn btn-info bi bi-arrow-left rounded-circle text-white fs-5 me-2" href="/"></a>
+                    <a class="btn btn-info bi bi-arrow-left rounded-circle text-white fs-5 go-back-btn" href="/"></a>
                 </#if>
                 <#if thisCategory??>
                     <p class="my-auto flex-fill category-name">${thisCategory.name}</p>
