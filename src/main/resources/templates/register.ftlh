@@ -7,7 +7,7 @@ styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons
     <#assign security=JspTaglibs["http://www.springframework.org/security/tags"]/>
 
     <nav class="navbar navbar-expand-custom navbar-mainbg">
-        <a class="navbar-brand navbar-logo" href="/main">Arenda.kg</a>
+        <a class="navbar-brand navbar-logo" href="/">Arenda.kg</a>
         <button class="navbar-toggler" type="button" aria-controls="navbarSupportedContent" aria-expanded="false"
                 aria-label="Toggle navigation">
             <i class="bi bi-list text-white p-0 m-0"></i>
