@@ -8,6 +8,7 @@ styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons
     <#assign security=JspTaglibs["http://www.springframework.org/security/tags"]/>
 
     <div class="container my-5">
+        <p class="bi bi-arrow-left fs-2 mb-4"  id="prev-page"></p>
         <div class="row product-details-box">
             <div class=" col-12 ">
                 <div class="image-slider main-image-slider">

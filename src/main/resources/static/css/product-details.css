@@ -225,3 +225,8 @@
     height: 100%;
     
 }
+
+#prev-page{
+    display:inline-block;
+    cursor:pointer;
+}

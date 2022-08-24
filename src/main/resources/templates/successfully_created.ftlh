@@ -1,13 +1,13 @@
 <#import "partials/main2.ftlh" as main />
 
 
-<#assign scripts_js = ["/js/create_product.js","/js/dropdown_script.js","/js/showLastStep.js"]>
+<#assign scripts_js = ["/js/create_product.js","/js/dropdown_script.js","/js/showLastStep.js","/js/navbar.js"]>
 <#assign security=JspTaglibs["http://www.springframework.org/security/tags"]/>
 
 <@main.renderWith title="Arenda.kg"
-scripts=scripts_js styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css","https://use.fontawesome.com/releases/v5.14.0/css/all.css","/css/create_product.css","/css/dropdown_style.css","/css/error_message.css","/css/navbar.css", "/css/nested_dropdown.css","/css/main_page.css","/css/dropdown_style.css"]>
+scripts=scripts_js styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css","https://use.fontawesome.com/releases/v5.14.0/css/all.css","/css/create_product.css","/css/dropdown_style.css","/css/error_message.css","/css/navbar.css"]>
     <nav class="navbar navbar-expand-custom navbar-mainbg">
-        <a class="navbar-brand navbar-logo" href="/main">Arenda.kg</a>
+        <a class="navbar-brand navbar-logo" href="/">Arenda.kg</a>
         <button class="navbar-toggler" type="button" aria-controls="navbarSupportedContent" aria-expanded="false"
                 aria-label="Toggle navigation">
             <i class="bi bi-list text-white p-0 m-0"></i>
@@ -61,7 +61,7 @@ scripts=scripts_js styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/f
         </div>
     </nav>
 
-    <div class="container-fluid">
+    <div class="container-fluid container">
         <div class="row justify-content-center">
             <div class="col-10 text-center pt-5">
                 <#if lastStep??></#if>
@@ -272,7 +272,7 @@ scripts=scripts_js styles=["https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/f
 
     <script>
         var timer = setTimeout(function () {
-            window.location = '/'
+            window.location = '/profile'
         }, 2000);
     </script>
 
